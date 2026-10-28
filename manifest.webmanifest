@@ -1,0 +1,14 @@
+{
+  "name": "ワタス解体新書",
+  "short_name": "ワタス解体新書",
+  "description": "MBTI×数秘術×西洋占星術×インド占星術×四柱推命×バイオリズム、まとめて診られちゃう診断サイト",
+  "start_url": "./",
+  "scope": "./",
+  "display": "browser",
+  "background_color": "#E3DBD1",
+  "theme_color": "#4A3B32",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
