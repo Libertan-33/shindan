@@ -190,6 +190,16 @@ details.quiz summary { cursor: pointer; font-size: 14px; color: var(--mind); min
 .recap { font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 12px; align-items: center; }
 .actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 .copyout { width: 100%; font: inherit; font-size: 13px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--fg); min-height: 7em; margin-top: 10px; }
+.sup{position:relative;margin:30px 0 4px;padding:22px 18px 20px;border-radius:22px;text-align:center;background:linear-gradient(135deg,#fff7e6,#ffe9f1 55%,#efe6ff);border:1.5px solid rgba(255,170,120,.55);box-shadow:0 10px 28px rgba(255,140,120,.22);color:#5a3a2a;overflow:hidden}
+.sup::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.75) 50%,transparent 65%);transform:translateX(-120%);animation:supShine 4.5s ease-in-out infinite;pointer-events:none}
+@keyframes supShine{0%,55%{transform:translateX(-120%)}100%{transform:translateX(120%)}}
+.sup .st{font-size:12px;letter-spacing:.14em;font-weight:700;color:#d2693f}
+.sup h3{margin:6px 0 8px;font-size:18px;line-height:1.5;font-weight:800;color:#5a3a2a}
+.sup p{margin:0 0 14px;font-size:13px;line-height:1.85;color:#6e4a38}
+.sup .sbtn{display:inline-block;position:relative;padding:13px 26px;border-radius:999px;background:linear-gradient(135deg,#ff8a5c,#ff5f8f);color:#fff!important;font-weight:800;font-size:15px;text-decoration:none;box-shadow:0 6px 16px rgba(255,95,143,.4);animation:supPulse 2.4s ease-in-out infinite}
+@keyframes supPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
+.sup .sn{display:block;margin-top:10px;font-size:11px;color:#9a7260}
+@media (prefers-reduced-motion:reduce){.sup::before,.sup .sbtn{animation:none}}
 .notice { font-size: 12px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 18px; margin-top: 44px; }
 .notice p + p { margin-top: 6px; }
 
@@ -706,6 +716,14 @@ input::placeholder { opacity: 0.55; }
   </section>
 
   </div>
+
+  <aside class="sup" id="support">
+    <div class="st">♡ SUPPORT ♡</div>
+    <h3>ワタス解体、楽しめた？<br>ここまで全部、無料でお届け中🫶</h3>
+    <p>このサイトは、りばが一人で<br>作って育てています<br>「続けてほしい！」と思ったら<br>応援がめちゃくちゃ励みになります☕</p>
+    <a class="sbtn" href="https://lit.link/libertan" target="_blank" rel="noopener noreferrer">りばの活動を応援する 💌</a>
+    <span class="sn">SNSや活動のまとめが見られます<br>（見るだけでもOK）</span>
+  </aside>
 
   <footer class="notice">
     <p>この診断は娯楽と自己理解のヒントを目的としたもので、性格や相性、将来を断定するものではありません<br>MBTIⓇはThe Myers-Briggs Companyの登録商標で、本ページは公式のものではありません</p>
