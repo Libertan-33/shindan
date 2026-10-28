@@ -2072,7 +2072,7 @@ function chap(no, c, because, lines, aru) {
 
 function overviewPage(a, st) {
   var T = st.T, who = a.nm ? a.nm + "さん" : "あなた", cn = comboNo(a), cd = curDash(a), h = "";
-  h += '<div class="hero"><div class="mys" aria-hidden="true"><span>？</span></div><p class="eyebrow">' + esc(who) + 'の分身キャラは、最後のお楽しみ</p><h2>' + esc(st.title) + '</h2>' +
+  h += '<div class="hero">' + (REPEAT2 ? charRV(a) : '<div class="mys" aria-hidden="true"><span>？</span></div>') + '<p class="eyebrow">' + esc(who) + (REPEAT2 ? 'の分身キャラ' : 'の分身キャラは、最後のお楽しみ') + '</p><h2>' + esc(st.title) + '</h2>' +
     '<p class="lede txt">' + '太陽は「' + esc(a.sg[4]) + '」 × 運命数' + a.lp + '（' + esc(a.num[0]) + '）× 「' + esc(a.nk[1]) + '」の月</p>' + heroChips(a) + hitokoto(a) + '</div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">総じて、こんな人です</span>' +
     '<p class="sumline txt">あなたは総じて<br><b class="sumbig">' + esc(st.title) + '</b><br>です</p>' +
