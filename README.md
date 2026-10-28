@@ -7,7 +7,7 @@ MBTI × 数秘術 × 西洋占星術 × インド占星術 × 四柱推命 × �
 単体の `index.html` だけで動きます（登録・サーバー不要）
 
 ## 公開ページ
-https://libertan-33.github.io/uranai/
+https://libertan-33.github.io/shindan/
 
 ## 作成
 マダガスカル𖤐りば（くりえいてぃっど ばぁい りばたん）
