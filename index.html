@@ -3458,7 +3458,9 @@ function smokeCover(cb) {
 }
 arrive = function () {};
 var fxIn0 = fxIn;
-fxIn = function (el) { fxIn0(el); try { if (SMK_OK && !smkCalm() && Date.now() - SMK_AT > 900) { SMK_AT = Date.now(); smkClear(smkBuild("hold")); } } catch (e) {} };
+var SMK_NAVT = 0;
+document.addEventListener("click", function (e) { try { if (e.target && e.target.closest && e.target.closest("button[data-stage], [data-goto], [data-page], [data-goinput], [data-tab], [data-go]")) SMK_NAVT = Date.now(); } catch (x) {} }, true);
+fxIn = function (el) { fxIn0(el); try { if (SMK_OK && !smkCalm() && Date.now() - SMK_NAVT < 1800 && Date.now() - SMK_AT > 900) { SMK_AT = Date.now(); smkClear(smkBuild("hold")); } } catch (e) {} };
 document.addEventListener("click", function (e) {
   if (SMK_PASS) return;
   var t = e.target && e.target.closest ? e.target.closest("button[data-stage], [data-goto], [data-page], [data-goinput]") : null; if (!t) return;
