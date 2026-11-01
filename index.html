@@ -952,13 +952,13 @@ var ADV = { "火": "迷ったら、先に小さく動いてみる⏎", "地": "�
 var GOOD = { 1: [3, 5, 9], 2: [4, 6, 8], 3: [1, 5, 9], 4: [2, 6, 8], 5: [1, 3, 7], 6: [2, 4, 9], 7: [5], 8: [2, 4, 6], 9: [1, 3, 6] };
 var TOUGH = ["4-5", "1-8", "6-7", "3-4", "2-5"];
 var ASP = [
-  ["同じ星座", "似た者同士で、感覚が近い⏎長所も短所も鏡のように映ります⏎"],
-  ["隣り合う星座", "近いのに性質が違う関係⏎相手の中に、自分にない視点を見つけやすい⏎"],
-  ["六分（60度）", "互いを刺激して伸ばし合える、協力しやすい角度⏎"],
-  ["四分（90度）", "摩擦が生まれやすい緊張の角度⏎ぶつかる分だけ成長のきっかけにもなります⏎"],
-  ["三分（120度）", "同じ要素を共有する、自然に噛み合う調和の角度⏎"],
-  ["150度", "感覚のズレが出やすい角度⏎違いを面白がれると距離が縮まります⏎"],
-  ["対向（180度）", "正反対だから強く惹かれ合う⏎足りない部分を補い合う関係⏎"]
+  ["同じ星座", "似た者どうしで、感覚が近いふたりです⏎長所も短所も、鏡のように映ります⏎"],
+  ["隣り合う星座", "近いのに、性質は違うふたりです⏎相手の中に、自分にない見方を見つけやすい関係です⏎"],
+  ["六分（60度）", "お互いを刺激して、伸ばし合える角度です⏎協力するとうまくいきます⏎"],
+  ["四分（90度）", "ぶつかりやすい、緊張感のある角度です⏎そのぶん、成長のきっかけにもなります⏎"],
+  ["三分（120度）", "同じ性質を分け合う、自然に噛み合う角度です⏎"],
+  ["150度", "感覚のズレが出やすい角度です⏎違いを面白がれると、距離が縮まります⏎"],
+  ["対向（180度）", "正反対だからこそ、強く惹かれ合います⏎足りない部分を、補い合える関係です⏎"]
 ];
 var ASC = [80, 60, 82, 48, 90, 52, 85];
 var TG = { NT: 0, NF: 1, SJ: 2, SP: 3 };
@@ -1174,42 +1174,52 @@ function rel(a, b) {
 }
 var RSC = { good: 90, same: 74, mid: 62, tough: 44 };
 var RTX = {
-  good: "数の相性は追い風です⏎お互いの動き方が噛み合いやすい組み合わせ⏎",
-  same: "同じ数⏎価値観が似て安心できる一方、癖も似ます⏎",
-  mid: "目立った相性の良し悪しはなく、関わり方しだいで形が決まります⏎",
-  tough: "リズムが違う組です⏎ペースのすり合わせに少し意識が必要です⏎"
+  good: "数の相性は追い風です⏎お互いの動き方が、自然と噛み合います⏎",
+  same: "同じ数のふたりです⏎価値観が似ていて安心できる反面、クセも似ています⏎",
+  mid: "数の相性は、良くも悪くもありません⏎関わり方しだいで、どちらにも育ちます⏎",
+  tough: "ペースが違うふたりです⏎進むスピードを、ときどき合わせる意識が必要です⏎"
 };
 var W = { love: [0.25, 0.2, 0.2, 0.35], home: [0.3, 0.2, 0.1, 0.4], work: [0.4, 0.3, 0.2, 0.1], friend: [0.3, 0.15, 0.25, 0.3], family: [0.2, 0.2, 0.15, 0.45] };
-function verdictOf(t) { return t >= 85 ? "引き合う二人" : t >= 72 ? "補い合う二人" : t >= 58 ? "磨き合う二人" : "学び合う二人"; }
+function verdictOf(t) { return t >= 85 ? "惹かれ合うふたり" : t >= 72 ? "補い合うふたり" : t >= 58 ? "刺激し合うふたり" : "育て合うふたり"; }
 function aspOf(i, j) { var diff = (i - j + 12) % 12; return Math.min(diff, 12 - diff); }
 /* 相性の採点の見かた：10段階（点数は約45〜98の範囲に収まるため） */
 var RATE = [null,
-  ["伸びしろのふたり", "まだ知らない面がたくさんある、これから育てる相性です⏎ゆっくり知り合うほど、意外な魅力が見えてきます⏎"],
-  ["ちがいを楽しむふたり", "感じ方が大きく違うぶん、新鮮な発見の多い相性です⏎わからない部分は、わからないと言っていい関係です⏎"],
-  ["ゆっくり育つふたり", "時間をかけて、少しずつ安心が積み上がる相性です⏎急がないほど、深くなっていきます⏎"],
-  ["磨き合うふたり", "違いが多いぶん、お互いに学べることも多い相性です⏎ぶつかったあとほど、理解が深まります⏎"],
-  ["ほどよい距離のふたり", "近づきすぎず、離れすぎず、楽に続けられる相性です⏎無理をしない付き合い方が合っています⏎"],
-  ["補い合えるふたり", "得意と不得意が、うまく噛み合う相性です⏎足りないところを、自然に分け合えます⏎"],
-  ["自然体でいられるふたり", "飾らずにいられる、居心地のよい相性です⏎一緒にいると、肩の力が抜けていきます⏎"],
-  ["息の合うふたり", "話さなくても通じる場面が多い、相性のよいふたりです⏎同じ方向を向くと、大きな力が出ます⏎"],
-  ["ぴったり寄り添うふたり", "考え方も気持ちも、重なるところが多い相性です⏎お互いが、いちばんの味方になれます⏎"],
-  ["奇跡のシンクロふたり", "ごくまれに出る、とても相性のよい組み合わせです⏎近いからこそ、感謝を言葉にすると長く続きます⏎"]
+  ["ここからのふたり", "まだお互いをよく知らない、これからの相性です⏎話すほど、意外な一面が見つかります⏎"],
+  ["ちがいが刺激のふたり", "感じ方がだいぶ違うぶん、新しい発見がいっぱいの相性です⏎「わからない」を言い合えると、うまくいきます⏎"],
+  ["じわじわ育つふたり", "会うたびに、少しずつ安心が増えていく相性です⏎あせらないほど、仲が深まります⏎"],
+  ["ぶつかって深まるふたり", "違うところが多いぶん、学び合えることも多い相性です⏎ぶつかったあとに、ぐっと近づけます⏎"],
+  ["ほどよい距離のふたり", "近すぎず遠すぎず、ラクに続けられる相性です⏎無理をしない付き合い方が、ぴったりです⏎"],
+  ["でこぼこ噛み合うふたり", "得意なことと苦手なことが、うまく入れ替わる相性です⏎足りないところを、自然に分け合えます⏎"],
+  ["素でいられるふたり", "かっこつけなくていい、居心地のいい相性です⏎一緒にいると、肩の力が抜けていきます⏎"],
+  ["あうんのふたり", "言わなくても伝わる場面が多い相性です⏎同じ方向を向くと、大きな力が出ます⏎"],
+  ["いちばんの味方どうし", "考え方も気持ちも、重なるところが多い相性です⏎お互いが、いちばんの味方になれます⏎"],
+  ["奇跡のシンクロふたり", "めったに出ない、とてもいい相性です⏎近いからこそ、「ありがとう」を口に出すと長続きします⏎"]
 ];
 function lvOf(sc) { return sc >= 95 ? 10 : sc >= 90 ? 9 : sc >= 85 ? 8 : sc >= 80 ? 7 : sc >= 75 ? 6 : sc >= 70 ? 5 : sc >= 65 ? 4 : sc >= 60 ? 3 : sc >= 55 ? 2 : 1; }
 var PART_NM = { m: "思考の型", n: "運命の数", s: "太陽星座", mo: "インドの月" };
 var PART_ISSUE = {
-  m: ["ものの見方や、決め方が違いやすいところ", "結論の前に、根拠か気持ちをひと言そえてみてください⏎"],
-  n: ["進むペースや、大切にするものが違いやすいところ", "お互いの「大事にしたいこと」を、先にひとつずつ言葉にしてみてください⏎"],
+  m: ["ものの見方や、決め方が違いやすいところ", "結論の前に、理由か気持ちをひと言そえてみてください⏎"],
+  n: ["進むペースや、大切にしたいことが違いやすいところ", "お互いの「大事にしたいこと」を、先にひとつずつ言葉にしてみてください⏎"],
   s: ["表に出る性格のクセが違いやすいところ", "相手の反応は「クセ」だと受けとめて、悪気を探さないようにしてみてください⏎"],
   mo: ["気持ちの動き方や、安心するポイントが違いやすいところ", "安心できることを、お互いにひとつずつ聞き合ってみてください⏎"]
 };
-function ratingBlock(c, sc, rl) {
-  var lv = lvOf(sc), r = RATE[lv], ks = ["m", "n", "s", "mo"], hi = ks[0], lo = ks[0], i;
+var PAIR_NM = ["まるで正反対の、でこぼこコンビ", "正反対なのに、段取りだけは合うふたり", "気持ちの置きどころだけ同じ、ほかは別世界のふたり", "決め方と段取りが合う、ちがいを楽しむふたり", "同じ景色を見て、ちがう歩き方をするふたり", "同じ景色を、同じ段取りで楽しむふたり", "ものの見方も決め方も同じ、あとは真逆のふたり", "静と動だけがちがう、そっくりなふたり", "テンポは同じ、中身は別々のふたり", "同じテンポで、ちがう景色を見るふたり", "テンポも決め方も同じ、見る景色だけちがうふたり", "現実派と直感派が、同じ歩幅で進むふたり", "景色もテンポも同じ、決め方だけちがうふたり", "頭と心で役割分担できるふたり", "計画派と気まま派の、名コンビ", "鏡のようにそっくりなふたり"];
+function pairName(a, b) { var A = a.type, B = b.type, i = 0; if (A.charAt(0) === B.charAt(0)) i += 8; if (A.charAt(1) === B.charAt(1)) i += 4; if (A.charAt(2) === B.charAt(2)) i += 2; if (A.charAt(3) === B.charAt(3)) i += 1; return PAIR_NM[i]; }
+function pairFight(a, b) {
+  var A = a.type, B = b.type;
+  if (A.charAt(2) !== B.charAt(2)) return ["正しさと気持ち、どちらを先にするか", "「先に気持ちを聞くね。そのあとで、解決策を考えよう」"];
+  if (A.charAt(3) !== B.charAt(3)) return ["予定を先に決めるか、直前まで決めないか", "「行き先だけ決めよう。あとは当日の気分で！」"];
+  if (A.charAt(0) !== B.charAt(0)) return ["ひとりの時間と、会う時間のバランス", "「返事が遅いのは、充電中ってことにしよう」"];
+  if (A.charAt(1) !== B.charAt(1)) return ["話の細かさと、話のスケールのずれ", "「たとえ話をひとつ、数字をひとつ足してみるね」"];
+  return ["ふたりとも、同じところで同時につまずくこと", "「ここは第三者に聞いてみよう」"];
+}
+function ratingBlock(c, sc, rl, a, b) {
+  var lv = lvOf(sc), r = RATE[lv], ks = ["m", "n", "s", "mo"], hi = ks[0], lo = ks[0], i, pf = pairFight(a, b);
   for (i = 1; i < 4; i++) { if (c[ks[i]] > c[hi]) hi = ks[i]; if (c[ks[i]] < c[lo]) lo = ks[i]; }
-  return '<div class="block" style="--c:var(--num)"><span class="lab">この点数の見かた</span><h3>' + lv + '／10　' + r[0] + '</h3>' +
-    '<p class="txt">' + esc(r[1]) + '</p>' +
-    '<p class="hint">' + rl + 'の相性を、思考・数・太陽・月の四つから採点した、100点満点の目安です⏎点数は10段階に分けて、「' + lv + '」の位置です⏎</p>' +
-    '<div class="kvs">' + kv("いちばん合うところ", PART_NM[hi] + "（" + c[hi] + "点）") + kv("すれ違いやすいところ", PART_NM[lo] + "：" + PART_ISSUE[lo][0].replace(/⏎/g, "")) + kv("抜け道", PART_ISSUE[lo][1].replace(/⏎/g, "")) + '</div></div>';
+  return '<div class="block" style="--c:var(--num)"><span class="lab">ふたりの名前</span><h3>' + esc(pairName(a, b)) + '</h3>' +
+    '<p class="txt">' + esc(r[0]) + '（' + lv + '／10）⏎' + esc(r[1]) + '</p>' +
+    '<div class="kvs">' + kv("ケンカの種", pf[0]) + kv("仲直りの合言葉", pf[1]) + kv("いちばん合うところ", PART_NM[hi] + "（" + c[hi] + "点）") + kv("すれ違いやすいところ", PART_NM[lo] + "：" + PART_ISSUE[lo][0].replace(/⏎/g, "")) + kv("うまくいくコツ", PART_ISSUE[lo][1].replace(/⏎/g, "")) + '</div>' +
+    '<p class="hint">' + rl + 'の相性を、思考・数・太陽・月の四つから採点した、100点満点の目安です⏎</p></div>';
 }
 function compat(a, b) {
   var t1 = a.type, t2 = b.type;
@@ -1224,15 +1234,15 @@ function compat(a, b) {
   Object.keys(W).forEach(function (k) { var w = W[k]; cats[k] = Math.round(w[0] * m + w[1] * n + w[2] * s + w[3] * mo); lv[k] = LV[k][cats[k] >= 80 ? 0 : cats[k] >= 62 ? 1 : 2]; });
   var total = cats.love;
   var tips = [];
-  if (!same(0)) tips.push(["外向と内向", "回復のしかたが違います⏎ひとりの時間と会う時間の配分を、先に話しておくと楽です⏎"]);
-  if (!same(1)) tips.push(["現実と直感", "具体派と抽象派で話の粒度がずれます⏎例え話と数字を両方出すと伝わります⏎"]);
-  if (!same(2)) tips.push(["論理と感情", "決める基準が違います⏎結論の前に、根拠か気持ちを一言添えるとこじれません⏎"]);
-  if (!same(3)) tips.push(["計画と柔軟", "段取り派と柔軟派です⏎決める日と、決めない余白を先に合意しておきましょう⏎"]);
-  if (!tips.length) tips.push(["同じ型の二人", "理解が早い反面、苦手も同じ場所に出ます⏎死角を補う第三者の視点を借りましょう⏎"]);
-  var mtx = golden ? "定番の好相性ペアです⏎足りない部分を、お互いが自然に埋めます⏎" :
-    t1 === t2 ? "同じ型です⏎分かり合いは早いけれど、苦手も同じ場所に出ます⏎" :
-    same(1) ? "ものの見方の粒度が近く、話が通じやすい組み合わせです⏎" :
-    "具体派と直感派の組み合わせです⏎話の抽象度がずれやすく、そこが刺激にも誤解にもなります⏎";
+  if (!same(0)) tips.push(["外向と内向", "元気を取り戻す方法が違います⏎ひとりの時間と会う時間の配分を、先に話しておくとラクです⏎"]);
+  if (!same(1)) tips.push(["現実と直感", "具体的に話す人と、イメージで話す人です⏎たとえ話と数字の両方で伝えると、通じやすくなります⏎"]);
+  if (!same(2)) tips.push(["論理と感情", "ものごとを決める基準が違います⏎結論の前に、理由か気持ちをひと言そえると、こじれません⏎"]);
+  if (!same(3)) tips.push(["計画と柔軟", "先に決めたい人と、流れに任せたい人です⏎決める日と、決めない余白を、先に決めておきましょう⏎"]);
+  if (!tips.length) tips.push(["同じタイプのふたり", "分かり合うのは早い反面、苦手なところも同じです⏎ふたりとも見えていない部分は、第三者の目を借りましょう⏎"]);
+  var mtx = golden ? "定番の好相性ペアです⏎足りない部分を、お互いが自然に埋め合えます⏎" :
+    t1 === t2 ? "同じタイプです⏎分かり合うのは早い反面、苦手なところも同じ場所に出ます⏎" :
+    same(1) ? "ものの見方が近く、話が通じやすい組み合わせです⏎" :
+    "現実派と直感派の組み合わせです⏎話の細かさがずれやすく、そこが刺激にも誤解にもなります⏎";
   var verdict = verdictOf(total);
   return { m: m, n: n, s: s, mo: mo, total: total, cats: cats, lv: lv, tips: tips, mtx: mtx, r1: r1, r2: r2, asp: ASP[d], aspm: ASP[dm], golden: golden, verdict: verdict };
 }
@@ -1272,27 +1282,27 @@ var CHR = [
   {n:"",g:"f",a:"soc",b:"sens",r:1,s:"chars/c004.webp"},
   {n:"",g:"m",a:"soc",b:"free",r:0,s:"chars/c005.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:3,s:"chars/c006.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:0,s:"chars/c007.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c007.webp"},
   {n:"",g:"f",a:"sens",b:"free",r:4,s:"chars/c008.webp"},
   {n:"",g:"m",a:"plan",b:"act",r:2,s:"chars/c009.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:1,s:"chars/c010.webp"},
   {n:"",g:"f",a:"plan",b:"sens",r:0,s:"chars/c011.webp"},
   {n:"",g:"m",a:"soc",b:"free",r:4,s:"chars/c012.webp"},
   {n:"",g:"u",a:"act",b:"free",r:1,s:"chars/c013.webp"},
-  {n:"",g:"f",a:"sens",b:"loyal",r:1,s:"chars/c014.webp"},
+  {n:"",g:"m",a:"sens",b:"loyal",r:1,s:"chars/c014.webp"},
   {n:"",g:"u",a:"plan",b:"loyal",r:1,s:"chars/c015.webp"},
-  {n:"",g:"m",a:"plan",b:"loyal",r:3,s:"chars/c016.webp"},
+  {n:"",g:"u",a:"plan",b:"loyal",r:3,s:"chars/c016.webp"},
   {n:"",g:"m",a:"free",b:"soc",r:0,s:"chars/c017.webp"},
-  {n:"",g:"f",a:"free",b:"sens",r:2,s:"chars/c018.webp"},
+  {n:"",g:"u",a:"free",b:"sens",r:2,s:"chars/c018.webp"},
   {n:"",g:"u",a:"free",b:"act",r:2,s:"chars/c019.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c020.webp"},
-  {n:"",g:"f",a:"plan",b:"sens",r:1,s:"chars/c021.webp"},
+  {n:"",g:"u",a:"plan",b:"sens",r:1,s:"chars/c021.webp"},
   {n:"",g:"m",a:"act",b:"free",r:1,s:"chars/c022.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c023.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:0,s:"chars/c024.webp"},
-  {n:"",g:"f",a:"plan",b:"act",r:4,s:"chars/c025.webp"},
+  {n:"",g:"m",a:"plan",b:"act",r:4,s:"chars/c025.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:0,s:"chars/c026.webp"},
-  {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c027.webp"},
+  {n:"",g:"u",a:"act",b:"free",r:2,s:"chars/c027.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:3,s:"chars/c028.webp"},
   {n:"",g:"m",a:"sens",b:"soc",r:1,s:"chars/c029.webp"},
   {n:"",g:"u",a:"loyal",b:"sens",r:1,s:"chars/c030.webp"},
@@ -1301,17 +1311,17 @@ var CHR = [
   {n:"",g:"m",a:"soc",b:"plan",r:0,s:"chars/c033.webp"},
   {n:"",g:"f",a:"sens",b:"free",r:1,s:"chars/c034.webp"},
   {n:"",g:"f",a:"plan",b:"soc",r:0,s:"chars/c035.webp"},
-  {n:"",g:"u",a:"act",b:"soc",r:0,s:"chars/c036.webp"},
+  {n:"",g:"m",a:"act",b:"soc",r:0,s:"chars/c036.webp"},
   {n:"",g:"f",a:"act",b:"plan",r:0,s:"chars/c037.webp"},
   {n:"",g:"f",a:"sens",b:"free",r:1,s:"chars/c038.webp"},
-  {n:"",g:"f",a:"plan",b:"free",r:0,s:"chars/c039.webp"},
+  {n:"",g:"m",a:"plan",b:"free",r:0,s:"chars/c039.webp"},
   {n:"",g:"m",a:"free",b:"sens",r:0,s:"chars/c040.webp"},
   {n:"",g:"u",a:"loyal",b:"plan",r:1,s:"chars/c041.webp"},
   {n:"",g:"f",a:"sens",b:"loyal",r:1,s:"chars/c042.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:1,s:"chars/c043.webp"},
   {n:"",g:"m",a:"sens",b:"loyal",r:0,s:"chars/c044.webp"},
   {n:"",g:"f",a:"soc",b:"sens",r:1,s:"chars/c045.webp"},
-  {n:"",g:"m",a:"free",b:"soc",r:1,s:"chars/c046.webp"},
+  {n:"",g:"u",a:"free",b:"soc",r:1,s:"chars/c046.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:3,s:"chars/c047.webp"},
   {n:"",g:"m",a:"sens",b:"free",r:0,s:"chars/c048.webp"},
   {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c049.webp"},
@@ -1319,17 +1329,17 @@ var CHR = [
   {n:"",g:"f",a:"soc",b:"free",r:0,s:"chars/c051.webp"},
   {n:"",g:"u",a:"soc",b:"sens",r:1,s:"chars/c052.webp"},
   {n:"",g:"m",a:"act",b:"free",r:4,s:"chars/c053.webp"},
-  {n:"",g:"f",a:"free",b:"sens",r:1,s:"chars/c054.webp"},
+  {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c054.webp"},
   {n:"",g:"m",a:"plan",b:"act",r:1,s:"chars/c055.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:0,s:"chars/c056.webp"},
   {n:"",g:"m",a:"soc",b:"loyal",r:0,s:"chars/c057.webp"},
   {n:"",g:"m",a:"plan",b:"act",r:0,s:"chars/c058.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:0,s:"chars/c059.webp"},
   {n:"",g:"f",a:"act",b:"loyal",r:1,s:"chars/c060.webp"},
-  {n:"",g:"f",a:"soc",b:"sens",r:1,s:"chars/c061.webp"},
+  {n:"",g:"u",a:"soc",b:"sens",r:1,s:"chars/c061.webp"},
   {n:"",g:"f",a:"free",b:"sens",r:0,s:"chars/c062.webp"},
-  {n:"",g:"m",a:"loyal",b:"plan",r:1,s:"chars/c063.webp"},
-  {n:"",g:"f",a:"sens",b:"free",r:4,s:"chars/c064.webp"},
+  {n:"",g:"u",a:"loyal",b:"plan",r:1,s:"chars/c063.webp"},
+  {n:"",g:"u",a:"sens",b:"free",r:4,s:"chars/c064.webp"},
   {n:"",g:"m",a:"plan",b:"sens",r:0,s:"chars/c065.webp"},
   {n:"",g:"m",a:"sens",b:"soc",r:0,s:"chars/c066.webp"},
   {n:"",g:"f",a:"free",b:"soc",r:4,s:"chars/c067.webp"},
@@ -1338,38 +1348,38 @@ var CHR = [
   {n:"",g:"u",a:"free",b:"act",r:1,s:"chars/c070.webp"},
   {n:"",g:"m",a:"free",b:"soc",r:0,s:"chars/c071.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:1,s:"chars/c072.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:0,s:"chars/c073.webp"},
-  {n:"",g:"m",a:"loyal",b:"act",r:2,s:"chars/c074.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c073.webp"},
+  {n:"",g:"u",a:"loyal",b:"act",r:2,s:"chars/c074.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:4,s:"chars/c075.webp"},
-  {n:"",g:"m",a:"free",b:"plan",r:2,s:"chars/c076.webp"},
-  {n:"",g:"u",a:"act",b:"free",r:1,s:"chars/c077.webp"},
-  {n:"",g:"u",a:"sens",b:"free",r:1,s:"chars/c078.webp"},
+  {n:"",g:"u",a:"free",b:"plan",r:2,s:"chars/c076.webp"},
+  {n:"",g:"m",a:"act",b:"free",r:1,s:"chars/c077.webp"},
+  {n:"",g:"m",a:"sens",b:"free",r:1,s:"chars/c078.webp"},
   {n:"",g:"f",a:"soc",b:"sens",r:3,s:"chars/c079.webp"},
   {n:"",g:"f",a:"act",b:"free",r:0,s:"chars/c080.webp"},
   {n:"",g:"f",a:"sens",b:"loyal",r:0,s:"chars/c081.webp"},
-  {n:"",g:"u",a:"loyal",b:"act",r:1,s:"chars/c082.webp"},
+  {n:"",g:"m",a:"loyal",b:"act",r:1,s:"chars/c082.webp"},
   {n:"",g:"u",a:"loyal",b:"sens",r:1,s:"chars/c083.webp"},
   {n:"",g:"f",a:"sens",b:"loyal",r:1,s:"chars/c084.webp"},
   {n:"",g:"m",a:"plan",b:"soc",r:3,s:"chars/c085.webp"},
   {n:"",g:"m",a:"free",b:"act",r:0,s:"chars/c086.webp"},
-  {n:"",g:"m",a:"act",b:"loyal",r:2,s:"chars/c087.webp"},
+  {n:"",g:"u",a:"act",b:"loyal",r:2,s:"chars/c087.webp"},
   {n:"",g:"u",a:"loyal",b:"plan",r:1,s:"chars/c088.webp"},
   {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c089.webp"},
-  {n:"",g:"f",a:"soc",b:"sens",r:2,s:"chars/c090.webp"},
+  {n:"",g:"u",a:"soc",b:"sens",r:2,s:"chars/c090.webp"},
   {n:"",g:"m",a:"free",b:"act",r:2,s:"chars/c091.webp"},
   {n:"",g:"m",a:"plan",b:"sens",r:0,s:"chars/c092.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c093.webp"},
   {n:"",g:"m",a:"sens",b:"soc",r:0,s:"chars/c094.webp"},
-  {n:"",g:"u",a:"plan",b:"loyal",r:0,s:"chars/c095.webp"},
+  {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c095.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:1,s:"chars/c096.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c097.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:1,s:"chars/c098.webp"},
-  {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c099.webp"},
+  {n:"",g:"u",a:"act",b:"free",r:2,s:"chars/c099.webp"},
   {n:"",g:"u",a:"plan",b:"loyal",r:4,s:"chars/c100.webp"},
   {n:"",g:"f",a:"soc",b:"sens",r:0,s:"chars/c101.webp"},
   {n:"",g:"f",a:"plan",b:"act",r:1,s:"chars/c102.webp"},
-  {n:"",g:"u",a:"free",b:"plan",r:0,s:"chars/c103.webp"},
-  {n:"",g:"u",a:"free",b:"act",r:0,s:"chars/c104.webp"},
+  {n:"",g:"m",a:"free",b:"plan",r:0,s:"chars/c103.webp"},
+  {n:"",g:"m",a:"free",b:"act",r:0,s:"chars/c104.webp"},
   {n:"",g:"m",a:"free",b:"sens",r:1,s:"chars/c105.webp"},
   {n:"",g:"m",a:"free",b:"act",r:4,s:"chars/c106.webp"},
   {n:"",g:"m",a:"free",b:"act",r:0,s:"chars/c107.webp"},
@@ -1380,26 +1390,26 @@ var CHR = [
   {n:"",g:"u",a:"loyal",b:"plan",r:3,s:"chars/c112.webp"},
   {n:"",g:"m",a:"free",b:"act",r:0,s:"chars/c113.webp"},
   {n:"",g:"m",a:"plan",b:"soc",r:0,s:"chars/c114.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:3,s:"chars/c115.webp"},
-  {n:"",g:"f",a:"plan",b:"loyal",r:3,s:"chars/c116.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:3,s:"chars/c115.webp"},
+  {n:"",g:"u",a:"plan",b:"loyal",r:3,s:"chars/c116.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:1,s:"chars/c117.webp"},
   {n:"",g:"f",a:"soc",b:"sens",r:1,s:"chars/c118.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:1,s:"chars/c119.webp"},
-  {n:"",g:"f",a:"plan",b:"sens",r:0,s:"chars/c120.webp"},
-  {n:"",g:"f",a:"plan",b:"act",r:2,s:"chars/c121.webp"},
-  {n:"",g:"f",a:"sens",b:"loyal",r:3,s:"chars/c122.webp"},
-  {n:"",g:"m",a:"free",b:"plan",r:2,s:"chars/c123.webp"},
-  {n:"",g:"f",a:"free",b:"sens",r:1,s:"chars/c124.webp"},
-  {n:"",g:"m",a:"loyal",b:"act",r:1,s:"chars/c125.webp"},
+  {n:"",g:"m",a:"plan",b:"sens",r:0,s:"chars/c120.webp"},
+  {n:"",g:"m",a:"plan",b:"act",r:2,s:"chars/c121.webp"},
+  {n:"",g:"u",a:"sens",b:"loyal",r:3,s:"chars/c122.webp"},
+  {n:"",g:"u",a:"free",b:"plan",r:2,s:"chars/c123.webp"},
+  {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c124.webp"},
+  {n:"",g:"u",a:"loyal",b:"act",r:1,s:"chars/c125.webp"},
   {n:"",g:"f",a:"act",b:"loyal",r:1,s:"chars/c126.webp"},
   {n:"",g:"f",a:"loyal",b:"plan",r:1,s:"chars/c127.webp"},
   {n:"",g:"f",a:"loyal",b:"plan",r:0,s:"chars/c128.webp"},
-  {n:"",g:"u",a:"sens",b:"loyal",r:0,s:"chars/c129.webp"},
+  {n:"",g:"f",a:"sens",b:"loyal",r:0,s:"chars/c129.webp"},
   {n:"",g:"f",a:"free",b:"soc",r:0,s:"chars/c130.webp"},
   {n:"",g:"u",a:"loyal",b:"sens",r:1,s:"chars/c131.webp"},
-  {n:"",g:"u",a:"free",b:"act",r:1,s:"chars/c132.webp"},
+  {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c132.webp"},
   {n:"",g:"f",a:"soc",b:"sens",r:2,s:"chars/c133.webp"},
-  {n:"",g:"m",a:"act",b:"soc",r:2,s:"chars/c134.webp"},
+  {n:"",g:"u",a:"act",b:"soc",r:2,s:"chars/c134.webp"},
   {n:"",g:"f",a:"soc",b:"act",r:0,s:"chars/c135.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:0,s:"chars/c136.webp"},
   {n:"",g:"f",a:"sens",b:"loyal",r:0,s:"chars/c137.webp"},
@@ -1410,43 +1420,43 @@ var CHR = [
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c142.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c143.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:1,s:"chars/c144.webp"},
-  {n:"",g:"f",a:"free",b:"soc",r:1,s:"chars/c145.webp"},
+  {n:"",g:"u",a:"free",b:"soc",r:1,s:"chars/c145.webp"},
   {n:"",g:"u",a:"loyal",b:"sens",r:0,s:"chars/c146.webp"},
   {n:"",g:"m",a:"sens",b:"free",r:1,s:"chars/c147.webp"},
-  {n:"",g:"f",a:"soc",b:"sens",r:1,s:"chars/c148.webp"},
-  {n:"",g:"f",a:"act",b:"free",r:2,s:"chars/c149.webp"},
+  {n:"",g:"u",a:"soc",b:"sens",r:1,s:"chars/c148.webp"},
+  {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c149.webp"},
   {n:"",g:"m",a:"sens",b:"free",r:0,s:"chars/c150.webp"},
-  {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c151.webp"},
+  {n:"",g:"u",a:"act",b:"free",r:2,s:"chars/c151.webp"},
   {n:"",g:"u",a:"soc",b:"loyal",r:2,s:"chars/c152.webp"},
-  {n:"",g:"u",a:"soc",b:"loyal",r:1,s:"chars/c153.webp"},
-  {n:"",g:"m",a:"act",b:"soc",r:3,s:"chars/c154.webp"},
+  {n:"",g:"m",a:"soc",b:"loyal",r:1,s:"chars/c153.webp"},
+  {n:"",g:"u",a:"act",b:"soc",r:3,s:"chars/c154.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c155.webp"},
   {n:"",g:"u",a:"sens",b:"soc",r:1,s:"chars/c156.webp"},
   {n:"",g:"m",a:"soc",b:"plan",r:0,s:"chars/c157.webp"},
   {n:"",g:"u",a:"loyal",b:"act",r:3,s:"chars/c158.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:1,s:"chars/c159.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c160.webp"},
-  {n:"",g:"u",a:"loyal",b:"act",r:0,s:"chars/c161.webp"},
-  {n:"",g:"f",a:"sens",b:"loyal",r:0,s:"chars/c162.webp"},
+  {n:"",g:"m",a:"loyal",b:"act",r:0,s:"chars/c161.webp"},
+  {n:"",g:"m",a:"sens",b:"loyal",r:0,s:"chars/c162.webp"},
   {n:"",g:"u",a:"plan",b:"loyal",r:4,s:"chars/c163.webp"},
   {n:"",g:"f",a:"soc",b:"free",r:2,s:"chars/c164.webp"},
   {n:"",g:"m",a:"act",b:"free",r:1,s:"chars/c165.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:0,s:"chars/c166.webp"},
   {n:"",g:"u",a:"act",b:"free",r:1,s:"chars/c167.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:3,s:"chars/c168.webp"},
+  {n:"",g:"u",a:"sens",b:"soc",r:3,s:"chars/c168.webp"},
   {n:"",g:"m",a:"soc",b:"plan",r:0,s:"chars/c169.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c170.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:0,s:"chars/c171.webp"},
-  {n:"",g:"m",a:"loyal",b:"act",r:3,s:"chars/c172.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c173.webp"},
+  {n:"",g:"u",a:"loyal",b:"act",r:3,s:"chars/c172.webp"},
+  {n:"",g:"u",a:"sens",b:"soc",r:1,s:"chars/c173.webp"},
   {n:"",g:"f",a:"free",b:"sens",r:3,s:"chars/c174.webp"},
   {n:"",g:"m",a:"loyal",b:"act",r:0,s:"chars/c175.webp"},
   {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c176.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c177.webp"},
-  {n:"",g:"f",a:"sens",b:"loyal",r:1,s:"chars/c178.webp"},
+  {n:"",g:"u",a:"sens",b:"loyal",r:1,s:"chars/c178.webp"},
   {n:"",g:"m",a:"loyal",b:"soc",r:0,s:"chars/c179.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c180.webp"},
-  {n:"",g:"f",a:"sens",b:"loyal",r:2,s:"chars/c181.webp"},
+  {n:"",g:"u",a:"sens",b:"soc",r:1,s:"chars/c180.webp"},
+  {n:"",g:"u",a:"sens",b:"loyal",r:2,s:"chars/c181.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:3,s:"chars/c182.webp"},
   {n:"",g:"m",a:"plan",b:"act",r:1,s:"chars/c183.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c184.webp"},
@@ -1455,10 +1465,10 @@ var CHR = [
   {n:"",g:"m",a:"act",b:"soc",r:0,s:"chars/c187.webp"},
   {n:"",g:"m",a:"loyal",b:"act",r:0,s:"chars/c188.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:0,s:"chars/c189.webp"},
-  {n:"",g:"u",a:"plan",b:"loyal",r:1,s:"chars/c190.webp"},
+  {n:"",g:"m",a:"plan",b:"loyal",r:1,s:"chars/c190.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:0,s:"chars/c191.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:0,s:"chars/c192.webp"},
-  {n:"",g:"m",a:"plan",b:"act",r:2,s:"chars/c193.webp"},
+  {n:"",g:"u",a:"plan",b:"act",r:2,s:"chars/c193.webp"},
   {n:"",g:"f",a:"plan",b:"act",r:0,s:"chars/c194.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:0,s:"chars/c195.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c196.webp"},
@@ -1466,20 +1476,20 @@ var CHR = [
   {n:"",g:"m",a:"plan",b:"free",r:0,s:"chars/c198.webp"},
   {n:"",g:"m",a:"loyal",b:"soc",r:0,s:"chars/c199.webp"},
   {n:"",g:"f",a:"free",b:"sens",r:0,s:"chars/c200.webp"},
-  {n:"",g:"u",a:"loyal",b:"act",r:0,s:"chars/c201.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:0,s:"chars/c202.webp"},
+  {n:"",g:"m",a:"loyal",b:"act",r:0,s:"chars/c201.webp"},
+  {n:"",g:"m",a:"sens",b:"soc",r:0,s:"chars/c202.webp"},
   {n:"",g:"u",a:"free",b:"act",r:2,s:"chars/c203.webp"},
   {n:"",g:"u",a:"free",b:"soc",r:2,s:"chars/c204.webp"},
   {n:"",g:"f",a:"soc",b:"plan",r:4,s:"chars/c205.webp"},
   {n:"",g:"u",a:"loyal",b:"plan",r:0,s:"chars/c206.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c207.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:0,s:"chars/c208.webp"},
+  {n:"",g:"m",a:"sens",b:"soc",r:0,s:"chars/c208.webp"},
   {n:"",g:"m",a:"soc",b:"free",r:3,s:"chars/c209.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c210.webp"},
   {n:"",g:"m",a:"act",b:"free",r:1,s:"chars/c211.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:3,s:"chars/c212.webp"},
-  {n:"",g:"f",a:"loyal",b:"plan",r:1,s:"chars/c213.webp"},
-  {n:"",g:"f",a:"sens",b:"free",r:4,s:"chars/c214.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:1,s:"chars/c213.webp"},
+  {n:"",g:"u",a:"sens",b:"free",r:4,s:"chars/c214.webp"},
   {n:"",g:"u",a:"free",b:"act",r:0,s:"chars/c215.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c216.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:0,s:"chars/c217.webp"},
@@ -1487,47 +1497,47 @@ var CHR = [
   {n:"",g:"m",a:"free",b:"act",r:2,s:"chars/c219.webp"},
   {n:"",g:"m",a:"sens",b:"loyal",r:0,s:"chars/c220.webp"},
   {n:"",g:"u",a:"soc",b:"loyal",r:2,s:"chars/c221.webp"},
-  {n:"",g:"u",a:"sens",b:"free",r:0,s:"chars/c222.webp"},
+  {n:"",g:"m",a:"sens",b:"free",r:0,s:"chars/c222.webp"},
   {n:"",g:"m",a:"soc",b:"free",r:0,s:"chars/c223.webp"},
-  {n:"",g:"m",a:"free",b:"plan",r:2,s:"chars/c224.webp"},
+  {n:"",g:"u",a:"free",b:"plan",r:2,s:"chars/c224.webp"},
   {n:"",g:"f",a:"soc",b:"plan",r:0,s:"chars/c225.webp"},
-  {n:"",g:"u",a:"plan",b:"loyal",r:0,s:"chars/c226.webp"},
+  {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c226.webp"},
   {n:"",g:"u",a:"loyal",b:"plan",r:1,s:"chars/c227.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:3,s:"chars/c228.webp"},
-  {n:"",g:"f",a:"loyal",b:"plan",r:3,s:"chars/c229.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:3,s:"chars/c229.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:2,s:"chars/c230.webp"},
   {n:"",g:"m",a:"sens",b:"soc",r:0,s:"chars/c231.webp"},
   {n:"",g:"u",a:"sens",b:"free",r:4,s:"chars/c232.webp"},
   {n:"",g:"f",a:"plan",b:"act",r:4,s:"chars/c233.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:3,s:"chars/c234.webp"},
-  {n:"",g:"f",a:"soc",b:"sens",r:1,s:"chars/c235.webp"},
+  {n:"",g:"u",a:"soc",b:"sens",r:1,s:"chars/c235.webp"},
   {n:"",g:"f",a:"sens",b:"loyal",r:0,s:"chars/c236.webp"},
   {n:"",g:"m",a:"sens",b:"free",r:0,s:"chars/c237.webp"},
   {n:"",g:"m",a:"plan",b:"free",r:0,s:"chars/c238.webp"},
   {n:"",g:"m",a:"free",b:"plan",r:0,s:"chars/c239.webp"},
   {n:"",g:"m",a:"plan",b:"soc",r:0,s:"chars/c240.webp"},
   {n:"",g:"f",a:"act",b:"free",r:0,s:"chars/c241.webp"},
-  {n:"",g:"u",a:"loyal",b:"soc",r:1,s:"chars/c242.webp"},
+  {n:"",g:"m",a:"loyal",b:"soc",r:1,s:"chars/c242.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c243.webp"},
-  {n:"",g:"u",a:"plan",b:"loyal",r:0,s:"chars/c244.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:2,s:"chars/c245.webp"},
+  {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c244.webp"},
+  {n:"",g:"f",a:"loyal",b:"plan",r:2,s:"chars/c245.webp"},
   {n:"",g:"f",a:"soc",b:"sens",r:2,s:"chars/c246.webp"},
   {n:"",g:"m",a:"free",b:"soc",r:0,s:"chars/c247.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:2,s:"chars/c248.webp"},
   {n:"",g:"f",a:"sens",b:"free",r:0,s:"chars/c249.webp"},
   {n:"",g:"m",a:"plan",b:"act",r:4,s:"chars/c250.webp"},
   {n:"",g:"m",a:"act",b:"plan",r:1,s:"chars/c251.webp"},
-  {n:"",g:"m",a:"free",b:"act",r:3,s:"chars/c252.webp"},
+  {n:"",g:"u",a:"free",b:"act",r:3,s:"chars/c252.webp"},
   {n:"",g:"f",a:"free",b:"sens",r:0,s:"chars/c253.webp"},
   {n:"",g:"u",a:"plan",b:"loyal",r:1,s:"chars/c254.webp"},
-  {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c255.webp"},
+  {n:"",g:"u",a:"act",b:"free",r:2,s:"chars/c255.webp"},
   {n:"",g:"m",a:"plan",b:"soc",r:2,s:"chars/c256.webp"},
-  {n:"",g:"m",a:"free",b:"plan",r:2,s:"chars/c257.webp"},
-  {n:"",g:"f",a:"soc",b:"sens",r:2,s:"chars/c258.webp"},
-  {n:"",g:"m",a:"plan",b:"loyal",r:1,s:"chars/c259.webp"},
+  {n:"",g:"u",a:"free",b:"plan",r:2,s:"chars/c257.webp"},
+  {n:"",g:"m",a:"soc",b:"sens",r:2,s:"chars/c258.webp"},
+  {n:"",g:"u",a:"plan",b:"loyal",r:1,s:"chars/c259.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c260.webp"},
   {n:"",g:"u",a:"soc",b:"act",r:1,s:"chars/c261.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c262.webp"},
+  {n:"",g:"u",a:"sens",b:"soc",r:1,s:"chars/c262.webp"},
   {n:"",g:"f",a:"loyal",b:"sens",r:1,s:"chars/c263.webp"},
   {n:"",g:"m",a:"soc",b:"act",r:2,s:"chars/c264.webp"},
   {n:"",g:"f",a:"loyal",b:"sens",r:0,s:"chars/c265.webp"},
@@ -1536,14 +1546,14 @@ var CHR = [
   {n:"",g:"f",a:"sens",b:"free",r:0,s:"chars/c268.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c269.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:0,s:"chars/c270.webp"},
-  {n:"",g:"f",a:"act",b:"free",r:3,s:"chars/c271.webp"},
+  {n:"",g:"u",a:"act",b:"free",r:3,s:"chars/c271.webp"},
   {n:"",g:"m",a:"plan",b:"act",r:2,s:"chars/c272.webp"},
   {n:"",g:"f",a:"plan",b:"act",r:3,s:"chars/c273.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c274.webp"},
   {n:"",g:"m",a:"soc",b:"loyal",r:2,s:"chars/c275.webp"},
   {n:"",g:"u",a:"loyal",b:"sens",r:3,s:"chars/c276.webp"},
-  {n:"",g:"m",a:"loyal",b:"plan",r:1,s:"chars/c277.webp"},
-  {n:"",g:"m",a:"loyal",b:"act",r:1,s:"chars/c278.webp"},
+  {n:"",g:"u",a:"loyal",b:"plan",r:1,s:"chars/c277.webp"},
+  {n:"",g:"u",a:"loyal",b:"act",r:1,s:"chars/c278.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c279.webp"},
   {n:"",g:"f",a:"plan",b:"sens",r:2,s:"chars/c280.webp"},
   {n:"",g:"u",a:"loyal",b:"plan",r:1,s:"chars/c281.webp"},
@@ -1551,9 +1561,9 @@ var CHR = [
   {n:"",g:"m",a:"plan",b:"act",r:2,s:"chars/c283.webp"},
   {n:"",g:"m",a:"free",b:"soc",r:3,s:"chars/c284.webp"},
   {n:"",g:"u",a:"sens",b:"soc",r:1,s:"chars/c285.webp"},
-  {n:"",g:"u",a:"soc",b:"free",r:3,s:"chars/c286.webp"},
+  {n:"",g:"m",a:"soc",b:"free",r:3,s:"chars/c286.webp"},
   {n:"",g:"f",a:"sens",b:"free",r:3,s:"chars/c287.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:0,s:"chars/c288.webp"},
+  {n:"",g:"u",a:"sens",b:"soc",r:0,s:"chars/c288.webp"},
   {n:"",g:"u",a:"soc",b:"free",r:1,s:"chars/c289.webp"},
   {n:"",g:"f",a:"soc",b:"act",r:2,s:"chars/c290.webp"},
   {n:"",g:"m",a:"sens",b:"loyal",r:0,s:"chars/c291.webp"},
@@ -1566,9 +1576,9 @@ var CHR = [
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c298.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c299.webp"},
   {n:"",g:"m",a:"free",b:"soc",r:2,s:"chars/c300.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:0,s:"chars/c301.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c301.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:3,s:"chars/c302.webp"},
-  {n:"",g:"m",a:"act",b:"free",r:2,s:"chars/c303.webp"},
+  {n:"",g:"u",a:"act",b:"free",r:2,s:"chars/c303.webp"},
   {n:"",g:"m",a:"act",b:"soc",r:1,s:"chars/c304.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:1,s:"chars/c305.webp"},
   {n:"",g:"m",a:"soc",b:"loyal",r:2,s:"chars/c306.webp"},
@@ -1577,19 +1587,19 @@ var CHR = [
   {n:"",g:"u",a:"loyal",b:"sens",r:0,s:"chars/c309.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c310.webp"},
   {n:"",g:"u",a:"free",b:"plan",r:1,s:"chars/c311.webp"},
-  {n:"",g:"f",a:"sens",b:"free",r:0,s:"chars/c312.webp"},
-  {n:"",g:"m",a:"free",b:"soc",r:3,s:"chars/c313.webp"},
+  {n:"",g:"m",a:"sens",b:"free",r:0,s:"chars/c312.webp"},
+  {n:"",g:"u",a:"free",b:"soc",r:3,s:"chars/c313.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:3,s:"chars/c314.webp"},
   {n:"",g:"u",a:"act",b:"free",r:1,s:"chars/c315.webp"},
   {n:"",g:"f",a:"plan",b:"sens",r:3,s:"chars/c316.webp"},
-  {n:"",g:"u",a:"loyal",b:"sens",r:1,s:"chars/c317.webp"},
-  {n:"",g:"u",a:"soc",b:"free",r:4,s:"chars/c318.webp"},
+  {n:"",g:"m",a:"loyal",b:"sens",r:1,s:"chars/c317.webp"},
+  {n:"",g:"m",a:"soc",b:"free",r:4,s:"chars/c318.webp"},
   {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c319.webp"},
   {n:"",g:"f",a:"soc",b:"act",r:1,s:"chars/c320.webp"},
-  {n:"",g:"u",a:"free",b:"act",r:1,s:"chars/c321.webp"},
+  {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c321.webp"},
   {n:"",g:"m",a:"soc",b:"loyal",r:0,s:"chars/c322.webp"},
   {n:"",g:"u",a:"free",b:"act",r:0,s:"chars/c323.webp"},
-  {n:"",g:"f",a:"free",b:"sens",r:2,s:"chars/c324.webp"},
+  {n:"",g:"m",a:"free",b:"sens",r:2,s:"chars/c324.webp"},
   {n:"",g:"m",a:"free",b:"act",r:0,s:"chars/c325.webp"},
   {n:"",g:"m",a:"free",b:"loyal",r:1,s:"chars/c326.webp"},
   {n:"",g:"f",a:"sens",b:"free",r:0,s:"chars/c327.webp"},
@@ -1600,44 +1610,44 @@ var CHR = [
   {n:"",g:"m",a:"free",b:"plan",r:0,s:"chars/c332.webp"},
   {n:"",g:"f",a:"sens",b:"soc",r:2,s:"chars/c333.webp"},
   {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c334.webp"},
-  {n:"",g:"m",a:"free",b:"plan",r:2,s:"chars/c335.webp"},
-  {n:"",g:"m",a:"loyal",b:"act",r:0,s:"chars/c336.webp"},
-  {n:"",g:"u",a:"loyal",b:"soc",r:1,s:"chars/c337.webp"},
+  {n:"",g:"u",a:"free",b:"plan",r:2,s:"chars/c335.webp"},
+  {n:"",g:"u",a:"loyal",b:"act",r:0,s:"chars/c336.webp"},
+  {n:"",g:"m",a:"loyal",b:"soc",r:1,s:"chars/c337.webp"},
   {n:"",g:"f",a:"soc",b:"loyal",r:1,s:"chars/c338.webp"},
   {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c339.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:0,s:"chars/c340.webp"},
   {n:"",g:"m",a:"free",b:"act",r:0,s:"chars/c341.webp"},
-  {n:"",g:"u",a:"loyal",b:"sens",r:0,s:"chars/c342.webp"},
+  {n:"",g:"m",a:"loyal",b:"sens",r:0,s:"chars/c342.webp"},
   {n:"",g:"f",a:"loyal",b:"sens",r:0,s:"chars/c343.webp"},
   {n:"",g:"m",a:"loyal",b:"soc",r:1,s:"chars/c344.webp"},
   {n:"",g:"m",a:"free",b:"sens",r:2,s:"chars/c345.webp"},
   {n:"",g:"f",a:"act",b:"loyal",r:0,s:"chars/c346.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c347.webp"},
   {n:"",g:"m",a:"act",b:"free",r:0,s:"chars/c348.webp"},
-  {n:"",g:"u",a:"sens",b:"free",r:2,s:"chars/c349.webp"},
+  {n:"",g:"m",a:"sens",b:"free",r:2,s:"chars/c349.webp"},
   {n:"",g:"m",a:"soc",b:"loyal",r:2,s:"chars/c350.webp"},
   {n:"",g:"m",a:"free",b:"plan",r:0,s:"chars/c351.webp"},
   {n:"",g:"f",a:"plan",b:"loyal",r:0,s:"chars/c352.webp"},
   {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c353.webp"},
-  {n:"",g:"f",a:"sens",b:"soc",r:1,s:"chars/c354.webp"},
-  {n:"",g:"u",a:"act",b:"loyal",r:0,s:"chars/c355.webp"},
+  {n:"",g:"u",a:"sens",b:"soc",r:1,s:"chars/c354.webp"},
+  {n:"",g:"m",a:"act",b:"loyal",r:0,s:"chars/c355.webp"},
   {n:"",g:"f",a:"plan",b:"act",r:0,s:"chars/c356.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c357.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:0,s:"chars/c358.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:4,s:"chars/c359.webp"},
-  {n:"",g:"u",a:"free",b:"sens",r:1,s:"chars/c360.webp"},
+  {n:"",g:"m",a:"free",b:"sens",r:1,s:"chars/c360.webp"},
   {n:"",g:"f",a:"act",b:"soc",r:2,s:"chars/c361.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:0,s:"chars/c362.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c362.webp"},
   {n:"",g:"m",a:"loyal",b:"plan",r:0,s:"chars/c363.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:4,s:"chars/c364.webp"},
-  {n:"",g:"u",a:"loyal",b:"plan",r:4,s:"chars/c365.webp"},
+  {n:"",g:"m",a:"loyal",b:"plan",r:4,s:"chars/c365.webp"},
   {n:"",g:"f",a:"sens",b:"plan",r:2,s:"chars/c366.webp"},
   {n:"",g:"m",a:"free",b:"act",r:1,s:"chars/c367.webp"},
   {n:"",g:"f",a:"sens",b:"loyal",r:0,s:"chars/c368.webp"},
   {n:"",g:"m",a:"loyal",b:"sens",r:2,s:"chars/c369.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c370.webp"},
   {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c371.webp"},
-  {n:"",g:"u",a:"plan",b:"loyal",r:0,s:"chars/c372.webp"},
+  {n:"",g:"m",a:"plan",b:"loyal",r:0,s:"chars/c372.webp"},
   {n:"",g:"f",a:"plan",b:"act",r:2,s:"chars/c373.webp"},
   {n:"",g:"f",a:"loyal",b:"sens",r:0,s:"chars/c374.webp"},
   {n:"",g:"m",a:"soc",b:"loyal",r:0,s:"chars/c375.webp"},
@@ -1651,7 +1661,8 @@ var RKN = ["N", "R", "SR", "SSR", "UR"], RKWD = ["ふつう", "めずらしい",
 function tw(ax, rk) { var r = rk.indexOf(ax); return r === 0 ? 4 : r === 1 ? 2.5 : r === 2 ? 1.5 : 0; }
 /* レア度：生年月日などの種から先にランクを決め（UR3% / SSR7% / SR15% / R30% / N45%）、そのランクの中でいちばん性格が近い子を選ぶ */
 var MBS = { INFJ: 1.5, ENTJ: 1.8, INTJ: 2.1, ENFJ: 2.5, ENTP: 3.2, INTP: 3.3, ESTP: 4.3, INFP: 4.4, ISTP: 5.4, ESFP: 8.5, ENFP: 8.1, ESTJ: 8.7, ISFP: 8.8, ISTJ: 11.6, ESFJ: 12.3, ISFJ: 13.8 };
-function rkRoll(a) { var x = Math.imul((a.seed >>> 0) ^ 0x9e3779b9, 2654435761) >>> 0, v = (x % 1000) / 10, f = Math.min(1.4, Math.max(0.5, (MBS[a.type] || 6.25) / 6.25)); if (a.lp === 11 || a.lp === 22 || a.lp === 33) f *= 0.7; v *= f; return v < 3 ? 4 : v < 10 ? 3 : v < 25 ? 2 : v < 55 ? 1 : 0; }
+function rkRoll(a) { var x = Math.imul((a.seed >>> 0) ^ 0x9e3779b9, 2654435761) >>> 0, v = (x % 1000) / 10, f = 0.9 * Math.min(1.15, Math.max(0.55, (MBS[a.type] || 6.25) / 6.25)); if (a.lp === 11 || a.lp === 22 || a.lp === 33) f *= 0.7; v *= f; return rkTier(v); }
+function rkTier(v) { return v < 6 ? 4 : v < 18 ? 3 : v < 42 ? 2 : v < 72 ? 1 : 0; }
 function pickChar(a) {
   var i, c, sc, best, bi = -1, g = a.p ? a.p.g : "", t1, t2, rk;
   if (!a.p) return Math.floor(Math.random() * CHR.length);
@@ -1961,11 +1972,11 @@ var EXP = {
 };
 var REL = [["love", "恋愛"], ["home", "結婚・同居"], ["work", "仕事"], ["friend", "友人"], ["family", "家族"]];
 var LV = {
-  love: ["気持ちが自然に通じ合い、惹かれ合いやすい二人です⏎", "違いを知るほど深まる関係です⏎話す時間が絆をつくります⏎", "価値観の違いが目立つ関係です⏎理解しようとする姿勢が、特別な絆に変わります⏎"],
-  home: ["暮らしのリズムが合いやすく、安心して過ごせる二人です⏎", "生活習慣のすり合わせしだいで、居心地が決まります⏎", "暮らし方が違う二人です⏎家事や休み方のルールを、先に言葉にすると安定します⏎"],
-  work: ["役割分担がかみ合い、成果が出やすい二人です⏎", "得意を分け合えば、安定したチームになります⏎", "進め方が違う二人です⏎目的を先に共有すると、違いが武器になります⏎"],
-  friend: ["会うたびに楽しく、長く続きやすい二人です⏎", "ほどよい距離感で、気楽に続く関係です⏎", "感覚は違うけれど、刺激をくれる存在になれる二人です⏎"],
-  family: ["心の拠りどころになり合える二人です⏎", "近いからこその遠慮が出やすい関係です⏎感謝を言葉にしましょう⏎", "近いからこそ衝突しやすい二人です⏎距離の取り方を話し合うと楽になります⏎"]
+  love: ["気持ちが自然に通じ合い、惹かれ合いやすいふたりです⏎", "違いを知るほど深まる関係です⏎話す時間が絆をつくります⏎", "価値観の違いが目立つ関係です⏎理解しようとする姿勢が、特別な絆に変わります⏎"],
+  home: ["暮らしのリズムが合いやすく、安心して過ごせるふたりです⏎", "生活習慣のすり合わせしだいで、居心地が決まります⏎", "暮らし方が違うふたりです⏎家事や休み方のルールを、先に言葉にすると安定します⏎"],
+  work: ["役割分担がかみ合い、成果が出やすいふたりです⏎", "得意を分け合えば、安定したチームになります⏎", "進め方が違うふたりです⏎目的を先に共有すると、違いが武器になります⏎"],
+  friend: ["会うたびに楽しく、長く続きやすいふたりです⏎", "ほどよい距離感で、気楽に続く関係です⏎", "感覚は違うけれど、刺激をくれる存在になれるふたりです⏎"],
+  family: ["心の拠りどころになり合えるふたりです⏎", "近いからこその遠慮が出やすい関係です⏎感謝を言葉にしましょう⏎", "近いからこそ衝突しやすいふたりです⏎距離の取り方を話し合うと楽になります⏎"]
 };
 var S = {
   A: { sur: "", giv: "", g: "f", date: "1995-08-24", time: "09:30", unk: false, place: 0, mbti: { EI: "I", SN: "N", TF: "F", JP: "P" }, touched: false },
@@ -2870,7 +2881,7 @@ function renderDuo() {
       '<div class="opts" role="group" aria-label="ふたりの関係">' + REL.map(function (r) { return '<button type="button" class="opt" data-rel="' + r[0] + '" aria-pressed="' + (r[0] === rel) + '">' + r[1] + '</button>'; }).join("") + '</div>' +
       '<h2>' + rl + 'の相性　' + sc + '点　' + ver + '</h2>' +
       '<p class="lede txt">' + esc(na) + 'と' + esc(nb) + 'の、' + rl + 'としての相性です⏎' + esc(c.lv[rel]) + '</p></div>';
-    h += ratingBlock(c, sc, rl);
+    h += ratingBlock(c, sc, rl, a, b);
     h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">関係ごとのスコア</span>' +
       REL.map(function (r) { return meter(r[1], c.cats[r[0]], r[0] === rel ? "--num" : "--star", "点"); }).join("") +
       '<p class="hint">関係の種類は、性別や形にかかわらず自由に選べます⏎上のボタンで切り替えてください⏎</p></div>';
@@ -2901,7 +2912,7 @@ function renderDuo() {
   nbBuild("duo", PG_DUO, cur); showNB("duo");
   box.innerHTML = fin(h); emph(box); budoxify(box); lineReveal(box); try { enhance(box, "duo", cur, a); } catch (e) {} navCenter(box); fxIn(box);
   lastText = plain("【ワタス解体新書　相性】\nA：" + a.type + " / " + a.sg[1] + " / 月" + a.mrs[1] + " / 運命数" + a.lp + "\nB：" + b.type + " / " + b.sg[1] + " / 月" + b.mrs[1] + " / 運命数" + b.lp +
-    "\n" + rl + "の相性 " + sc + "点（" + lvOf(sc) + "／10　" + RATE[lvOf(sc)][0] + "）　型" + c.m + " 数" + c.n + " 太陽" + c.s + " 月" + c.mo);
+    "\nふたりの名前：" + pairName(a, b) + "\n" + rl + "の相性 " + sc + "点（" + lvOf(sc) + "／10　" + RATE[lvOf(sc)][0] + "）　型" + c.m + " 数" + c.n + " 太陽" + c.s + " 月" + c.mo);
 }
 function navCenter(box) {
   try { var c = box.querySelector(".pn[aria-current]"); if (c && c.parentNode) c.parentNode.scrollLeft = c.offsetLeft - c.parentNode.clientWidth / 2 + c.offsetWidth / 2; } catch (e) {}
@@ -2953,7 +2964,7 @@ function orbs() {
 var Au = { ctx: null, master: null, on: true, timer: 0 };
 /* ---------- ふれあい：保存・おかえり・反応 ---------- */
 var ME = {};
-function meLoad() { try { ME = JSON.parse(window.localStorage.getItem("hkk-me") || "{}") || {}; } catch (e) { ME = {}; } if (ME.cv !== 2) { ME.col = []; ME.cv = 2; } }
+function meLoad() { try { ME = JSON.parse(window.localStorage.getItem("hkk-me") || "{}") || {}; } catch (e) { ME = {}; } if (ME.cv !== 3) { ME.col = []; ME.gx = {}; ME.gu = {}; ME.cv = 3; } }
 function meSave() { try { window.localStorage.setItem("hkk-me", JSON.stringify(ME)); } catch (e) {} }
 function myName(a) { return ME.cn ? ME.cn : charName(a); }
 var TAPL = ["えへへ、くすぐったいです", "なあに？　呼びましたか", "今日も来てくれて、ありがとう", "ここにいますよ", "ちょっと照れます", "いいこいいこ、してください", "あなたのこと、見てますよ", "深呼吸、ひとつどうぞ", "今日は、いい顔をしてますね", "もう少し、このままでいたいです"];
@@ -3639,9 +3650,9 @@ function gxHTML(a) {
 }
 var GX_CUR = null;
 function gxDraw(a) {
-  var g = a.p ? a.p.g : "", x = Math.floor(Math.random() * 1000) / 10, f = Math.min(1.4, Math.max(0.5, (MBS[a.type] || 6.25) / 6.25));
+  var g = a.p ? a.p.g : "", x = Math.floor(Math.random() * 1000) / 10, f = 0.9 * Math.min(1.15, Math.max(0.55, (MBS[a.type] || 6.25) / 6.25));
   if (a.lp === 11 || a.lp === 22 || a.lp === 33) f *= 0.7; x *= f;
-  var rk = x < 3 ? 4 : x < 10 ? 3 : x < 25 ? 2 : x < 55 ? 1 : 0, cur = pickChar(a), pool, i;
+  var rk = rkTier(x), cur = pickChar(a), pool, i;
   for (; rk >= 0; rk--) { pool = []; for (i = 0; i < CHR.length; i++) { if (i === cur || (CHR[i].r || 0) !== rk) continue; if ((g === "m" || g === "f") && CHR[i].g !== g && CHR[i].g !== "u") continue; pool.push(i); } if (pool.length) return pool[Math.floor(Math.random() * pool.length)]; }
   return cur;
 }
