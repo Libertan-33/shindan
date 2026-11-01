@@ -685,6 +685,8 @@ input::placeholder { opacity: 0.55; }
 .pt .pc { animation-duration: 2.8s; }
 .hello .lkmore2 { display: none; } .hello .lkmore2.on { display: grid; }
 .hello .lkbtn { display: block; margin: 6px auto 0; padding: 7px 16px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); font-weight: 800; font-size: 12.5px; font-family: inherit; cursor: pointer; }
+.gxbtn { display: block; margin: 8px auto 0; padding: 9px 18px; border-radius: 99px; border: 2px solid #8a4fd6; background: linear-gradient(135deg, #fff, #efe3ff); color: #4c2a86; font-weight: 900; font-size: 13.5px; font-family: inherit; cursor: pointer; box-shadow: 0 2px 0 #8a4fd6; }
+.gxnote { margin: 6px 0 0; font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
 </style>
 <style id="patch-20261025f">
 .pt .pc { will-change: transform; text-shadow: 0 3px 4px rgba(70, 30, 140, 0.4); }
@@ -1653,6 +1655,7 @@ function rkRoll(a) { var x = Math.imul((a.seed >>> 0) ^ 0x9e3779b9, 2654435761) 
 function pickChar(a) {
   var i, c, sc, best, bi = -1, g = a.p ? a.p.g : "", t1, t2, rk;
   if (!a.p) return Math.floor(Math.random() * CHR.length);
+  try { var gv = ME.gx && ME.gx[a.seed >>> 0]; if (gv != null && CHR[gv]) return gv; } catch (e) {}
   var T = story(a); t1 = T.t1; t2 = T.t2;
   for (rk = rkRoll(a); rk >= 0 && bi < 0; rk--) {
     best = -1;
@@ -2319,7 +2322,7 @@ function chap(no, c, because, lines, aru) {
 
 function overviewPage(a, st) {
   var T = st.T, who = a.nm ? a.nm + "さん" : "あなた", cn = comboNo(a), cd = curDash(a), h = "";
-  h += '<div class="hero">' + (REPEAT2 ? charRV(a) : '<div class="mys" aria-hidden="true"><span>？</span></div>') + '<p class="eyebrow">' + esc(who) + (REPEAT2 ? 'の分身キャラ' : 'の分身キャラは、最後のお楽しみ') + '</p><h2>' + esc(st.title) + '</h2>' +
+  h += '<div class="hero">' + (REPEAT2 ? charRV(a) : '<div class="mys" aria-hidden="true"><span>？</span></div>') + '<p class="eyebrow">' + esc(who) + (REPEAT2 ? 'の分身キャラ' : 'の分身キャラは、最後のお楽しみ') + '</p>' + (REPEAT2 ? gxHTML(a) : '') + '<h2>' + esc(st.title) + '</h2>' +
     '<p class="lede txt">' + '太陽は「' + esc(a.sg[4]) + '」 × 運命数' + a.lp + '（' + esc(a.num[0]) + '）× 「' + esc(a.nk[1]) + '」の月</p>' + heroChips(a) + hitokoto(a) + '</div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">総じて、こんな人です</span>' +
     '<p class="sumline txt">あなたは総じて<br><b class="sumbig">' + esc(st.title) + '</b><br>です</p>' +
@@ -3662,6 +3665,34 @@ zukan = function () {
   zukan0();
   try { document.querySelectorAll(".zk .zc.got").forEach(function (b) { var r = CHR[+b.dataset.zc].r || 0; if (r >= 2) b.classList.add("rare", "r" + r); b.insertAdjacentHTML("beforeend", '<span class="rkb s r' + r + '">' + RKN[r] + '</span>'); }); } catch (e) {}
 };
+
+
+/* --- キャラ替えガチャ：同じ誕生日の診断につき1回だけ（この端末の記録） --- */
+function gxHTML(a) {
+  try { if (!a || !a.p) return ""; GX_CUR = a; var used = ME.gu && ME.gu[a.seed >>> 0];
+    return used ? '<p class="gxnote">🎰 キャラ替えガチャは使用ずみです</p>' : '<button class="gxbtn" data-gx="1">🎰 キャラ替えガチャ（1回だけ）</button>'; } catch (e) { return ""; }
+}
+var GX_CUR = null;
+function gxDraw(a) {
+  var g = a.p ? a.p.g : "", x = Math.floor(Math.random() * 1000) / 10, f = Math.min(1.4, Math.max(0.5, (MBS[a.type] || 6.25) / 6.25));
+  if (a.lp === 11 || a.lp === 22 || a.lp === 33) f *= 0.7; x *= f;
+  var rk = x < 3 ? 4 : x < 10 ? 3 : x < 25 ? 2 : x < 55 ? 1 : 0, cur = pickChar(a), pool, i;
+  for (; rk >= 0; rk--) { pool = []; for (i = 0; i < CHR.length; i++) { if (i === cur || (CHR[i].r || 0) !== rk) continue; if ((g === "m" || g === "f") && CHR[i].g !== g && CHR[i].g !== "u") continue; pool.push(i); } if (pool.length) return pool[Math.floor(Math.random() * pool.length)]; }
+  return cur;
+}
+document.addEventListener("click", function (e) {
+  var t = e.target && e.target.closest ? e.target.closest("[data-gx]") : null; if (!t || !GX_CUR) return;
+  var a = GX_CUR; if (ME.gu && ME.gu[a.seed >>> 0]) return;
+  if (!window.confirm("キャラ替えガチャは、この診断で1回だけ引けます。\n引いたキャラのままになり、元のキャラには戻れません。\n引きますか？")) return;
+  var ov = xEl("div", "gacha", '<div class="ball">🎰</div><p>キャラ替え中…</p>'); document.body.appendChild(ov);
+  try { laugh(false, ov); } catch (er) {}
+  window.setTimeout(function () {
+    var n = gxDraw(a); ME.gx = ME.gx || {}; ME.gu = ME.gu || {}; ME.gx[a.seed >>> 0] = n; ME.gu[a.seed >>> 0] = 1; meSave(); ov.remove();
+    try { collect(a); } catch (er) {}
+    try { if (!isRareIdx(n)) { var w = window.innerWidth, h = window.innerHeight; xBurst(w / 2, h / 3, 10); } } catch (er) {}
+    try { renderSelf(); } catch (er) {}
+  }, 1600);
+});
 
 /* --- crystal ball before results --- */
 var gachaPass = false;
