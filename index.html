@@ -688,6 +688,14 @@ input::placeholder { opacity: 0.55; }
 .hello .lkbtn { display: block; margin: 6px auto 0; padding: 7px 16px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); font-weight: 800; font-size: 12.5px; font-family: inherit; cursor: pointer; }
 .gxbtn { display: block; margin: 8px auto 0; padding: 9px 18px; border-radius: 99px; border: 2px solid #8a4fd6; background: linear-gradient(135deg, #fff, #efe3ff); color: #4c2a86; font-weight: 900; font-size: 13.5px; font-family: inherit; cursor: pointer; box-shadow: 0 2px 0 #8a4fd6; }
 .gxnote { margin: 6px 0 0; font-size: 12px; font-weight: 700; color: var(--muted); text-align: center; }
+.rlov, .gxov { position: fixed; inset: 0; z-index: 100004; display: grid; place-items: center; padding: 16px; background: rgba(30, 18, 52, 0.88); overflow: auto; }
+.rlbox { text-align: center; color: #fff; } .rlt { font-weight: 900; font-size: 1.1rem; margin: 0 0 10px; } .rlr { font-weight: 800; margin: 10px 0 0; min-height: 1.6em; }
+.rlimg { width: 220px; height: 260px; margin: 0 auto; border-radius: 22px; background: linear-gradient(135deg, #fff3c4, #f2c45a); display: grid; place-items: center; box-shadow: 0 0 40px rgba(255, 220, 120, 0.7); } .rlimg img { width: 86%; height: 224px; object-fit: contain; }
+.gxbox { background: var(--bg, #fff); color: var(--fg, #222); border-radius: 20px; padding: 18px 14px; width: 100%; max-width: 440px; } .gxbox h3 { margin: 0 0 4px; text-align: center; } .gxs { margin: 0 0 12px; text-align: center; font-size: 12.5px; color: var(--muted); }
+.gxg { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; } .gxc { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 8px; border-radius: 14px; border: 2px solid var(--line); background: var(--surface); } .gxc.sel { border-color: #8a4fd6; box-shadow: 0 0 0 2px rgba(138, 79, 214, 0.25); }
+.gxi { position: relative; width: 100%; height: 130px; display: grid; place-items: center; } .gxi img { width: 100%; height: 130px; object-fit: contain; } .gxi .rkb { top: 0; left: 0; } .gxc small { font-weight: 800; font-size: 11.5px; color: var(--muted); } .gxc .btn { padding: 7px 10px; font-size: 12.5px; }
+.rlr .rkb { position: static; display: inline-block; }
+.gxa { display: flex; gap: 8px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
 </style>
 <style id="patch-20261025f">
 .pt .pc { will-change: transform; text-shadow: 0 3px 4px rgba(70, 30, 140, 0.4); }
@@ -1718,20 +1726,20 @@ function tw(ax, rk) { var r = rk.indexOf(ax); return r === 0 ? 4 : r === 1 ? 2.5
 var MBS = { INFJ: 1.5, ENTJ: 1.8, INTJ: 2.1, ENFJ: 2.5, ENTP: 3.2, INTP: 3.3, ESTP: 4.3, INFP: 4.4, ISTP: 5.4, ESFP: 8.5, ENFP: 8.1, ESTJ: 8.7, ISFP: 8.8, ISTJ: 11.6, ESFJ: 12.3, ISFJ: 13.8 };
 function rkRoll(a) { var x = Math.imul((a.seed >>> 0) ^ 0x9e3779b9, 2654435761) >>> 0, v = (x % 1000) / 10, f = 0.9 * Math.min(1.15, Math.max(0.55, (MBS[a.type] || 6.25) / 6.25)); if (a.lp === 11 || a.lp === 22 || a.lp === 33) f *= 0.7; v *= f; return rkTier(v); }
 function rkTier(v) { return v < 6 ? 4 : v < 18 ? 3 : v < 42 ? 2 : v < 72 ? 1 : 0; }
-function pickChar(a) {
-  var i, c, sc, best, bi = -1, g = a.p ? a.p.g : "", t1, t2, rk;
+function pickChar0(a) {
+  var i, pool, g = a.p ? a.p.g : "", rk, h;
   if (!a.p) return Math.floor(Math.random() * CHR.length);
-  try { var gv = ME.gx && ME.gx[a.seed >>> 0]; if (gv != null && CHR[gv]) return gv; } catch (e) {}
-  var T = story(a); t1 = T.t1; t2 = T.t2;
-  for (rk = rkRoll(a); rk >= 0 && bi < 0; rk--) {
-    best = -1;
-    for (i = 0; i < CHR.length; i++) {
-      c = CHR[i]; if ((c.r || 0) !== rk) continue; if ((g === "m" || g === "f") && c.g !== g && c.g !== "u") continue;
-      sc = tw(c.a, T.T.rank) + tw(c.b, T.T.rank) * 0.5 + ((a.seed >>> 0) % 997 * (i + 3) % 89) / 100;
-      if (sc > best) { best = sc; bi = i; }
-    }
+  h = Math.imul(a.seed >>> 0, 2246822519) >>> 0;
+  for (rk = rkRoll(a); rk >= 0; rk--) {
+    pool = [];
+    for (i = 0; i < CHR.length; i++) { if ((CHR[i].r || 0) !== rk) continue; if ((g === "m" || g === "f") && CHR[i].g !== g && CHR[i].g !== "u") continue; pool.push(i); }
+    if (pool.length) return pool[(h >>> 3) % pool.length];
   }
-  return bi < 0 ? 0 : bi;
+  return 0;
+}
+function pickChar(a) {
+  try { var gv = a.p && ME.gx && ME.gx[a.seed >>> 0]; if (gv != null && CHR[gv]) return gv; } catch (e) {}
+  return pickChar0(a);
 }
 /* キャラの呼び名：診断結果（上位の性格）と性別から決まる */
 var NICK = {
@@ -2657,7 +2665,7 @@ function aruPage(a, st) {
 function charPage(a, st) {
   var T = st.T, P = T.pct, tg = a.tg, bal = balance(a), dom = bal.dom, lord = PL[a.lord], cd = curDash(a), t1 = st.t1, t2 = st.t2;
   var p7 = SG[(a.mr + 6) % 12], lg7 = a.lag == null ? null : SG[(a.lag + 6) % 12], gold = GOLD[a.type], par = loveParadox(P), h = "";
-  h += '<div class="hero">' + charRV(a, true) + '<p class="eyebrow">' + esc(a.nm ? a.nm + "さん" : "あなた") + 'の分身キャラ</p><p class="cname" id="cname">「' + esc(myName(a)) + '」</p><div class="namer"><input id="cn-in" type="text" maxlength="10" placeholder="キャラに名前をつける" aria-label="キャラの名前" value="' + esc(ME.cn || "") + '"><button type="button" class="btn ghost" data-cn="1">つける</button></div><p class="fbr" id="cn-r" aria-live="polite">' + (LASTNEW ? "図鑑に、新しい仲間が加わりました" : "") + '</p>' + accInfo() + '<button type="button" class="btn ghost" data-zk="1">キャラ図鑑を見る（' + (ME.col || []).length + ' / ' + CHR.length + '）</button><p class="no" style="margin-top:-4px">' + nameWhy(a) + '⏎</p><h2>' + esc(st.title) + '</h2>' + heroChips(a) + hitokoto(a) + '</div>';
+  h += '<div class="hero">' + charRV(a, true) + '<p class="eyebrow">' + esc(a.nm ? a.nm + "さん" : "あなた") + 'の分身キャラ</p>' + gxHTML(a) + '<p class="cname" id="cname">「' + esc(myName(a)) + '」</p><div class="namer"><input id="cn-in" type="text" maxlength="10" placeholder="キャラに名前をつける" aria-label="キャラの名前" value="' + esc(ME.cn || "") + '"><button type="button" class="btn ghost" data-cn="1">つける</button></div><p class="fbr" id="cn-r" aria-live="polite">' + (LASTNEW ? "図鑑に、新しい仲間が加わりました" : "") + '</p>' + accInfo() + '<button type="button" class="btn ghost" data-zk="1">キャラ図鑑を見る（' + (ME.col || []).length + ' / ' + CHR.length + '）</button><p class="no" style="margin-top:-4px">' + nameWhy(a) + '⏎</p><h2>' + esc(st.title) + '</h2>' + heroChips(a) + hitokoto(a) + '</div>';
   h += '<div class="block" style="--c:var(--star)"><span class="lab">キャラ設定</span><div class="kvs">' +
     kv("二つ名", st.title) + kv("属性", dom + "属性（" + ELM[dom] + "）") + kv("グループ", TNAME[tg] + "（" + tg + "）") +
     kv("必殺技", a.mb[2] + "、そして" + a.sg[6]) + kv("弱点", a.mb[3] + "、" + a.sg[7] + "、" + a.num[3]) +
@@ -3031,7 +3039,7 @@ function orbs() {
 var Au = { ctx: null, master: null, on: true, timer: 0 };
 /* ---------- ふれあい：保存・おかえり・反応 ---------- */
 var ME = {};
-function meLoad() { try { ME = JSON.parse(window.localStorage.getItem("hkk-me") || "{}") || {}; } catch (e) { ME = {}; } if (ME.cv !== 4) { ME.col = []; ME.gx = {}; ME.gu = {}; ME.cv = 4; } }
+function meLoad() { try { ME = JSON.parse(window.localStorage.getItem("hkk-me") || "{}") || {}; } catch (e) { ME = {}; } if (ME.cv !== 5) { ME.col = []; ME.gx = {}; ME.gu = {}; ME.gp = {}; ME.rl = {}; ME.cv = 5; } }
 function meSave() { try { window.localStorage.setItem("hkk-me", JSON.stringify(ME)); } catch (e) {} }
 function myName(a) { return ME.cn ? ME.cn : charName(a); }
 var TAPL = ["えへへ、くすぐったいです", "なあに？　呼びましたか", "今日も来てくれて、ありがとう", "ここにいますよ", "ちょっと照れます", "いいこいいこ、してください", "あなたのこと、見てますよ", "深呼吸、ひとつどうぞ", "今日は、いい顔をしてますね", "もう少し、このままでいたいです"];
@@ -3692,7 +3700,6 @@ collect = function (a) {
   collect0(a);
   try {
     if (!a || !LASTNEW) return; var i = pickChar(a);
-    if (isRareIdx(i)) window.setTimeout(function () { rareBurst(i, a); }, 700);
   } catch (e) {}
 };
 function rareBurst(i, a) {
@@ -3710,32 +3717,57 @@ zukan = function () {
 };
 
 
-/* --- キャラ替えガチャ：同じ誕生日の診断につき1回だけ（この端末の記録） --- */
-function gxHTML(a) {
-  try { if (!a || !a.p) return ""; GX_CUR = a; var used = ME.gu && ME.gu[a.seed >>> 0];
-    return used ? '<p class="gxnote">🎰 キャラ替えガチャは使用ずみです</p>' : '<button class="gxbtn" data-gx="1">🎰 キャラ替えガチャ（1回だけ）</button>'; } catch (e) { return ""; }
-}
+/* --- ルーレットとキャラ替えガチャ：引き直し3回まで、候補から選べる --- */
 var GX_CUR = null;
-function gxDraw(a) {
+function gxPulls(a) { ME.gp = ME.gp || {}; var k = a.seed >>> 0; if (!ME.gp[k]) ME.gp[k] = []; return ME.gp[k]; }
+function gxHTML(a) {
+  try { if (!a || !a.p) return ""; GX_CUR = a; var left = 3 - gxPulls(a).length;
+    return '<button class="gxbtn" data-gx="1">🎰 キャラ替えガチャ（' + (left === 3 ? '3回まで引き直して、選べます' : left > 0 ? 'あと' + left + '回' : '候補から選びなおす') + '）</button>'; } catch (e) { return ""; }
+}
+function gxDraw(a, ex) {
   var g = a.p ? a.p.g : "", x = Math.floor(Math.random() * 1000) / 10, f = 0.9 * Math.min(1.15, Math.max(0.55, (MBS[a.type] || 6.25) / 6.25));
   if (a.lp === 11 || a.lp === 22 || a.lp === 33) f *= 0.7; x *= f;
-  var rk = rkTier(x), cur = pickChar(a), pool, i;
-  for (; rk >= 0; rk--) { pool = []; for (i = 0; i < CHR.length; i++) { if (i === cur || (CHR[i].r || 0) !== rk) continue; if ((g === "m" || g === "f") && CHR[i].g !== g && CHR[i].g !== "u") continue; pool.push(i); } if (pool.length) return pool[Math.floor(Math.random() * pool.length)]; }
-  return cur;
+  var rk = rkTier(x), pool, i;
+  for (; rk >= 0; rk--) { pool = []; for (i = 0; i < CHR.length; i++) { if (ex.indexOf(i) >= 0 || (CHR[i].r || 0) !== rk) continue; if ((g === "m" || g === "f") && CHR[i].g !== g && CHR[i].g !== "u") continue; pool.push(i); } if (pool.length) return pool[Math.floor(Math.random() * pool.length)]; }
+  return 0;
 }
+function rouletteShow(fin, done) {
+  var calm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches, ov = xEl("div", "rlov", '<div class="rlbox"><p class="rlt">ルーレット中…</p><div class="rlimg"><img alt="" src="' + CHR[0].s + '"></div><p class="rlr">&nbsp;</p></div>'), img = ov.querySelector("img"), n = 0, total = calm ? 4 : 26, ms = 60, t;
+  document.body.appendChild(ov); try { sfx && sfx("tap"); } catch (er) {}
+  function tick() {
+    n++; if (n >= total) {
+      img.src = CHR[fin].s; var r = CHR[fin].r || 0; ov.querySelector(".rlt").textContent = "けってい！"; ov.querySelector(".rlr").innerHTML = '<span class="rkb r' + r + '">' + RKN[r] + '</span>　' + RKWD[r] + 'キャラ';
+      xBurst(window.innerWidth / 2, window.innerHeight / 2, 8); try { laugh(false, ov.firstChild); } catch (er) {}
+      window.setTimeout(function () { ov.remove(); if (done) done(); }, calm ? 500 : 1400); return;
+    }
+    img.src = CHR[Math.floor(Math.random() * CHR.length)].s; ms = n > total - 8 ? ms + 38 : ms; window.setTimeout(tick, ms);
+  }
+  window.setTimeout(tick, ms);
+}
+function gxOpen(a) {
+  var base = pickChar0(a), pulls = gxPulls(a), cur = pickChar(a), ov = document.querySelector(".gxov"); if (ov) ov.remove();
+  var cands = [base].concat(pulls), left = 3 - pulls.length;
+  var h = '<div class="gxbox"><h3>キャラ替えガチャ</h3><p class="gxs">引き直しは3回まで。出たキャラのなかから、好きなものを選べます</p><div class="gxg">' +
+    cands.map(function (i, k) { var r = CHR[i].r || 0; return '<div class="gxc' + (i === cur ? ' sel' : '') + '"><div class="gxi"><img alt="" src="' + CHR[i].s + '"><span class="rkb r' + r + '">' + RKN[r] + '</span></div><small>' + (k === 0 ? '最初のキャラ' : k + '回目') + '</small><button type="button" class="btn ' + (i === cur ? '' : 'ghost') + '" data-gxpick="' + i + '"' + (i === cur ? ' disabled' : '') + '>' + (i === cur ? 'いまのキャラ' : 'このキャラにする') + '</button></div>'; }).join("") +
+    '</div><div class="gxa"><button type="button" class="btn" data-gxspin="1"' + (left > 0 ? '' : ' disabled') + '>🎰 まわす（あと' + left + '回）</button><button type="button" class="btn ghost" data-gxclose="1">とじる</button></div></div>';
+  ov = xEl("div", "gxov", h); document.body.appendChild(ov);
+}
+function gxRefresh() { try { renderSelf(); } catch (er) {} try { renderDuo(); } catch (er) {} }
 document.addEventListener("click", function (e) {
-  var t = e.target && e.target.closest ? e.target.closest("[data-gx]") : null; if (!t || !GX_CUR) return;
-  var a = GX_CUR; if (ME.gu && ME.gu[a.seed >>> 0]) return;
-  if (!window.confirm("キャラ替えガチャは、この診断で1回だけ引けます。\n引いたキャラのままになり、元のキャラには戻れません。\n引きますか？")) return;
-  var ov = xEl("div", "gacha", '<div class="ball">🎰</div><p>キャラ替え中…</p>'); document.body.appendChild(ov);
-  try { laugh(false, ov); } catch (er) {}
-  window.setTimeout(function () {
-    var n = gxDraw(a); ME.gx = ME.gx || {}; ME.gu = ME.gu || {}; ME.gx[a.seed >>> 0] = n; ME.gu[a.seed >>> 0] = 1; meSave(); ov.remove();
-    try { collect(a); } catch (er) {}
-    try { if (!isRareIdx(n)) { var w = window.innerWidth, h = window.innerHeight; xBurst(w / 2, h / 3, 10); } } catch (er) {}
-    try { renderSelf(); } catch (er) {}
-  }, 1600);
+  var T = e.target && e.target.closest ? e.target : null; if (!T) return; var a = GX_CUR;
+  if (T.closest("[data-gx]")) { if (a) gxOpen(a); return; }
+  if (T.closest("[data-gxclose]")) { var o = document.querySelector(".gxov"); if (o) o.remove(); return; }
+  var pk = T.closest("[data-gxpick]"); if (pk && a) { ME.gx = ME.gx || {}; ME.gx[a.seed >>> 0] = +pk.dataset.gxpick; meSave(); var o2 = document.querySelector(".gxov"); if (o2) o2.remove(); try { collect(a); } catch (er) {} gxRefresh(); return; }
+  if (T.closest("[data-gxspin]") && a) {
+    var pulls = gxPulls(a); if (pulls.length >= 3) return;
+    var ex = [pickChar0(a)].concat(pulls), n = gxDraw(a, ex), o3 = document.querySelector(".gxov"); if (o3) o3.remove();
+    rouletteShow(n, function () { pulls.push(n); meSave(); gxOpen(a); });
+  }
 });
+var renderSelf1 = renderSelf; renderSelf = function () {
+  renderSelf1();
+  try { if (S.page.self === "char") { var a = analyze(S.A); if (a && a.p) { ME.rl = ME.rl || {}; var k = a.seed >>> 0; if (!ME.rl[k]) { ME.rl[k] = 1; meSave(); var i = pickChar(a); rouletteShow(i, function () { if (isRareIdx(i)) rareBurst(i, a); }); } } } } catch (er) {}
+};
 
 /* --- crystal ball before results --- */
 var gachaPass = false;
