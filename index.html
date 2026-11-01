@@ -807,24 +807,12 @@ input::placeholder { opacity: 0.55; }
 /* レア度バッジ：大きく右上 */
 .frame .rkb { top: -16px; right: -12px; left: auto; font-size: 22px; padding: 4px 20px; border-width: 3px; z-index: 7; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4); }
 .chars .frame .rkb { font-size: 16px; padding: 2px 13px; top: -12px; right: -8px; border-width: 2px; }
-/* 額縁：グレード別（N 胡桃材 / R 古銀 / SR 古金 / SSR 彫金 / UR 虹金） */
-.frame.fr0 { padding: 18px; background: repeating-linear-gradient(95deg, #6b4428 0 3px, #5a3820 3px 6px, #7a5232 6px 9px); box-shadow: inset 0 0 0 2px #2d1a0c, inset 0 0 0 4px #a07a4c, inset 0 0 0 7px #3c2412, 0 6px 14px rgba(0, 0, 0, 0.45); }
-.frame.fr0::before { display: none; } .frame.fr0::after { inset: 10px; border: 2px solid #b8935c; border-radius: 2px; }
-.frame.fr1 { padding: 20px; background: linear-gradient(135deg, #f2f4f7, #9aa3ae 25%, #e6eaee 50%, #7c8590 75%, #d9dee4); box-shadow: inset 0 0 0 2px #4a525c, inset 0 0 0 5px #eef1f4, inset 0 0 0 7px #7c8590, inset 0 0 0 9px #cfd5db, 0 7px 18px rgba(0, 0, 0, 0.45); }
-.frame.fr1::before { inset: -4px; background: radial-gradient(circle at 12px 12px, #fff, #8c95a0 55%, transparent 60%) top left no-repeat, radial-gradient(circle at calc(100% - 12px) 12px, #fff, #8c95a0 55%, transparent 60%) top right no-repeat, radial-gradient(circle at 12px calc(100% - 12px), #fff, #8c95a0 55%, transparent 60%) bottom left no-repeat, radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), #fff, #8c95a0 55%, transparent 60%) bottom right no-repeat; background-size: 26px 26px; }
-.frame.fr1::after { border: 3px solid #eef1f4; inset: 11px; }
-.frame.fr3 { padding: 26px; background: linear-gradient(135deg, #fff1b0, #d9a63a 20%, #fff0a8 40%, #a8741f 60%, #f6dc7a 80%, #c48a24); box-shadow: inset 0 0 0 2px #5a3a0a, inset 0 0 0 6px #fbe9a0, inset 0 0 0 8px #8a5a14, inset 0 0 0 11px #f1d27a, 0 0 0 3px #6b4a14, 0 0 0 5px #f6e4a0, 0 0 22px rgba(255, 200, 80, 0.75), 0 10px 24px rgba(0, 0, 0, 0.5); animation: frGlow 2.8s ease-in-out infinite; }
-.frame.fr3::before { inset: -12px; } .frame.fr3::after { border: 4px double #fff6c8; inset: 13px; }
-.frame.fr4 { padding: 28px; background: conic-gradient(from 20deg, #ffd86b, #ff8ad0, #8ad8ff, #9cffc8, #fff08a, #ff9aa8, #c6a0ff, #ffd86b); box-shadow: inset 0 0 0 2px #4a2a6a, inset 0 0 0 6px #fff7d0, inset 0 0 0 8px #7a4a1a, inset 0 0 0 12px #ffe9a0, 0 0 0 3px #4a2a6a, 0 0 0 6px #ffe9a0, 0 0 30px rgba(255, 160, 220, 0.9), 0 12px 28px rgba(0, 0, 0, 0.5); animation: frGlow 2.2s ease-in-out infinite; }
-.frame.fr4::before { inset: -14px; } .frame.fr4::after { border: 4px double #fffbe0; inset: 14px; }
-.frame.fr0 .mat { background: radial-gradient(circle at 50% 40%, #f8f1e2, #e6d9bb 85%); }
-.frame.fr1 .mat { background: radial-gradient(circle at 50% 40%, #f7f9fb, #dfe5ea 85%); }
-.frame.fr3 .mat { background: radial-gradient(circle at 50% 40%, #fffbea, #f6e6b0 85%); }
-.frame.fr4 .mat { background: radial-gradient(circle at 50% 40%, #fff9ff, #eadcff 85%); }
-.frame.fr3 .mat::before, .frame.fr4 .mat::before { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%); transform: translateX(-120%); animation: frSheen 3.6s ease-in-out infinite; }
-@keyframes frGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.12); } }
-@keyframes frSheen { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
-@media (prefers-reduced-motion: reduce) { .frame.fr3, .frame.fr4, .frame .mat::before { animation: none !important; } }
+
+
+.rkb.r0 { background: linear-gradient(135deg, #a8774a, #6b4428); } .rkb.r1 { background: linear-gradient(135deg, #f0a77a, #b45f33); }
+.rkb.r2 { background: linear-gradient(135deg, #f4f6f9, #9aa3ae); color: #2f353c; text-shadow: none; }
+.zc.rare.r2 { box-shadow: 0 0 0 2px #aab3be, 0 0 12px rgba(190, 200, 215, 0.8); }
+.rarebox.r2 { background: linear-gradient(135deg, #f4f6f9, #c4ccd6 55%, #8a94a0); border-color: #4a525c; color: #23282e; box-shadow: 0 0 40px #cfd6df; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -917,6 +905,55 @@ input::placeholder { opacity: 0.55; }
 
 <div class="nextbar" id="nextbar" hidden></div>
 <script>
+
+/* 額縁：屋敷にありそうな装飾額縁（N 木 / R 銅 / SR 銀 / SSR 金 / UR 虹） */
+(function () {
+  var P = [
+    { l: "#d9b27c", m: "#8a5a30", d: "#2d1a0c", a: "#f1dcb4", pad: 24, cs: 52 },
+    { l: "#ffd0a8", m: "#c06a3a", d: "#4e210d", a: "#ffe6cf", pad: 26, cs: 56 },
+    { l: "#ffffff", m: "#a2abb6", d: "#3d444d", a: "#ffffff", pad: 28, cs: 60 },
+    { l: "#fff3b8", m: "#d9a63a", d: "#5a3a0a", a: "#fff8d6", pad: 30, cs: 66 },
+    { l: "#fff7d0", m: "#e8b04a", d: "#4a2a6a", a: "#ffffff", pad: 32, cs: 72 }
+  ];
+  function U(w, h, body) { return 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + w + ' ' + h + '">' + body + '</svg>') + '")'; }
+  function col(t, c) { return t.replace(/\{l\}/g, c.l).replace(/\{m\}/g, c.m).replace(/\{d\}/g, c.d).replace(/\{a\}/g, c.a); }
+  var CORNER = '<path d="M34 12C42 2 56 4 63 12C55 11 49 15 47 22C44 16 40 13 34 12Z" fill="{m}" stroke="{d}" stroke-width="1.2"/><path d="M12 34C2 42 4 56 12 63C11 55 15 49 22 47C16 44 13 40 12 34Z" fill="{m}" stroke="{d}" stroke-width="1.2"/><path d="M40 16C46 10 54 10 58 14M16 40C10 46 10 54 14 58" stroke="{l}" stroke-width="1.6" fill="none"/><circle cx="22" cy="22" r="17" fill="{m}" stroke="{d}" stroke-width="1.4"/><g fill="{l}" stroke="{d}" stroke-width="0.8">' + [0, 1, 2, 3, 4, 5, 6, 7].map(function (k) { return '<ellipse cx="22" cy="10" rx="4" ry="7" transform="rotate(' + k * 45 + ' 22 22)"/>'; }).join("") + '</g><circle cx="22" cy="22" r="6" fill="{d}"/><circle cx="22" cy="22" r="3.2" fill="{a}"/><circle cx="60" cy="30" r="2.4" fill="{a}" stroke="{d}" stroke-width="0.6"/><circle cx="30" cy="60" r="2.4" fill="{a}" stroke="{d}" stroke-width="0.6"/>';
+  var CREST = '<path d="M6 42Q8 10 50 6Q92 10 94 42Z" fill="{m}" stroke="{d}" stroke-width="1.4"/><g stroke="{l}" stroke-width="2" fill="none"><path d="M50 42L14 30M50 42L24 16M50 42L36 10M50 42L50 8M50 42L64 10M50 42L76 16M50 42L86 30"/></g><path d="M28 42Q50 30 72 42Z" fill="{l}" stroke="{d}" stroke-width="1"/><circle cx="50" cy="9" r="5" fill="{a}" stroke="{d}" stroke-width="1"/>';
+  var BOSS = '<path d="M15 2L28 22L15 42L2 22Z" fill="{m}" stroke="{d}" stroke-width="1.3"/><path d="M15 9L22 22L15 35L8 22Z" fill="{l}" stroke="{d}" stroke-width="0.8"/><circle cx="15" cy="22" r="3.4" fill="{a}" stroke="{d}" stroke-width="0.7"/>';
+  function corner(c, fx, fy) { return U(64, 64, '<g transform="translate(' + (fx < 0 ? 64 : 0) + ',' + (fy < 0 ? 64 : 0) + ') scale(' + fx + ',' + fy + ')">' + col(CORNER, c) + '</g>'); }
+  function crest(c, fy) { return U(100, 44, '<g transform="translate(0,' + (fy < 0 ? 44 : 0) + ') scale(1,' + fy + ')">' + col(CREST, c) + '</g>'); }
+  function boss(c) { return U(30, 44, col(BOSS, c)); }
+  var css = "", rings = [
+    function (c) { return "inset 0 0 0 2px " + c.d + ", inset 0 0 0 4px " + c.l + ", inset 0 0 0 7px " + c.m + ", inset 0 0 0 9px " + c.d + ", 0 0 0 2px " + c.d + ", 0 8px 18px rgba(0,0,0,.5)"; },
+    function (c) { return "inset 0 0 0 2px " + c.d + ", inset 0 0 0 5px " + c.l + ", inset 0 0 0 8px " + c.m + ", inset 0 0 0 10px " + c.a + ", 0 0 0 2px " + c.d + ", 0 8px 20px rgba(0,0,0,.5)"; },
+    function (c) { return "inset 0 0 0 2px " + c.d + ", inset 0 0 0 5px " + c.l + ", inset 0 0 0 8px " + c.m + ", inset 0 0 0 11px " + c.a + ", 0 0 0 2px " + c.d + ", 0 0 0 4px " + c.l + ", 0 10px 22px rgba(0,0,0,.5)"; },
+    function (c) { return "inset 0 0 0 2px " + c.d + ", inset 0 0 0 6px " + c.l + ", inset 0 0 0 8px " + c.m + ", inset 0 0 0 12px " + c.a + ", 0 0 0 3px " + c.d + ", 0 0 0 6px " + c.l + ", 0 0 26px rgba(255,200,80,.8), 0 12px 26px rgba(0,0,0,.5)"; },
+    function (c) { return "inset 0 0 0 2px " + c.d + ", inset 0 0 0 6px " + c.l + ", inset 0 0 0 8px " + c.d + ", inset 0 0 0 13px " + c.a + ", 0 0 0 3px " + c.d + ", 0 0 0 7px " + c.l + ", 0 0 34px rgba(255,150,220,.95), 0 14px 28px rgba(0,0,0,.5)"; }
+  ];
+  var base = [
+    "repeating-linear-gradient(95deg,#6b4428 0 3px,#59371f 3px 6px,#7a5232 6px 9px)",
+    "linear-gradient(135deg,#f7c3a0,#c06a3a 25%,#f0a77a 45%,#8a4a24 68%,#e9a272)",
+    "linear-gradient(135deg,#ffffff,#9aa3ae 22%,#eef1f5 45%,#6f7882 68%,#e2e6eb)",
+    "linear-gradient(135deg,#fff1b0,#d9a63a 20%,#fff0a8 40%,#a8741f 60%,#f6dc7a 80%,#c48a24)",
+    "conic-gradient(from 20deg,#ffd86b,#ff8ad0,#8ad8ff,#9cffc8,#fff08a,#ff9aa8,#c6a0ff,#ffd86b)"
+  ];
+  var mats = ["#f8f1e2,#e6d9bb", "#fbf3ec,#ecd9c8", "#f7f9fb,#dfe5ea", "#fffbea,#f6e6b0", "#fff9ff,#eadcff"];
+  P.forEach(function (c, i) {
+    var bead = i === 0 ? "rgba(255,235,200,.28)" : "rgba(255,255,255,.4)", bg = "radial-gradient(circle at 50% 50%," + bead + " 0 2px,transparent 3px) 0 0/11px 11px," + base[i];
+    css += ".frame.fr" + i + " { background: " + bg + "; box-shadow: " + rings[i](c) + "; }\n.frame.fr" + i + " .mat { background: radial-gradient(circle at 50% 40%," + mats[i] + " 85%); }\n";
+    [{ pre: "", k: 1 }, { pre: ".chars ", k: 0.62 }].forEach(function (sc) {
+      var k = sc.k, cs = Math.round(c.cs * k), pad = Math.round(c.pad * k), cw = Math.round(cs * 1.25), ch = Math.round(cs * 0.5), bw = Math.round(cs * 0.36), bh = Math.round(cs * 0.52), off = 9, mid = pad / 2 + off;
+      var lay = [corner(c, 1, 1) + " left top", corner(c, -1, 1) + " right top", corner(c, 1, -1) + " left bottom", corner(c, -1, -1) + " right bottom",
+        crest(c, 1) + " center " + Math.round(mid - ch / 2) + "px", crest(c, -1) + " center bottom " + Math.round(mid - ch / 2) + "px"], sz = [cs + "px " + cs + "px", cs + "px " + cs + "px", cs + "px " + cs + "px", cs + "px " + cs + "px", cw + "px " + ch + "px", cw + "px " + ch + "px"];
+      if (i >= 2) { lay.push(boss(c) + " left " + Math.round(mid - bw / 2) + "px center", boss(c) + " right " + Math.round(mid - bw / 2) + "px center"); sz.push(bw + "px " + bh + "px", bw + "px " + bh + "px"); }
+      css += sc.pre + ".frame.fr" + i + " { padding: " + pad + "px; }\n" +
+        sc.pre + ".frame.fr" + i + "::before { content: ''; position: absolute; inset: -" + off + "px; pointer-events: none; z-index: 3; background: " + lay.map(function (x) { return x + " no-repeat"; }).join(",") + "; background-size: " + sz.join(",") + "; }\n" +
+        sc.pre + ".frame.fr" + i + "::after { content: ''; position: absolute; inset: " + Math.max(4, Math.round(pad - 11 * k)) + "px; pointer-events: none; z-index: 2; border: " + (k < 1 ? 2 : 3) + "px double " + c.a + "; border-radius: 2px; }\n";
+    });
+  });
+  css += ".frame.fr3, .frame.fr4 { animation: frGlow 2.8s ease-in-out infinite; }\n.frame.fr3 .mat::before, .frame.fr4 .mat::before { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(115deg,transparent 40%,rgba(255,255,255,.6) 50%,transparent 60%); transform: translateX(-120%); animation: frSheen 3.6s ease-in-out infinite; }\n@keyframes frGlow { 0%,100% { filter: brightness(1); } 50% { filter: brightness(1.1); } }\n@keyframes frSheen { 0%,55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }\n@media (prefers-reduced-motion: reduce) { .frame.fr3, .frame.fr4, .frame .mat::before { animation: none !important; } }\n";
+  var st = document.createElement("style"); st.id = "frames-css"; st.textContent = css; document.head.appendChild(st);
+})();
 /* ---------- data ---------- */
 var AX = [
   ["EI", "E", "I", "外向", "内向", "エネルギーの向き"],
