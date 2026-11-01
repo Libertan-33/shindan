@@ -1056,6 +1056,58 @@ function ascendant(J, lat, lon) {
   var asc = Math.atan2(Math.cos(ramc), -(Math.sin(ramc) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps)));
   return norm(asc / RAD);
 }
+/* ---------- planets (low precision, Schlyter) ---------- */
+function planetLonsTrop(J) {
+  var d = J - 2451543.5, R = Math.PI / 180, sn = function (x) { return Math.sin(x * R); }, cs = function (x) { return Math.cos(x * R); };
+  var EL = {
+    me: [48.3313 + 3.24587e-5 * d, 7.0047 + 5.00e-8 * d, 29.1241 + 1.01444e-5 * d, 0.387098, 0.205635 + 5.59e-10 * d, 168.6562 + 4.0923344368 * d],
+    ve: [76.6799 + 2.46590e-5 * d, 3.3946 + 2.75e-8 * d, 54.8910 + 1.38374e-5 * d, 0.723330, 0.006773 - 1.302e-9 * d, 48.0052 + 1.6021302244 * d],
+    ma: [49.5574 + 2.11081e-5 * d, 1.8497 - 1.78e-8 * d, 286.5016 + 2.92961e-5 * d, 1.523688, 0.093405 + 2.516e-9 * d, 18.6021 + 0.5240207766 * d],
+    ju: [100.4542 + 2.76854e-5 * d, 1.3030 - 1.557e-7 * d, 273.8777 + 1.64505e-5 * d, 5.20256, 0.048498 + 4.469e-9 * d, 19.8950 + 0.0830853001 * d],
+    sa: [113.6634 + 2.38980e-5 * d, 2.4886 - 1.081e-7 * d, 339.3939 + 2.97661e-5 * d, 9.55475, 0.055546 - 9.499e-9 * d, 316.9670 + 0.0334442282 * d]
+  };
+  var Ms = 356.0470 + 0.9856002585 * d, ws = 282.9404 + 4.70935e-5 * d, es = 0.016709 - 1.151e-9 * d;
+  var Es = Ms + (180 / Math.PI) * es * sn(Ms) * (1 + es * cs(Ms));
+  var xs0 = cs(Es) - es, ys0 = Math.sqrt(1 - es * es) * sn(Es), rs = Math.sqrt(xs0 * xs0 + ys0 * ys0), lons = Math.atan2(ys0, xs0) / R + ws;
+  var xs = rs * cs(lons), ys = rs * sn(lons), out = {}, k;
+  var Mj = EL.ju[5], Msat = EL.sa[5];
+  for (k in EL) {
+    var e = EL[k], N = e[0], i = e[1], w = e[2], a = e[3], ec = e[4], M = norm(e[5]);
+    var E = M + (180 / Math.PI) * ec * sn(M) * (1 + ec * cs(M)), it;
+    for (it = 0; it < 6; it++) E = E - (E - (180 / Math.PI) * ec * sn(E) - M) / (1 - ec * cs(E));
+    var x = a * (cs(E) - ec), y = a * Math.sqrt(1 - ec * ec) * sn(E), r = Math.sqrt(x * x + y * y), v = Math.atan2(y, x) / R;
+    var xh = r * (cs(N) * cs(v + w) - sn(N) * sn(v + w) * cs(i)), yh = r * (sn(N) * cs(v + w) + cs(N) * sn(v + w) * cs(i));
+    var lon = Math.atan2(yh + ys, xh + xs) / R;
+    if (k === "ju") lon += -0.332 * sn(2 * Mj - 5 * Msat - 67.6) - 0.056 * sn(2 * Mj - 2 * Msat + 21) + 0.042 * sn(3 * Mj - 5 * Msat + 21) - 0.036 * sn(Mj - 2 * Msat) + 0.022 * cs(Mj - Msat) + 0.023 * sn(2 * Mj - 3 * Msat + 52) - 0.016 * sn(Mj - 5 * Msat - 69);
+    if (k === "sa") lon += 0.812 * sn(2 * Mj - 5 * Msat - 67.6) - 0.229 * cs(2 * Mj - 4 * Msat - 2) + 0.119 * sn(Mj - 2 * Msat - 3) + 0.046 * sn(2 * Mj - 6 * Msat - 69) + 0.014 * sn(Mj - 3 * Msat + 32);
+    out[k] = norm(lon);
+  }
+  return out;
+}
+/* PLの並び：0ケートゥ 1金星 2太陽 3月 4火星 5ラーフ 6木星 7土星 8水星 */
+var EXALT = [7, 11, 0, 1, 9, 1, 3, 6, 5], DEBIL = [1, 5, 6, 7, 3, 7, 9, 0, 11], OWN = [[], [1, 6], [4], [3], [0, 7], [10], [8, 11], [9, 10], [2, 5]];
+var HSC = [0, 1, 0.5, 0, 1, 1.5, -1, 1, -1.5, 1.5, 1, 1, -1];
+var HTHEME = ["", "自分らしさ・体", "お金・家族", "努力・発信", "家・心の安定", "創造・恋・学び", "仕事の日々・健康", "パートナー・対人", "変化・深いご縁", "学び・運・恩師", "仕事・評価", "収入・仲間", "休息・手放し"];
+function digOf(k, sign) { return EXALT[k] === sign ? 2 : OWN[k].indexOf(sign) >= 0 ? 1.5 : DEBIL[k] === sign ? -2 : 0; }
+function attachPlanets(R, J, ay, sl) {
+  var t = planetLonsTrop(J), rahu = norm(norm(125.04452 - 1934.136261 * ((J - 2451545) / 36525)) - ay), sid = [];
+  sid[0] = norm(rahu + 180); sid[1] = norm(t.ve - ay); sid[2] = norm(sl - ay); sid[3] = R.ms; sid[4] = norm(t.ma - ay); sid[5] = rahu; sid[6] = norm(t.ju - ay); sid[7] = norm(t.sa - ay); sid[8] = norm(t.me - ay);
+  var base = R.lag != null ? R.lag : R.mr, pv = [], info = [], k, sign, h, dg, hs, v, mal = [0, 2, 4, 5, 7];
+  for (k = 0; k < 9; k++) {
+    sign = Math.floor(sid[k] / 30) % 12; h = (sign - base + 12) % 12 + 1; dg = digOf(k, sign); hs = HSC[h];
+    if (mal.indexOf(k) >= 0 && [3, 6, 10, 11].indexOf(h) >= 0) hs += 1.5;
+    v = Math.max(40, Math.min(92, FLOW_G[k] + 6 * dg + 4 * Math.max(-2, Math.min(3, hs))));
+    pv[k] = v; info[k] = { sign: sign, house: h, dg: dg };
+  }
+  R.pls = sid; R.pv = pv; R.pinfo = info; R.hbase = R.lag != null ? "lag" : "moon";
+}
+function pvOf(a, k) { return a && a.pv ? a.pv[k] : FLOW_G[k]; }
+function planetNote(a, k) {
+  if (!a || !a.pinfo) return "";
+  var q = a.pinfo[k], dgs = q.dg >= 2 ? "得意な位置" : q.dg >= 1.5 ? "自分の本拠地" : q.dg <= -2 ? "苦手な位置" : "ふつうの位置", hb = a.hbase === "lag" ? "" : "（出生時間がわからないため、月を基準にした場所です）";
+  var v = pvOf(a, k), tone = v >= 72 ? "あなたの場合、この時期は追い風が出やすいほうです" : v >= 58 ? "あなたの場合、この時期はおだやかに進みやすいです" : "あなたの場合、この時期は力をためて根を張るのに向いています";
+  return PL[k][0] + "は" + SG[q.sign][1] + "（" + dgs + "）、第" + q.house + "室「" + HTHEME[q.house] + "」にいます" + hb + "⏎" + tone + "⏎";
+}
 function dashas(moonSid, birthMs) {
   var seg = 360 / 27, nk = Math.floor(moonSid / seg), frac = (moonSid - nk * seg) / seg, li = nk % 9;
   var t = birthMs - frac * PL[li][1] * YM, list = [];
@@ -1143,12 +1195,14 @@ function analyze(p) {
   var sg = SG[si];
   var sdeg = sl % 30;
   var stl = styleOf(p, type);
-  return { p: p, nm: (p.giv || p.sur || "").trim(), gl: gLabel(p), style: stl, seed: hashStr(type + si + mr + nak + kab + (lag == null ? "x" : lag) + stl), unk: unk, place: pl[0], type: type, mb: MB[type], tg: tgOf(type),
+  var R0 = { p: p, nm: (p.giv || p.sur || "").trim(), gl: gLabel(p), style: stl, seed: hashStr(type + si + mr + nak + kab + (lag == null ? "x" : lag) + stl), unk: unk, place: pl[0], type: type, mb: MB[type], tg: tgOf(type),
     si: si, sg: sg, sdeg: sdeg, cusp: unk && (sdeg < 1 || sdeg > 29),
     mr: mr, mrs: SG[mr], nak: nak, pada: pada, nk: NK[nak], lord: nak % 9, lag: lag, lags: lag == null ? null : SG[lag],
     digits: digits, chain: chain, lp: lp, lb: lb, num: NU[lp], roma: roma, kchain: kchain, kab: kab, ksrc: ksrc, day: d, se: SE[kab],
     mEl: mindEl(type), sEl: sg[2], moEl: SG[mr][2], nEl: NEL[lb], laEl: lag == null ? null : SG[lag][2],
     birthMs: birthMs, ms: ms, dash: dashas(ms, birthMs) };
+  try { attachPlanets(R0, J, ay, sl); } catch (e) {}
+  return R0;
 }
 function comboNo(a) {
   var mbi = Object.keys(MB).indexOf(a.type), lpi = LPS.indexOf(a.lp);
@@ -1882,7 +1936,7 @@ function flowG(a, ms) {
   if (!md) return null;
   var ad = antars(md), sub = ad[0], j;
   for (j = 0; j < ad.length; j++) if (ad[j].s <= ms && ms < ad[j].e) { sub = ad[j]; break; }
-  return { t: 0.6 * FLOW_G[md.k] + 0.4 * FLOW_G[sub.k], k: md.k, sk: sub.k };
+  return { t: 0.6 * pvOf(a, md.k) + 0.4 * pvOf(a, sub.k), k: md.k, sk: sub.k };
 }
 function wxIcon(v) { return v >= 80 ? "☀️" : v >= 60 ? "🌤" : v >= 45 ? "☁️" : "🌱"; }
 function wxWord(v) { return v >= 80 ? "追い風" : v >= 60 ? "おだやか" : v >= 45 ? "力をためる" : "足場固め"; }
@@ -1890,7 +1944,7 @@ function flowList(a) {
   var now = Date.now(), L = a.dash.filter(function (e) { return e.e > now; }).slice(0, 4), h = '<div class="wx">';
   L.forEach(function (e, i) {
     var p = PL[e.k], cur = e.s <= now;
-    h += '<div class="wxr' + (cur ? ' now' : '') + '"><span class="wxi">' + wxIcon(FLOW_G[e.k]) + '</span><div><b>' + (cur ? 'いま〜' + new Date(e.e).getFullYear() + '年　' : new Date(e.s).getFullYear() + '〜' + new Date(e.e).getFullYear() + '年　') + wxWord(FLOW_G[e.k]) + '</b><span>テーマは「' + esc(p[2]) + '」⏎' + esc(p[3]) + '</span></div></div>';
+    h += '<div class="wxr' + (cur ? ' now' : '') + '"><span class="wxi">' + wxIcon(pvOf(a, e.k)) + '</span><div><b>' + (cur ? 'いま〜' + new Date(e.e).getFullYear() + '年　' : new Date(e.s).getFullYear() + '〜' + new Date(e.e).getFullYear() + '年　') + wxWord(pvOf(a, e.k)) + '</b><span>テーマは「' + esc(p[2]) + '」⏎' + esc(p[3]) + '</span></div></div>';
   });
   return h + '</div>';
 }
@@ -1927,7 +1981,7 @@ function flowChart(a) {
   segs.forEach(function (g) {
     var x = Math.max(X0, X(g.s)), w = Math.min(X1, X(g.e)) - x; if (w <= 0) return;
     svg += '<rect x="' + x.toFixed(1) + '" y="' + (Y1 + 6) + '" width="' + w.toFixed(1) + '" height="16" fill="' + FLOW_C[g.k] + '" fill-opacity="0.75"/>';
-    if (w > 16) svg += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (Y1 + 18) + '" font-size="11" text-anchor="middle">' + wxIcon(FLOW_G[g.k]) + '</text>';
+    if (w > 16) svg += '<text x="' + (x + w / 2).toFixed(1) + '" y="' + (Y1 + 18) + '" font-size="11" text-anchor="middle">' + wxIcon(pvOf(a, g.k)) + '</text>';
   });
   var y0 = new Date(t0).getFullYear(), y1 = new Date(t1).getFullYear(), step = (y1 - y0) > 28 ? 10 : 5, yy;
   for (yy = Math.ceil(y0 / step) * step; yy <= y1; yy += step) {
@@ -1943,7 +1997,7 @@ function flowChart(a) {
       (d2 <= 5 && up ? '次に勢いが上がりやすいのは、' + new Date(up.ms).getFullYear() + '年ごろです⏎' : '') +
       'このグラフの中でいちばん追い風が強そうなのは、' + by + '年ごろ（★）です⏎</p>';
   }
-  return svg + cap + txt + flowList(a) + '<p class="hint">線が高いほど勢いが出やすく、低いほど力をためて根を張る時期です⏎どちらも大切な時期で、低い時期は「悪い時期」ではありません⏎生まれた日の月の位置から出る周期（ダシャー）を、ひとつの目安にまとめたものです⏎当たる外れるではなく「流れの読み物」として楽しんでください⏎</p>';
+  return svg + cap + txt + flowList(a) + '<p class="hint">線が高いほど勢いが出やすく、低いほど力をためて根を張る時期です⏎どちらも大切な時期で、低い時期は「悪い時期」ではありません⏎生まれた日の月の位置から出る周期（ダシャー）に、その時期を担当する惑星の状態（得意な位置か、どの部屋にいるか）を加えた目安です⏎惑星の位置は簡易計算なので、星座の境目の近くは数度ずれることがあります⏎当たる外れるではなく「流れの読み物」として楽しんでください⏎</p>';
 }
 function timeline(a) {
   var now = Date.now(), L = a.dash, cur = null, i;
@@ -1961,7 +2015,7 @@ function timeline(a) {
     var p = PL[cur.k], ad = antars(cur), ca = null, nx = [];
     ad.forEach(function (x) { if (x.s <= now && now < x.e) ca = x; else if (x.s > now) nx.push(x); });
     h += '<div class="block" style="--c:var(--star)"><span class="lab">現在</span><h3>いまは「' + p[0] + '期」</h3><p class="when">' + fmtYM(cur.s) + '〜' + fmtYM(cur.e) + '（' + ageR(cur.a0, cur.a1) + '）　あと約' + Math.max(1, Math.round((cur.e - now) / YM)) + '年</p>' +
-      '<p class="txt">テーマは「' + esc(p[2]) + '」⏎' + (ca ? 'いまの小さな流れは「' + PL[ca.k][0] + '」（' + fmtYM(ca.s) + '〜' + fmtYM(ca.e) + '）で、「' + esc(PL[ca.k][2]) + '」がアクセントになります⏎' : '') + '</p>' + lmh(p[3], p[4], p[5]);
+      '<p class="txt">テーマは「' + esc(p[2]) + '」⏎' + (ca ? 'いまの小さな流れは「' + PL[ca.k][0] + '」（' + fmtYM(ca.s) + '〜' + fmtYM(ca.e) + '）で、「' + esc(PL[ca.k][2]) + '」がアクセントになります⏎' : '') + '</p>' + lmh(p[3], p[4], p[5]) + (a.pinfo ? '<p class="txt">' + esc(planetNote(a, cur.k)) + '</p>' : '');
     if (nx.length) h += '<p class="when">この先の小さな流れ：' + nx.slice(0, 2).map(function (x) { return PL[x.k][0] + '（' + fmtYM(x.s) + '〜）'; }).join('　→　') + '</p>';
     h += '</div>';
     var fut = L.filter(function (e) { return e.s >= cur.e; }).slice(0, 2);
@@ -1969,7 +2023,7 @@ function timeline(a) {
     fut.forEach(function (e, k) {
       var q = PL[e.k];
       h += '<div class="card" style="--c:var(--num)"><span class="k">' + q[0] + '期　' + ageR(e.a0, e.a1) + '</span><h4>' + esc(q[2]) + '</h4><p class="when">' + fmtYM(e.s) + '〜' + fmtYM(e.e) + '</p>' +
-        (k === 0 ? lmh(q[3], q[4], q[5]) : '<p>光：' + esc(q[3]) + '⏎<br>気をつけたい影：' + esc(q[4]) + '⏎<br>' + esc(q[5]) + '</p>') + '</div>';
+        (a.pinfo ? '<p class="hint">' + esc(planetNote(a, e.k)) + '</p>' : '') + (k === 0 ? lmh(q[3], q[4], q[5]) : '<p>光：' + esc(q[3]) + '⏎<br>気をつけたい影：' + esc(q[4]) + '⏎<br>' + esc(q[5]) + '</p>') + '</div>';
     });
     if (fut[0]) h += '<p class="txt">' + fmtYM(fut[0].s) + '頃（' + Math.floor(fut[0].a0) + '歳前後）に、人生のテーマが「' + esc(p[2]) + '」から「' + esc(PL[fut[0].k][2]) + '」へ切り替わります⏎</p>';
     h += '</div></div>';
