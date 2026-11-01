@@ -801,6 +801,30 @@ input::placeholder { opacity: 0.55; }
 .smkov.in i { animation-duration: 0.55s; }
 .smkov.out i { animation-duration: 1.4s; }
 .smkov.out b { animation-duration: 1.4s; animation-delay: 0.25s; }
+
+/* キャラの紫の影をなくす */
+:root:root:root:root img.char:not(.mini) { filter: drop-shadow(0 5px 7px rgba(60, 40, 20, 0.28)); }
+/* レア度バッジ：大きく右上 */
+.frame .rkb { top: -16px; right: -12px; left: auto; font-size: 22px; padding: 4px 20px; border-width: 3px; z-index: 7; box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4); }
+.chars .frame .rkb { font-size: 16px; padding: 2px 13px; top: -12px; right: -8px; border-width: 2px; }
+/* 額縁：グレード別（N 胡桃材 / R 古銀 / SR 古金 / SSR 彫金 / UR 虹金） */
+.frame.fr0 { padding: 18px; background: repeating-linear-gradient(95deg, #6b4428 0 3px, #5a3820 3px 6px, #7a5232 6px 9px); box-shadow: inset 0 0 0 2px #2d1a0c, inset 0 0 0 4px #a07a4c, inset 0 0 0 7px #3c2412, 0 6px 14px rgba(0, 0, 0, 0.45); }
+.frame.fr0::before { display: none; } .frame.fr0::after { inset: 10px; border: 2px solid #b8935c; border-radius: 2px; }
+.frame.fr1 { padding: 20px; background: linear-gradient(135deg, #f2f4f7, #9aa3ae 25%, #e6eaee 50%, #7c8590 75%, #d9dee4); box-shadow: inset 0 0 0 2px #4a525c, inset 0 0 0 5px #eef1f4, inset 0 0 0 7px #7c8590, inset 0 0 0 9px #cfd5db, 0 7px 18px rgba(0, 0, 0, 0.45); }
+.frame.fr1::before { inset: -4px; background: radial-gradient(circle at 12px 12px, #fff, #8c95a0 55%, transparent 60%) top left no-repeat, radial-gradient(circle at calc(100% - 12px) 12px, #fff, #8c95a0 55%, transparent 60%) top right no-repeat, radial-gradient(circle at 12px calc(100% - 12px), #fff, #8c95a0 55%, transparent 60%) bottom left no-repeat, radial-gradient(circle at calc(100% - 12px) calc(100% - 12px), #fff, #8c95a0 55%, transparent 60%) bottom right no-repeat; background-size: 26px 26px; }
+.frame.fr1::after { border: 3px solid #eef1f4; inset: 11px; }
+.frame.fr3 { padding: 26px; background: linear-gradient(135deg, #fff1b0, #d9a63a 20%, #fff0a8 40%, #a8741f 60%, #f6dc7a 80%, #c48a24); box-shadow: inset 0 0 0 2px #5a3a0a, inset 0 0 0 6px #fbe9a0, inset 0 0 0 8px #8a5a14, inset 0 0 0 11px #f1d27a, 0 0 0 3px #6b4a14, 0 0 0 5px #f6e4a0, 0 0 22px rgba(255, 200, 80, 0.75), 0 10px 24px rgba(0, 0, 0, 0.5); animation: frGlow 2.8s ease-in-out infinite; }
+.frame.fr3::before { inset: -12px; } .frame.fr3::after { border: 4px double #fff6c8; inset: 13px; }
+.frame.fr4 { padding: 28px; background: conic-gradient(from 20deg, #ffd86b, #ff8ad0, #8ad8ff, #9cffc8, #fff08a, #ff9aa8, #c6a0ff, #ffd86b); box-shadow: inset 0 0 0 2px #4a2a6a, inset 0 0 0 6px #fff7d0, inset 0 0 0 8px #7a4a1a, inset 0 0 0 12px #ffe9a0, 0 0 0 3px #4a2a6a, 0 0 0 6px #ffe9a0, 0 0 30px rgba(255, 160, 220, 0.9), 0 12px 28px rgba(0, 0, 0, 0.5); animation: frGlow 2.2s ease-in-out infinite; }
+.frame.fr4::before { inset: -14px; } .frame.fr4::after { border: 4px double #fffbe0; inset: 14px; }
+.frame.fr0 .mat { background: radial-gradient(circle at 50% 40%, #f8f1e2, #e6d9bb 85%); }
+.frame.fr1 .mat { background: radial-gradient(circle at 50% 40%, #f7f9fb, #dfe5ea 85%); }
+.frame.fr3 .mat { background: radial-gradient(circle at 50% 40%, #fffbea, #f6e6b0 85%); }
+.frame.fr4 .mat { background: radial-gradient(circle at 50% 40%, #fff9ff, #eadcff 85%); }
+.frame.fr3 .mat::before, .frame.fr4 .mat::before { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.6) 50%, transparent 60%); transform: translateX(-120%); animation: frSheen 3.6s ease-in-out infinite; }
+@keyframes frGlow { 0%, 100% { filter: brightness(1); } 50% { filter: brightness(1.12); } }
+@keyframes frSheen { 0%, 55% { transform: translateX(-120%); } 100% { transform: translateX(120%); } }
+@media (prefers-reduced-motion: reduce) { .frame.fr3, .frame.fr4, .frame .mat::before { animation: none !important; } }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -1756,7 +1780,7 @@ var NICK = {
   loyal: [["一途者", 0], ["まっすぐ屋", 1], ["守り人", 0]]
 };
 function rkBadge(i) { var r = CHR[i].r || 0; return '<span class="rkb r' + r + '">' + RKN[r] + '</span>'; }
-function charRV(a, own) { return '<div class="rv"><div class="frame"><div class="mat">' + charSVG(a) + '</div>' + rkBadge(pickChar(a)) + '</div>' + (own ? accHTML() : '') + '</div>'; }
+function charRV(a, own) { var pi = pickChar(a); return '<div class="rv"><div class="frame fr' + (CHR[pi].r || 0) + '"><div class="mat">' + charSVG(a) + '</div>' + rkBadge(pi) + '</div>' + (own ? accHTML() : '') + '</div>'; }
 var SUNADJ = ["せっかちな", "マイペースな", "おしゃべりな", "世話好きな", "華やかな", "几帳面な", "バランス好きな", "ミステリアスな", "冒険好きな", "ストイックな", "ユニークな", "夢見がちな"];
 function nickBase(a) {
   var T = story(a), g = a.p ? a.p.g : "", v = NICK[T.t1][(a.seed >>> 0) % 3], w = v[0];
@@ -3047,8 +3071,9 @@ var ME = {};
 function meLoad() { try { ME = JSON.parse(window.localStorage.getItem("hkk-me") || "{}") || {}; } catch (e) { ME = {}; } if (ME.cv !== 6) { ME.col = []; ME.gx = {}; ME.gu = {}; ME.gp = {}; ME.rl = {}; ME.bc = {}; ME.cv = 6; } }
 function meSave() { try { window.localStorage.setItem("hkk-me", JSON.stringify(ME)); } catch (e) {} }
 function myName(a) { return ME.cn ? ME.cn : charName(a); }
-var TAPL = ["えへへ、くすぐったいです", "なあに？　呼びましたか", "今日も来てくれて、ありがとう", "ここにいますよ", "ちょっと照れます", "いいこいいこ、してください", "あなたのこと、見てますよ", "深呼吸、ひとつどうぞ", "今日は、いい顔をしてますね", "もう少し、このままでいたいです"];
-var TARE = ["…実は、あなたのこと、ずっと応援してます", "ひみつですが、わたしはカレーが好きです", "三回つついた人にだけ、ないしょのお知らせ：あなたは、思っているより大丈夫です", "いま、流れ星がひとつ通りました"];
+var TAPL = ["えへへ、くすぐったいです", "なあに？　呼びましたか", "今日も来てくれて、ありがとう", "ここにいますよ", "ちょっと照れます", "いいこいいこ、してください", "あなたのこと、見てますよ", "深呼吸、ひとつどうぞ", "今日は、いい顔をしてますね", "もう少し、このままでいたいです", "はい、ここにいますよ", "つんつん、くすぐったいです", "今日もおつかれさまです", "がんばってるところ、ちゃんと見てますよ", "ひと休みしても、だいじょうぶです", "今日のあなた、けっこういい感じです", "お水、飲みましたか？", "肩の力、ぬいてくださいね", "ふふ、また来てくれたんですね", "深呼吸しましょう　すー、はー", "あなたのペースで、だいじょうぶです", "小さな一歩も、ちゃんと一歩です", "いまの気持ち、そのままで大丈夫", "わたしはいつでも、あなたの味方です", "おやつの時間にしませんか", "笑ってる顔、すきです", "今日は、いいことありましたか？", "うまくいかない日も、味方です", "がんばりすぎないでくださいね", "あなたがいてくれて、うれしいです", "ちょっとだけ、空を見てみませんか", "ぜんぶ、ひとりで抱えなくていいんですよ", "きょうも生きてて、えらいです", "わたしのこと、ほめてもいいですよ", "今日の運、ちょっと上向きな予感です", "ねむいときは、ねむっていいんです", "あなたの「好き」は、宝ものです", "遠回りも、ちゃんと道のうちです", "できたことを、ひとつ数えてみましょう", "ここまで来たのが、もうすごいんです", "よしよし、ぽんぽん", "あったかい飲み物でも、どうですか", "気づいたら、ちゃんと進んでますよ", "あなたの今日に、そっと拍手です", "なにも言わなくても、そばにいますよ", "いまの顔、やさしいですね", "今日はゆっくりでいいですよ", "靴ひも、むすびなおしましょうか", "いい香りのするものを、ひとつ探してみて", "あなたが笑うと、わたしもうれしいです", "ちょっと伸びをしてみましょう", "急がなくても、間に合いますよ", "今日のごほうび、なににしますか", "だれかに「ありがとう」を、ひとつどうぞ", "わたし、額縁のなかから応援してます", "きれいな額縁でしょう？　えへん", "ちょっと照れちゃいます", "もっと、つついてもいいですよ", "まぶしいですか？　額縁がピカピカなので", "いつでも、ここに戻ってきていいですよ"];
+var TKG = ["📜 七転び八起き　何度転んでも、立ち上がればいい", "📜 急がば回れ　確かな道のほうが、結局は早い", "📜 継続は力なり　続けることが、いちばんの力", "📜 千里の道も一歩から　どんな旅も、最初の一歩から", "📜 雨垂れ石を穿つ　小さな努力も、積もれば大きな力", "📜 果報は寝て待て　あせらず、いい知らせを待とう", "📜 笑う門には福来る　笑顔のところに、幸せは来る", "📜 失敗は成功のもと　失敗から学べば、次はうまくいく", "📜 石の上にも三年　がまん強く続ければ、いつか報われる", "📜 備えあれば憂いなし　準備しておけば、安心できる", "📜 人間万事塞翁が馬　幸も不幸も、どう転ぶかわからない", "📜 一期一会　出会いは一度きり、大切にしよう", "📜 善は急げ　よいと思ったことは、すぐ始めよう", "📜 思い立ったが吉日　始めたい日が、いちばんいい日", "📜 猿も木から落ちる　上手な人でも、失敗はする", "📜 負けるが勝ち　ときには譲るのが、いちばん得", "📜 十人十色　人はみんな違っていて、いい", "📜 案ずるより産むが易し　心配するより、やってみよう", "📜 転ばぬ先の杖　つまずく前に、ちょっと用心", "📜 明日は明日の風が吹く　くよくよせず、明日に任せよう", "📜 情けは人のためならず　親切は、巡り巡って自分に返る", "📜 三人寄れば文殊の知恵　みんなで考えれば、いい案が出る", "📜 大器晩成　大きな人は、ゆっくり育つ", "📜 初心忘るべからず　始めたときの気持ちを、大切に", "📜 天は自ら助くる者を助く　自分でがんばる人に、運は味方する", "📜 無事これ名馬　元気でいることが、いちばん", "📜 後悔先に立たず　終わったことより、これからを", "📜 縁は異なもの味なもの　ご縁は不思議で、おもしろい", "📜 光陰矢の如し　時間は早い、いまを大切に", "📜 灯台下暗し　答えは、意外と身近にある", "📜 聞くは一時の恥　わからないことは、聞いてしまおう", "📜 柳に雪折れなし　しなやかな人は、折れにくい", "📜 雨降って地固まる　ぶつかったあとに、絆は強くなる", "📜 捨てる神あれば拾う神あり　見捨てられても、助けてくれる人はいる", "📜 急いては事を仕損じる　あわてると、失敗しやすい", "📜 鉄は熱いうちに打て　気持ちが熱いうちに、動こう", "📜 二兎を追う者は一兎をも得ず　まずは、ひとつに集中", "📜 好きこそものの上手なれ　好きなことは、自然と上達する", "📜 ローマは一日にして成らず　大きなことは、時間がかかる", "📜 意志あるところに道は開ける　やる気があれば、道は見つかる", "📜 遅くても、やらないよりいい　Better late than never", "📜 ゆっくり着実が、レースに勝つ　イソップ寓話より", "📜 どんな雲にも、銀の裏地がある　Every cloud has a silver lining", "📜 練習は完璧をつくる　Practice makes perfect", "📜 毎日は小さな旅　ゆっくり歩こう"];
+var TARE = ["…実は、あなたのこと、ずっと応援してます", "ひみつですが、わたしはカレーが好きです", "三回つついた人にだけ、ないしょのお知らせ：あなたは、思っているより大丈夫です", "いま、流れ星がひとつ通りました", "実はこの額縁、毎朝みがいています", "ここだけの話、わたし、あなたのことが大好きです", "いま、目が合いましたね", "ふたりだけの合言葉：「だいじょうぶ」", "今夜ぐっすり眠れる魔法を、そっとかけておきました", "ひみつ：わたしは、あなたに似てきています", "いまのは、ほんとうに小さな奇跡です", "あなたの運が、ちょっとだけ上向きました…気のせいかもしれません"];
 var FBR = { y: ["やった、ちゃんと伝わってました", "「そうそう」が聞こえました、うれしいです", "いまのうなずき、見えてましたよ"], m: ["「まあまあ」も、立派な手がかりです", "気になるところだけ、持ち帰ってくださいね", "ちょうどいい、くらいで十分です"], n: ["ちがうところは、まだ見せていない顔かもしれません", "「ちがう」と思えるのは、自分をよく知っている証拠です", "教えてくれてありがとう、そこがあなたらしさです"] };
 var FB_SET = { overview: 1, aruaru: 1, combo: 1, star: 1, jyotish: 1 };
 function fbRow(a) {
@@ -3084,8 +3109,9 @@ function openCview(html, nm0) {
   ov.addEventListener("click", function (ev) {
     var r2 = ev.target.closest && ev.target.closest(".rv");
     if (!r2) { ov.remove(); return; }
-    cnt++; laugh(false, r2); var bub = ov.querySelector(".cbub"), pool = (cnt === 3 || Math.random() < 0.08) ? TARE : TAPL;
-    bub.textContent = pool[Math.floor(Math.random() * pool.length)];
+    cnt++; laugh(false, r2); var bub = ov.querySelector(".cbub"), pool = (cnt === 3 || Math.random() < 0.08) ? TARE : (Math.random() < 0.3 ? TKG : TAPL); var pick, tries = 0;
+    do { pick = pool[Math.floor(Math.random() * pool.length)]; tries++; } while (pick === ov._last && tries < 5);
+    ov._last = pick; bub.textContent = pick;
     r2.classList.remove("poke"); void r2.offsetWidth; r2.classList.add("poke"); bub.classList.remove("pop"); void bub.offsetWidth; bub.classList.add("pop");
   });
   document.body.appendChild(ov);
