@@ -813,6 +813,32 @@ input::placeholder { opacity: 0.55; }
 .rkb.r2 { background: linear-gradient(135deg, #f4f6f9, #9aa3ae); color: #2f353c; text-shadow: none; }
 .zc.rare.r2 { box-shadow: 0 0 0 2px #aab3be, 0 0 12px rgba(190, 200, 215, 0.8); }
 .rarebox.r2 { background: linear-gradient(135deg, #f4f6f9, #c4ccd6 55%, #8a94a0); border-color: #4a525c; color: #23282e; box-shadow: 0 0 40px #cfd6df; }
+
+/* トップページ：比率の調整 */
+.hello .lucky .lkbig b { font-size: 24px; } .hello .lucky .lkbig .lkand { font-size: 14px; }
+.hello .scbig i { font-size: 54px; } .hello .scbig u { font-size: 16px; }
+.hello .acttag { font-size: 17px; padding: 5px 20px; margin: 8px 0 4px; }
+.hello .todayact b { font-size: 21px; line-height: 1.5; margin-top: 2px; }
+.hello .todayact .inner { display: block; margin-top: 4px; font-size: 13px; font-weight: 800; color: var(--muted); }
+.hello .molink { font-size: 19px; min-height: 60px; padding: 14px 26px; width: 100%; max-width: 340px; margin-top: 12px; }
+.hello .rmbtn { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 18px; font-weight: 900; min-height: 60px; padding: 12px 24px; width: 100%; max-width: 340px; margin: 10px auto 0; border-radius: 99px; border: 2px solid #8a4fd6; background: linear-gradient(135deg, #fff, #efe3ff); color: #4c2a86; cursor: pointer; font-family: inherit; box-shadow: 0 3px 0 #8a4fd6; }
+.hello .rmbtn small { font-size: 11.5px; font-weight: 700; opacity: 0.85; }
+.rmov { position: fixed; inset: 0; z-index: 100005; display: grid; place-items: center; padding: 16px; background: rgba(30, 18, 52, 0.7); }
+.rmbox { width: 100%; max-width: 400px; background: var(--bg, #fff); color: var(--fg, #222); border-radius: 20px; padding: 20px 16px; text-align: center; } .rmbox h3 { margin: 0 0 6px; } .rmbox p { margin: 6px 0; font-size: 13px; color: var(--muted); }
+.rmbox input[type=time] { font: inherit; font-size: 28px; font-weight: 900; padding: 8px 12px; border-radius: 12px; border: 2px solid var(--line); background: var(--surface); color: var(--fg); margin: 10px 0; }
+.rmq { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; } .rmq button { padding: 6px 12px; border-radius: 99px; border: 1.5px solid var(--line); background: var(--surface); color: var(--fg); font-family: inherit; font-weight: 800; cursor: pointer; }
+.rmbox .go { display: block; width: 100%; min-height: 54px; font-size: 17px; font-weight: 900; margin-top: 8px; } .rmbox .note { font-size: 11.5px; }
+
+/* トップページの比率 */
+.hello .lucky { font-size: 12px; } .hello .lucky .lkbig b { font-size: 22px !important; } .hello .lucky .lkand { font-size: 12px; }
+.hello .scbig i { font-size: 46px !important; } .hello .scbig u { font-size: 14px !important; }
+.hello .acttag { font-size: 22px !important; padding: 8px 26px !important; margin: 12px 0 8px !important; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.22); }
+.hello .todayact b { font-size: 19px !important; } .hello .todayact b .nb { white-space: normal; overflow-wrap: anywhere; }
+.hello .todayact.low .acttag { background: linear-gradient(135deg, #5f5cc0, #3b3a88); color: #fff; }
+.hello .todayact.low b { color: #4a47a8; }
+.hello .molink { font-size: 19px !important; white-space: nowrap; min-height: 70px !important; padding: 16px 16px !important; background: linear-gradient(180deg, #fff3c4, #f2c45a 55%, #e0a63a); color: #4a2f0a; border: 2px solid #8a5e1a; box-shadow: 0 4px 0 #8a5e1a; }
+.hello .rmbtn { font-size: 18px !important; white-space: nowrap; min-height: 74px !important; padding: 12px 14px !important; }
+.mochart { overflow: visible; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -2012,8 +2038,8 @@ function flowG(a, ms) {
   for (j = 0; j < ad.length; j++) if (ad[j].s <= ms && ms < ad[j].e) { sub = ad[j]; break; }
   return { t: 0.6 * pvOf(a, md.k) + 0.4 * pvOf(a, sub.k), k: md.k, sk: sub.k };
 }
-function wxIcon(v) { return v >= 80 ? "☀️" : v >= 60 ? "🌤" : v >= 45 ? "☁️" : "🌱"; }
-function wxWord(v) { return v >= 80 ? "追い風" : v >= 60 ? "おだやか" : v >= 45 ? "力をためる" : "足場固め"; }
+function wxIcon(v) { return v >= 80 ? "☀️" : v >= 60 ? "🌤" : v >= 45 ? "☁️" : "🌙"; }
+function wxWord(v) { return v >= 80 ? "追い風" : v >= 60 ? "おだやか" : v >= 45 ? "力をためる" : "内側をととのえる"; }
 function flowList(a) {
   var now = Date.now(), L = a.dash.filter(function (e) { return e.e > now; }).slice(0, 4), h = '<div class="wx">';
   L.forEach(function (e, i) {
@@ -3746,7 +3772,7 @@ var LK_ITEM = [
   [80, "追い風の日", ["スニーカー", "お気に入りのペン", "腕時計", "イヤホン", "新しいノート", "リュック", "サングラス", "名刺入れ", "キーホルダー", "スマホケース", "革の財布", "トートバッグ", "帽子", "傘", "水筒", "モバイルバッテリー", "ボールペン", "手帳", "マフラー", "ピアス", "指輪", "ネックレス", "香水", "ヘアゴム", "折りたたみ傘", "ミニポーチ", "ステッカー", "万年筆", "スマートウォッチ", "小さなカメラ", "スカーフ", "ネクタイ", "カフス", "日傘", "トレンチコート", "ジャケット", "新しい靴下", "ボディバッグ", "缶バッジ", "ブックカバー", "ミニライト"]],
   [60, "おだやかな日", ["ノート", "小さなお花", "鏡", "お気に入りの香り", "しおり", "マグカップ", "ブレスレット", "ミニタオル", "写真", "ハンドクリーム", "紅茶", "ティーカップ", "文庫本", "観葉植物", "アロマキャンドル", "はちみつ", "手作りのもの", "手紙", "ポストカード", "万華鏡", "ガラスの小物", "木のスプーン", "リネンのハンカチ", "エコバッグ", "お気に入りのお皿", "スノードーム", "星のモチーフ", "小さな置物", "レモンの香り", "ヘアクリップ", "ルームソックス", "アイマスク", "入浴剤", "リップ", "季節の果物", "カーディガン", "おそろいのもの", "旅の思い出の品", "ステンドグラス風の雑貨", "ミニ花瓶", "好きな香りのハンドソープ"]],
   [45, "力をためる日", ["温かい飲み物", "ハンカチ", "ふせん", "手ぶくろ", "ひざかけ", "マスク", "ブランケット", "ストール", "リップクリーム", "カイロ", "毛糸の靴下", "耳あて", "温かいスープ", "ミニ加湿器", "湯たんぽ", "ハーブティー", "白湯", "ポケットティッシュ", "のど飴", "はちみつレモン", "洗いたてのタオル", "ふわふわのスリッパ", "お気に入りのクッション", "目薬", "ミニ絆創膏", "常備薬", "ブランケット付きの膝掛け", "本のしおり", "やわらかいパジャマ", "読みかけの本", "日記帳", "ホットアイマスク", "好きな音楽のプレイリスト", "保温ボトル", "ミルクティー", "米のおにぎり", "おだやかな香り", "防寒インナー", "手入れした靴", "マグネット式のポーチ"]],
-  [0, "足場を固める日", ["ハンカチ", "温かい飲み物", "チョコ", "ふせん", "のど飴", "ミント", "クッション", "ポーチ", "お守り", "はみがき", "歯ブラシ", "目覚まし時計", "常備の水", "小銭入れ", "使い慣れたペン", "好きな缶コーヒー", "洗いたての靴下", "いつもの鞄", "家の鍵", "メモ帳", "手のひらサイズの石", "お気に入りのマグ", "いつもの椅子", "整理したデスク", "ミニほうき", "乾いたタオル", "水のボトル", "丈夫な靴", "使い慣れた財布", "ハンドタオル", "予備の充電ケーブル", "昨日のレシート整理", "お茶のティーバッグ", "軽いストレッチ", "白いシャツ", "静かな音楽", "腹巻き", "古い手帳", "好きな本の一節", "ひざ掛け"]]
+  [0, "内側をととのえる日", ["ハンカチ", "温かい飲み物", "チョコ", "ふせん", "のど飴", "ミント", "クッション", "ポーチ", "お守り", "はみがき", "歯ブラシ", "目覚まし時計", "常備の水", "小銭入れ", "使い慣れたペン", "好きな缶コーヒー", "洗いたての靴下", "いつもの鞄", "家の鍵", "メモ帳", "手のひらサイズの石", "お気に入りのマグ", "いつもの椅子", "整理したデスク", "ミニほうき", "乾いたタオル", "水のボトル", "丈夫な靴", "使い慣れた財布", "ハンドタオル", "予備の充電ケーブル", "昨日のレシート整理", "お茶のティーバッグ", "軽いストレッチ", "白いシャツ", "静かな音楽", "腹巻き", "古い手帳", "好きな本の一節", "ひざ掛け"]]
 ];
 var hello0 = hello;
 hello = function () {
@@ -3991,6 +4017,7 @@ function moScore(a, y, m, d) {
   return Math.max(25, Math.min(98, Math.round(base * 0.85 + 10 + bonus + lun + j)));
 }
 function moAct(a, y, m, d, sc) { var pool = sc >= 75 ? ACT_HI : sc >= 50 ? ACT_MID : ACT_LO; return pool[hashStr(a.seed + "act" + y + "-" + m + "-" + d) % pool.length]; }
+function moBh(s0, arr, H) { var mn = 999, mx = 0, i; for (i = 0; i < arr.length; i++) { mn = Math.min(mn, arr[i].s); mx = Math.max(mx, arr[i].s); } return mx - mn < 1 ? H * 0.5 : H * (0.08 + 0.92 * (s0 - mn) / (mx - mn)); }
 function moTier(v) { return v >= 80 ? "hi" : v >= 60 ? "mid" : v >= 45 ? "lo" : "lw"; }
 function moAdvice(a, y, m, arr) {
   var n = arr.length, avg = Math.round(arr.reduce(function (x, v) { return x + v.s; }, 0) / n), srt = arr.slice().sort(function (x, z) { return z.s - x.s; });
@@ -3999,7 +4026,7 @@ function moAdvice(a, y, m, arr) {
   var tone = avg >= 75 ? "動くほど流れに乗れる、追い風の月です" : avg >= 60 ? "いつものペースで進めるのがいちばん合う、おだやかな月です" : avg >= 48 ? "力をためて整える月です　無理に広げず、足もとを固めましょう" : "ゆっくり休んで土台をつくる月です　片づけと睡眠が味方になります";
   var trend = diff > 4 ? "前半より後半のほうが流れが良くなります　大きな行動は後半に回すと◎" : diff < -4 ? "前半に勢いがあります　やりたいことは早めに動かしましょう" : "月を通して、流れは安定しています";
   var moons = []; arr.forEach(function (x) { var ag = moAge(new Date(y, m, x.d, 12).getTime()); if (ag < 0.5 || ag > 29.03) moons.push("🌑" + x.d + "日（新月：はじまりの種まき）"); else if (Math.abs(ag - 14.77) < 0.5) moons.push("🌕" + x.d + "日（満月：区切りと感謝）"); });
-  return "今月の平均は" + avg + "点　" + tone + "⏎" + trend + "⏎高めの日：" + top + "　休み多めの日：" + low + (moons.length ? "⏎" + moons.join("　") : "") + "⏎";
+  return "今月の平均は" + avg + "点　" + tone + "⏎" + trend + "⏎高めの日：" + top + "　内側をととのえる日（🌙）：" + low + (moons.length ? "⏎" + moons.join("　") : "") + "⏎";
 }
 var moY = 0, moM = 0;
 
@@ -4021,10 +4048,11 @@ var BIO_HELP = '<details class="hlp" open><summary>📖 グラフの見方（か
 function moRender(ov) {
   var a = analyze(ME.A); if (!a) return; var days = new Date(moY, moM + 1, 0).getDate(), arr = [], d, now = new Date(), isNow = now.getFullYear() === moY && now.getMonth() === moM;
   for (d = 1; d <= days; d++) arr.push({ d: d, s: moScore(a, moY, moM, d) });
-  var W = 310, H = 130, bw = (W - 16) / days, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 16) + '" class="mochart" role="img" aria-label="日ごとの得点グラフ"><line x1="8" x2="' + (W - 8) + '" y1="' + (H - H * 0.6) + '" y2="' + (H - H * 0.6) + '" class="mogrid"/>';
+  var W = 310, H = 170, bw = (W - 16) / days, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 16) + '" class="mochart" role="img" aria-label="日ごとの得点グラフ"><line x1="8" x2="' + (W - 8) + '" y1="' + (H - H * 0.6) + '" y2="' + (H - H * 0.6) + '" class="mogrid"/>';
   arr.forEach(function (x, i) {
-    var bh = Math.max(4, H * x.s / 100), bx = 8 + i * bw;
+    var bh = moBh(x.s, arr, H), bx = 8 + i * bw;
     svg += '<rect x="' + (bx + 1).toFixed(1) + '" y="' + (H - bh).toFixed(1) + '" width="' + Math.max(2, bw - 2).toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="2" class="mob ' + moTier(x.s) + (isNow && x.d === now.getDate() ? ' today' : '') + '"/>';
+    if (x.s < 45) svg += '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (H - bh - 3).toFixed(1) + '" class="molab" style="font-size:8px">🌙</text>';
     if (x.d === 1 || x.d % 5 === 0) svg += '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (H + 12) + '" class="molab">' + x.d + '</text>';
   });
   svg += '</svg>';
@@ -4033,7 +4061,7 @@ function moRender(ov) {
     return '<li class="morow' + (isNow && x.d === now.getDate() ? ' today' : '') + '"' + (isNow && x.d === now.getDate() ? ' id="motoday"' : '') + '><span class="mod">' + x.d + '<small>' + MO_WS[dt.getDay()] + '</small></span><b class="mos ' + moTier(x.s) + '">' + x.s + '</b><span class="moa">' + wxIcon(x.s) + ' ' + esc(moAct(a, moY, moM, x.d, x.s)) + mk + '</span></li>';
   }).join("");
   ov.querySelector(".mobody").innerHTML = '<div class="mohead"><button type="button" class="btn ghost" data-mon="-1">‹</button><b>' + moY + '年' + (moM + 1) + '月</b><button type="button" class="btn ghost" data-mon="1">›</button></div>' + svg +
-    '<p class="mocap">棒の高さが、その日の得点（100点満点）です</p><div class="moadv">' + fin(moAdvice(a, moY, moM, arr)) + '</div><p class="mocap">日ごとの小さな開運アクション</p><ul class="molist">' + list + '</ul>' +
+    '<p class="mocap">棒の高さが、その月のなかでの高さです　高い日は外へ動く日、🌙の低い日は「内側をととのえる日」で、休んだり片づけたりすることが開運になります</p><div class="moadv">' + fin(moAdvice(a, moY, moM, arr)) + '</div><p class="mocap">日ごとの小さな開運アクション</p><ul class="molist">' + list + '</ul>' +
     '<p class="mocap">得点は、診断の「流れ」の運気に、曜日と月の満ち欠けを合わせた目安です　エンタメとしてお楽しみください</p>';
 }
 function moOpen() {
@@ -4048,16 +4076,38 @@ document.addEventListener("click", function (e) {
   if (t.dataset.mox) { ov.remove(); return; }
   moM += +t.dataset.mon; if (moM < 0) { moM = 11; moY--; } if (moM > 11) { moM = 0; moY++; } moRender(ov);
 }, false);
+
+/* --- 毎日のリマインド：カレンダーの繰り返し予定(.ics)として登録 --- */
+function rmIcs(hm) {
+  var t = hm.split(":"), now = new Date(), pad = function (n) { return (n < 10 ? "0" : "") + n; }, d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), ds = "" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(+t[0]) + pad(+t[1]) + "00", stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ワタス解体新書//JP", "CALSCALE:GREGORIAN", "BEGIN:VEVENT", "UID:wataso-daily-" + hm.replace(":", "") + "@libertan-33.github.io", "DTSTAMP:" + stamp, "DTSTART:" + ds, "DURATION:PT10M", "RRULE:FREQ=DAILY", "SUMMARY:🔮 今日の運勢をチェック（ワタス解体新書）", "DESCRIPTION:今日のラッキーカラーと開運ポイントを見に行こう\\nhttps://libertan-33.github.io/shindan/", "URL:https://libertan-33.github.io/shindan/", "BEGIN:VALARM", "TRIGGER:PT0M", "ACTION:DISPLAY", "DESCRIPTION:🔮 今日の運勢をチェック", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+}
+function rmOpen() {
+  var old = document.querySelector(".rmov"); if (old) old.remove();
+  var v = ME.rm || "08:00", ov = xEl("div", "rmov", '<div class="rmbox"><h3>🔔 毎日の運勢リマインド</h3><p>時間を選ぶと、スマホのカレンダーに「毎日くり返す予定」を登録できます　その時間に通知が届きます</p><div class="rmq"><button type="button" data-rmq="07:00">朝 7:00</button><button type="button" data-rmq="08:00">朝 8:00</button><button type="button" data-rmq="12:00">昼 12:00</button><button type="button" data-rmq="21:00">夜 21:00</button></div><input type="time" id="rmt" value="' + v + '"><button type="button" class="btn go" data-rmgo="1">📅 カレンダーに登録する</button><button type="button" class="btn ghost" data-rmx="1" style="margin-top:8px">とじる</button><p class="note">登録は、ダウンロードされたファイルを開くとできます（iPhone・Androidのカレンダーに対応）　通知のオンとオフは、カレンダーの設定で変えられます</p></div>');
+  document.body.appendChild(ov);
+}
+document.addEventListener("click", function (e) {
+  var T = e.target && e.target.closest ? e.target : null; if (!T) return;
+  if (T.closest("[data-rm]")) { rmOpen(); return; }
+  var q = T.closest("[data-rmq]"); if (q) { var inp = document.getElementById("rmt"); if (inp) inp.value = q.dataset.rmq; return; }
+  if (T.closest("[data-rmx]")) { var o = document.querySelector(".rmov"); if (o) o.remove(); return; }
+  if (T.closest("[data-rmgo]")) {
+    var inp2 = document.getElementById("rmt"), hm = inp2 && /^\d\d:\d\d$/.test(inp2.value) ? inp2.value : "08:00";
+    try { var blob = new Blob([rmIcs(hm)], { type: "text/calendar;charset=utf-8" }), url = URL.createObjectURL(blob), a = document.createElement("a"); a.href = url; a.download = "wataso-daily.ics"; document.body.appendChild(a); a.click(); window.setTimeout(function () { a.remove(); URL.revokeObjectURL(url); }, 1500); } catch (er) {}
+    ME.rm = hm; meSave(); var o2 = document.querySelector(".rmov"); if (o2) o2.remove(); try { hello(); } catch (er) {}
+  }
+});
 var hello1 = hello;
 hello = function () {
   hello1();
   try {
     var host = $("hello"); if (!host || host.hidden || !ME.A || !ME.A.date) return; var a = analyze(ME.A); if (!a) return;
-    host.querySelectorAll(".todayact, .molink").forEach(function (n) { n.remove(); });
+    host.querySelectorAll(".todayact, .molink, .rmbtn").forEach(function (n) { n.remove(); });
     var n = new Date(), sc = moScore(a, n.getFullYear(), n.getMonth(), n.getDate());
-    var act = xEl("span", "todayact", "✨ 今日の開運スコア<span class=\"scbig\" aria-label=\"" + sc + "点\"><i>" + sc + "</i><u>点</u></span><span class=\"acttag\">🎯 今日の開運アクション</span><b>" + nbz(moAct(a, n.getFullYear(), n.getMonth(), n.getDate(), sc)) + "</b>");
-    var lk = xEl("button", "btn molink", "📅 今月の運勢を見る"); lk.type = "button"; lk.dataset.mo = "1";
-    var em = host.querySelector("em"); host.insertBefore(act, em); host.insertBefore(lk, host.querySelector(".link[data-zk]"));
+    var act = xEl("span", "todayact" + (sc < 50 ? " low" : ""), "✨ 今日の開運スコア<span class=\"scbig\" aria-label=\"" + sc + "点\"><i>" + sc + "</i><u>点</u></span><span class=\"acttag\">" + (sc >= 50 ? "🎯 今日の開運ポイント" : "🌙 今日は、内側をととのえる日") + "</span><b>" + nbz(moAct(a, n.getFullYear(), n.getMonth(), n.getDate(), sc)) + "</b>" + (sc < 50 ? "<span class=\"inner\">今日は内側に力をためる日　休む・整える・ふり返るほど、あとで運が育ちます</span>" : ""));
+    var lk = xEl("button", "btn molink", "📅 今月の運勢グラフを見る"); lk.type = "button"; lk.dataset.mo = "1"; var rmb = xEl("button", "btn rmbtn", "🔔 今日の運勢を、毎日お知らせ" + (ME.rm ? "<small>設定ずみ：毎日 " + ME.rm + "　（変更はここから）</small>" : "<small>毎朝、運勢を見るのを忘れません</small>")); rmb.type = "button"; rmb.dataset.rm = "1";
+    var em = host.querySelector("em"); host.insertBefore(act, em); host.insertBefore(lk, host.querySelector(".link[data-zk]")); host.insertBefore(rmb, host.querySelector(".link[data-zk]"));
   } catch (e) {}
 };
 
@@ -4108,7 +4158,7 @@ function moDay(a, y, m, d) {
   var ms = new Date(y, m, d, 12).getTime(), f = flowAt(a, ms), base = f ? f.t : 60, wd = MO_WD[new Date(ms).getDay()];
   var bonus = (typeof LKWD !== "undefined" && LKWD[a.lord] === wd) ? 8 : 0, lun = Math.cos((moAge(ms) - 14.77) / 29.53 * 6.2832) * 8, j = (hashStr(a.seed + "mo" + y + "-" + m + "-" + d) % 19) - 9;
   var sh = shiDay(a, y, m, d), bio = bioAt(a, y, m, d), raw = base * 0.5 + 22 + bonus + (sh ? sh.pt : 0) + (bio ? (bio.p + bio.e + bio.i) / 3 * 0.12 : 0) + lun + j;
-  return MD_C[k] = { s: Math.round(Math.max(12, Math.min(99, 62 + (raw - 52) * 1.6))), sh: sh, bio: bio };
+  return MD_C[k] = { s: Math.round(Math.max(8, Math.min(99, 58 + (raw - 52) * 2.8))), sh: sh, bio: bio };
 }
 function moScore(a, y, m, d) { return moDay(a, y, m, d).s; }
 function moActsFor(a, y, m) {
@@ -4139,16 +4189,17 @@ function moAdvice(a, y, m, arr) {
   var trend = diff > 4 ? "前半より後半のほうが流れが良くなります　大きな行動は後半に回すと◎" : diff < -4 ? "前半に勢いがあります　やりたいことは早めに動かしましょう" : "月を通して、流れは安定しています";
   var sup = arr.filter(function (x) { return x.sh && x.sh.rel === "支え"; }).slice(0, 3), ch = arr.filter(function (x) { return x.sh && x.sh.ex === "合"; }).slice(0, 3), cl = arr.filter(function (x) { return x.sh && x.sh.ex === "冲"; }).slice(0, 3);
   var moons = []; arr.forEach(function (x) { var ag = moAge(new Date(y, m, x.d, 12).getTime()); if (ag < 0.5 || ag > 29.03) moons.push("🌑" + x.d + "日（新月：はじまりの種まき）"); else if (Math.abs(ag - 14.77) < 0.5) moons.push("🌕" + x.d + "日（満月：区切りと感謝）"); });
-  return "今月の平均は" + avg + "点　" + tone + "⏎" + trend + "⏎高めの日：" + dl(srt.slice(0, 3)) + "　休み多めの日：" + dl(srt.slice(-2)) +
+  return "今月の平均は" + avg + "点　" + tone + "⏎" + trend + "⏎高めの日：" + dl(srt.slice(0, 3)) + "　内側をととのえる日（🌙）：" + dl(srt.slice(-2)) +
     (sup.length ? "⏎助けが入る日（四柱推命）：" + dl(sup) : "") + (ch.length ? "⏎ご縁がつながる日：" + dl(ch) : "") + (cl.length ? "⏎予定が揺れやすい日：" + dl(cl) : "") + (moons.length ? "⏎" + moons.join("　") : "") + "⏎";
 }
 function moRender(ov) {
   var a = analyze(ME.A); if (!a) return; var days = new Date(moY, moM + 1, 0).getDate(), arr = [], d, now = new Date(), isNow = now.getFullYear() === moY && now.getMonth() === moM, acts = moActsFor(a, moY, moM);
   for (d = 1; d <= days; d++) { var r = moDay(a, moY, moM, d); arr.push({ d: d, s: r.s, sh: r.sh, bio: r.bio }); }
-  var W = 310, H = 130, bw = (W - 16) / days, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 16) + '" class="mochart" role="img" aria-label="日ごとの得点グラフ"><line x1="8" x2="' + (W - 8) + '" y1="' + (H - H * 0.6) + '" y2="' + (H - H * 0.6) + '" class="mogrid"/>';
+  var W = 310, H = 170, bw = (W - 16) / days, svg = '<svg viewBox="0 0 ' + W + ' ' + (H + 16) + '" class="mochart" role="img" aria-label="日ごとの得点グラフ"><line x1="8" x2="' + (W - 8) + '" y1="' + (H - H * 0.6) + '" y2="' + (H - H * 0.6) + '" class="mogrid"/>';
   arr.forEach(function (x, i) {
-    var bh = Math.max(4, H * x.s / 100), bx = 8 + i * bw;
+    var bh = moBh(x.s, arr, H), bx = 8 + i * bw;
     svg += '<rect x="' + (bx + 1).toFixed(1) + '" y="' + (H - bh).toFixed(1) + '" width="' + Math.max(2, bw - 2).toFixed(1) + '" height="' + bh.toFixed(1) + '" rx="2" class="mob ' + moTier(x.s) + (isNow && x.d === now.getDate() ? ' today' : '') + '"/>';
+    if (x.s < 45) svg += '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (H - bh - 3).toFixed(1) + '" class="molab" style="font-size:8px">🌙</text>';
     if (x.d === 1 || x.d % 5 === 0) svg += '<text x="' + (bx + bw / 2).toFixed(1) + '" y="' + (H + 12) + '" class="molab">' + x.d + '</text>';
   });
   svg += '</svg>';
@@ -4169,7 +4220,7 @@ function moRender(ov) {
     return '<li class="morow' + (td ? ' today' : '') + '"><span class="mod">' + x.d + '<small>' + MO_WS[dt.getDay()] + '</small></span><b class="mos ' + moTier(x.s) + '">' + x.s + '</b><span class="moa">' + wxIcon(x.s) + ' ' + esc(acts[x.d - 1]) + mk + '<small class="motag">' + esc(moTag(x)) + '</small></span></li>';
   }).join("");
   ov.querySelector(".mobody").innerHTML = '<div class="mohead"><button type="button" class="btn ghost" data-mon="-1">‹</button><b>' + moY + '年' + (moM + 1) + '月</b><button type="button" class="btn ghost" data-mon="1">›</button></div>' + svg +
-    '<p class="mocap">棒の高さが、その日の得点（100点満点）です</p><div class="moadv">' + fin(moAdvice(a, moY, moM, arr)) + '</div>' + shiBlock(a) +
+    '<p class="mocap">棒の高さが、その月のなかでの高さです　高い日は外へ動く日、🌙の低い日は「内側をととのえる日」で、休んだり片づけたりすることが開運になります</p><div class="moadv">' + fin(moAdvice(a, moY, moM, arr)) + '</div>' + shiBlock(a) +
     '<div class="shbox"><b>バイオリズム（体・感情・知性の波）</b>' + bsv + '<p class="mocap"><b style="color:var(--warn)">━ 体（23日周期）</b>　<b style="color:var(--mind)">━ 感情（28日周期）</b>　<b style="color:var(--star)">━ 知性（33日周期）</b><br>点線と●＝今日の位置（今月を見ているときだけ表示）</p>' + bnow + BIO_HELP + '</div>' +
     '<p class="mocap">日ごとの小さな開運アクション</p><ul class="molist">' + list + '</ul>' +
     '<p class="mocap">得点は、診断の「流れ」の運気に、四柱推命（日柱と今日の干支の相性）・バイオリズム・曜日・月の満ち欠けを合わせた目安です　エンタメとしてお楽しみください</p>';
