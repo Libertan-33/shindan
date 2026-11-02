@@ -858,6 +858,25 @@ body { word-break: keep-all; overflow-wrap: anywhere; line-break: strict; }
 p, li, dd, span, div, summary, button, h1, h2, h3, h4, label { overflow-wrap: anywhere; }
 h1, h2, h3, h4, .lead, .catch, .because, button, summary, .acttag, .cnm { text-wrap: balance; }
 p, li, dd { text-wrap: pretty; }
+
+/* 作者カード */
+.auth { margin-top: 22px; padding-top: 18px; border-top: 1.5px dashed rgba(210,105,63,.35); }
+.auth .aimg { width: min(70%, 250px); aspect-ratio: 3/4; object-fit: cover; object-position: 50% 14%; border-radius: 22px; display: block; margin: 0 auto 10px; border: 3px solid #fff; box-shadow: 0 8px 22px rgba(90,40,90,.25); -webkit-user-select: none; user-select: none; }
+.auth .at { font-size: 12px; letter-spacing: .14em; font-weight: 700; color: #d2693f; }
+.auth .an { font-size: 21px; font-weight: 900; color: #5a3a2a; line-height: 1.4; margin: 2px 0 6px; }
+.auth .an small { display: block; font-size: 12.5px; font-weight: 700; color: #9a7260; }
+.sup .auth .ap { margin: 0 0 12px; }
+.auth .al { display: block; margin: 8px auto 0; max-width: 340px; padding: 12px 14px; border-radius: 14px; font-weight: 800; font-size: 14px; line-height: 1.5; text-decoration: none; color: #fff !important; box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+.auth .l1 { background: linear-gradient(135deg,#7a5cff,#a77bff); } .auth .l2 { background: linear-gradient(135deg,#ff8a5c,#ff5f8f); }
+.auth .l3 { background: linear-gradient(135deg,#06c755,#3fd97f); } .auth .l4 { background: linear-gradient(135deg,#2b2b3a,#55556e); }
+.auth .l5 { background: linear-gradient(135deg,#d8962b,#f0c04a); } .auth .l6 { background: linear-gradient(135deg,#6b2bd0,#d05fb0); }
+/* リピート感謝・リマインド */
+.vrib { font-size: 22px !important; line-height: 1.45 !important; text-wrap: balance; }
+.vrib small.vbig { font-size: 17px; color: var(--num); margin: 4px 0 2px; font-weight: 900; }
+.rmbtn.rmnew { animation: rmPulse 2s ease-in-out infinite; }
+@keyframes rmPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 0 6px rgba(139,92,246,.18); } }
+@media (prefers-reduced-motion: reduce) { .rmbtn.rmnew { animation: none; } }
+.rmbox .rmlead { font-size: 15px; font-weight: 800; color: var(--fg); line-height: 1.7; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -936,6 +955,18 @@ p, li, dd { text-wrap: pretty; }
     <p>このサイトは、りばが一人で<br>作って育てています<br>「続けてほしい！」と思ったら<br>応援がめちゃくちゃ励みになります☕</p>
     <a class="sbtn" href="https://qr.paypay.ne.jp/p2p01_siuOfOivPRJeYxxa" target="_blank" rel="noopener noreferrer">PayPayで応援する 💌</a>
     <span class="sn">金額は自由・PayPayアプリで送れます<br><a class="slk" href="https://lit.link/libertan" target="_blank" rel="noopener noreferrer">りばの活動まとめを見るだけでもOK →</a></span>
+    <div class="auth">
+      <img class="aimg" src="libertan.webp" alt="レンタルりばたん（りば）" loading="lazy" decoding="async" draggable="false">
+      <div class="at">この診断をつくった人</div>
+      <div class="an">マダガスカル𖤐りば<small>レンタルりばたん</small></div>
+      <p class="ap">ひとりで話を聞いてほしい日も、<br>ちょっと誰かと話したい日も<br>気軽にのぞいてみてください☺️</p>
+      <a class="al l1" href="https://libertan-33.github.io/libertan/?v=3" target="_blank" rel="noopener noreferrer">🏠 レンタルりばたん ホームページ</a>
+      <a class="al l2" href="https://tol-app.jp/s/rentallibertan" target="_blank" rel="noopener noreferrer">📅 ご予約はこちら（予約フォーム）</a>
+      <a class="al l3" href="https://lin.ee/RFYuSxv" target="_blank" rel="noopener noreferrer">💬 公式LINEで友だち追加</a>
+      <a class="al l4" href="https://note.com/rental_libertan/membership" target="_blank" rel="noopener noreferrer">🌙 noteメンバーシップ「変会」</a>
+      <a class="al l5" href="https://libertan.official.ec/" target="_blank" rel="noopener noreferrer">🛍 ECサイト レンタルりばたんOfficial</a>
+      <a class="al l6" href="https://libertan-33.github.io/shindan/" target="_blank" rel="noopener noreferrer">🔮 自分診断プラットフォーム ワタス解体新書</a>
+    </div>
   </aside>
 
   <section class="mast" id="listpage"></section>
@@ -2928,7 +2959,7 @@ function selfPage(a, key) {
     h += '<div class="block" style="--c:var(--mind)"><span class="lab">思考のクセ</span><div class="big">' + a.type + '</div><h3>' + esc(a.mb[0]) + '</h3><p class="txt">' + esc(a.mb[1]) + '</p>' + lmh(a.mb[2], a.mb[3], a.mb[4]) + '</div>';
     h += '<div class="block" style="--c:var(--mind)"><span class="lab">自分らしさの表現</span><h3>「' + esc(a.style) + '」の表現</h3>' +
       '<p class="txt">' + '診断結果から、見せ方の雰囲気は「' + esc(a.style) + '」と読みました⏎</p><p class="txt">' + esc(expTx) + '</p>' +
-      '<p class="txt">' + esc(a.mb[0]) + 'の気質と、この表現が重なると、「' + esc(a.mb[2]) + '」が自然に伝わります⏎ただし、周りの期待に合わせすぎると「' + esc(a.mb[3]) + '」が強まります⏎自分の言葉で名乗ることが、いちばんの味方です⏎</p></div>';
+      '<p class="txt">' + esc(a.mb[0]) + 'の気質と、この表現が重なると、「' + esc(a.mb[2]) + '」が自然に伝わります⏎ただし、周りの期待に合わせすぎると「' + esc(a.mb[3]) + '」が強まります⏎「自分はこうだ」と自分の言葉で言ってみることが、いちばんの支えになります⏎</p></div>';
   } else if (key === "number") {
     var kline = a.lb === a.kab ? "道（運命数）と名前（カバラ数）が同じ方向を向いています⏎ぶれにくい配置です⏎" : "道は「" + a.num[0] + "」、名前は「" + a.se[0].split("（")[1].replace("）", "") + "」の質で補います⏎";
     h += '<div class="block" style="--c:var(--num)"><span class="lab">運命数</span><div class="big">' + a.lp + '</div><h3>運命数　' + esc(a.num[0]) + '</h3><p class="txt">' + esc(a.num[1]) + '</p>' + lmh(a.num[2], a.num[3], a.num[4]) +
@@ -4099,11 +4130,11 @@ document.addEventListener("click", function (e) {
 /* --- 毎日のリマインド：カレンダーの繰り返し予定(.ics)として登録 --- */
 function rmIcs(hm) {
   var t = hm.split(":"), now = new Date(), pad = function (n) { return (n < 10 ? "0" : "") + n; }, d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), ds = "" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(+t[0]) + pad(+t[1]) + "00", stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
-  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ワタス解体新書//JP", "CALSCALE:GREGORIAN", "BEGIN:VEVENT", "UID:wataso-daily-" + hm.replace(":", "") + "@libertan-33.github.io", "DTSTAMP:" + stamp, "DTSTART:" + ds, "DURATION:PT10M", "RRULE:FREQ=DAILY", "SUMMARY:🔮 今日の運勢をチェック（ワタス解体新書）", "DESCRIPTION:今日のラッキーカラーと開運ポイントを見に行こう\\nhttps://libertan-33.github.io/shindan/", "URL:https://libertan-33.github.io/shindan/", "BEGIN:VALARM", "TRIGGER:PT0M", "ACTION:DISPLAY", "DESCRIPTION:🔮 今日の運勢をチェック", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
+  return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ワタス解体新書//JP", "CALSCALE:GREGORIAN", "BEGIN:VEVENT", "UID:wataso-daily-" + hm.replace(":", "") + "@libertan-33.github.io", "DTSTAMP:" + stamp, "DTSTART:" + ds, "DURATION:PT10M", "RRULE:FREQ=DAILY", "SUMMARY:🔮 今日のラッキーカラーと開運ポイント（ワタス解体新書）", "DESCRIPTION:今日の運勢が届いています✨ ひらくと、今日のラッキーカラー・アイテム・開運ポイントが分かります\\nhttps://libertan-33.github.io/shindan/", "URL:https://libertan-33.github.io/shindan/", "BEGIN:VALARM", "TRIGGER:PT0M", "ACTION:DISPLAY", "DESCRIPTION:🔮 今日の運勢、見にきてね", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
 }
 function rmOpen() {
   var old = document.querySelector(".rmov"); if (old) old.remove();
-  var v = ME.rm || "08:00", ov = xEl("div", "rmov", '<div class="rmbox"><h3>🔔 毎日の運勢リマインド</h3><p>時間を選ぶと、スマホのカレンダーに「毎日くり返す予定」を登録できます　その時間に通知が届きます</p><div class="rmq"><button type="button" data-rmq="07:00">朝 7:00</button><button type="button" data-rmq="08:00">朝 8:00</button><button type="button" data-rmq="12:00">昼 12:00</button><button type="button" data-rmq="21:00">夜 21:00</button></div><input type="time" id="rmt" value="' + v + '"><button type="button" class="btn go" data-rmgo="1">📅 カレンダーに登録する</button><button type="button" class="btn ghost" data-rmx="1" style="margin-top:8px">とじる</button><p class="note">登録は、ダウンロードされたファイルを開くとできます（iPhone・Androidのカレンダーに対応）　通知のオンとオフは、カレンダーの設定で変えられます</p></div>');
+  var v = ME.rm || "08:00", ov = xEl("div", "rmov", '<div class="rmbox"><h3>🔔 毎日の運勢リマインド</h3><p class="rmlead">毎日見るほど、自分の波に気づけます<br>ラッキーカラーも開運ポイントも<br>毎日ちがう内容でお届けします</p><p>時間を選んで登録すると、スマホのカレンダーに<br>「毎日くり返す予定」が入り、その時間に通知が届きます</p><div class="rmq"><button type="button" data-rmq="07:00">朝 7:00</button><button type="button" data-rmq="08:00">朝 8:00</button><button type="button" data-rmq="12:00">昼 12:00</button><button type="button" data-rmq="21:00">夜 21:00</button></div><input type="time" id="rmt" value="' + v + '"><button type="button" class="btn go" data-rmgo="1">📅 カレンダーに登録する</button><button type="button" class="btn ghost" data-rmx="1" style="margin-top:8px">とじる</button><p class="note">登録は、ダウンロードされたファイルを開くとできます（iPhone・Androidのカレンダーに対応）　通知のオンとオフは、カレンダーの設定で変えられます</p></div>');
   document.body.appendChild(ov);
 }
 document.addEventListener("click", function (e) {
@@ -4125,7 +4156,7 @@ hello = function () {
     host.querySelectorAll(".todayact, .molink, .rmbtn").forEach(function (n) { n.remove(); });
     var n = new Date(), sc = moScore(a, n.getFullYear(), n.getMonth(), n.getDate());
     var act = xEl("span", "todayact" + (sc < 50 ? " low" : ""), "✨ 今日の開運スコア<span class=\"scbig\" aria-label=\"" + sc + "点\"><i>" + sc + "</i><u>点</u></span><span class=\"acttag\">" + (sc >= 50 ? "🎯 今日の開運ポイント" : "🌙 今日は、内側をととのえる日") + "</span><b>" + nbz(moAct(a, n.getFullYear(), n.getMonth(), n.getDate(), sc)) + "</b>" + (sc < 50 ? "<span class=\"inner\">今日は内側に力をためる日　休む・整える・ふり返るほど、あとで運が育ちます</span>" : ""));
-    var lk = xEl("button", "btn molink", "📅 今月の運勢グラフを見る"); lk.type = "button"; lk.dataset.mo = "1"; var rmb = xEl("button", "btn rmbtn", "🔔 今日の運勢を、毎日お知らせ" + (ME.rm ? "<small>設定ずみ：毎日 " + ME.rm + "　（変更はここから）</small>" : "<small>毎朝、運勢を見るのを忘れません</small>")); rmb.type = "button"; rmb.dataset.rm = "1";
+    var lk = xEl("button", "btn molink", "📅 今月の運勢グラフを見る"); lk.type = "button"; lk.dataset.mo = "1"; var rmb = xEl("button", "btn rmbtn" + (ME.rm ? "" : " rmnew"), (ME.rm ? "🔔 毎日 " + ME.rm + " にお知らせ中" : "🔔 毎日の運勢を、通知で受け取る") + (ME.rm ? "<small>設定ずみ　（時間の変更はここから）</small>" : "<small>1回の設定で、毎朝スマホに届きます<br>見る習慣が、運を育てます🍀</small>")); rmb.type = "button"; rmb.dataset.rm = "1";
     var em = host.querySelector("em"); host.insertBefore(act, em); host.insertBefore(lk, host.querySelector(".link[data-zk]")); host.insertBefore(rmb, host.querySelector(".link[data-zk]"));
   } catch (e) {}
 };
@@ -4259,7 +4290,7 @@ hello = function () {
     var host = $("hello"); if (!host || host.hidden || !ME.A || !ME.A.date) return;
     var n = (ME.days || []).length; if (n < 2) { host.classList.remove("vip"); return; }
     host.classList.add("vip"); host.querySelectorAll(".vrib, .vdeco").forEach(function (x) { x.remove(); });
-    var rib = xEl("div", "vrib", "🎉 おかえりなさい 🎉<small>あそびに来てくれたのは" + n + "日目😍<br>リピート特典を開放中です</small>"); host.insertBefore(rib, host.firstChild);
+    var rib = xEl("div", "vrib", "🎉 また来てくれて、ありがとう！ 🎉<small class=\"vbig\">" + n + "日目の来訪です😍</small><small>毎日の積み重ねが、うれしいです<br>リピート特典を開放中です</small>"); host.insertBefore(rib, host.firstChild);
     var DC = ["✨", "⭐", "💫", "🌟", "✨", "💖", "🎊", "✨"], i;
     for (i = 0; i < DC.length; i++) { var dc = xEl("span", "vdeco", DC[i]); dc.setAttribute("aria-hidden", "true"); dc.style.left = (4 + (i * 13 + (i % 2) * 5) % 90) + "%"; dc.style.top = (i % 2 ? 62 + (i * 7) % 28 : 4 + (i * 9) % 26) + "%"; dc.style.setProperty("--d", (i * 0.37).toFixed(2) + "s"); host.appendChild(dc); }
     if (!host.dataset.burst) { host.dataset.burst = "1"; window.setTimeout(function () { var r = host.getBoundingClientRect(); if (r.top > -50 && r.top < window.innerHeight) { sparkle(r.left + r.width * 0.2, r.top + 24); sparkle(r.left + r.width * 0.5, r.top + 8); sparkle(r.left + r.width * 0.8, r.top + 24); } }, 700); }
