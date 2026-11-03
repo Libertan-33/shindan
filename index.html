@@ -4207,8 +4207,8 @@ function moDay(a, y, m, d) {
   var k = a.seed + "|" + y + "-" + m + "-" + d; if (MD_C[k]) return MD_C[k];
   var ms = new Date(y, m, d, 12).getTime(), f = flowAt(a, ms), base = f ? f.t : 60, wd = MO_WD[new Date(ms).getDay()];
   var bonus = (typeof LKWD !== "undefined" && LKWD[a.lord] === wd) ? 8 : 0, lun = Math.cos((moAge(ms) - 14.77) / 29.53 * 6.2832) * 8, j = (hashStr(a.seed + "mo" + y + "-" + m + "-" + d) % 19) - 9;
-  var sh = shiDay(a, y, m, d), bio = bioAt(a, y, m, d), raw = base * 0.5 + 22 + bonus + (sh ? sh.pt : 0) + (bio ? (bio.p + bio.e + bio.i) / 3 * 0.12 : 0) + lun + j;
-  return MD_C[k] = { s: Math.round(Math.max(8, Math.min(99, 58 + (raw - 52) * 2.8))), sh: sh, bio: bio };
+  var sh = shiDay(a, y, m, d), bio = bioAt(a, y, m, d), raw = (base - 60) * 0.1 + bonus * 0.8 + (sh ? sh.pt * 1.1 : 0) + (bio ? (bio.p * 0.45 + bio.e * 0.3 + bio.i * 0.25) * 0.28 : 0) + lun + j;
+  return MD_C[k] = { s: Math.round(60 + 34 * Math.tanh(raw * 0.9 / 34)), sh: sh, bio: bio };
 }
 function moScore(a, y, m, d) { return moDay(a, y, m, d).s; }
 function moActsFor(a, y, m) {
