@@ -877,6 +877,7 @@ p, li, dd { text-wrap: pretty; }
 @keyframes rmPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 0 6px rgba(139,92,246,.18); } }
 @media (prefers-reduced-motion: reduce) { .rmbtn.rmnew { animation: none; } }
 .rmbox .rmlead { font-size: 15px; font-weight: 800; color: var(--fg); line-height: 1.7; }
+.cl { display: inline-block; max-width: 100%; margin: 0 .12em; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -4246,8 +4247,8 @@ function moAdvice(a, y, m, arr) {
   var trend = diff > 4 ? "前半より後半のほうが流れが良くなります　大きな行動は後半に回すと◎" : diff < -4 ? "前半に勢いがあります　やりたいことは早めに動かしましょう" : "月を通して、流れは安定しています";
   var sup = arr.filter(function (x) { return x.sh && x.sh.rel === "支え"; }).slice(0, 3), ch = arr.filter(function (x) { return x.sh && x.sh.ex === "合"; }).slice(0, 3), cl = arr.filter(function (x) { return x.sh && x.sh.ex === "冲"; }).slice(0, 3);
   var moons = []; arr.forEach(function (x) { var ag = moAge(new Date(y, m, x.d, 12).getTime()); if (ag < 0.5 || ag > 29.03) moons.push("🌑" + x.d + "日（新月：はじまりの種まき）"); else if (Math.abs(ag - 14.77) < 0.5) moons.push("🌕" + x.d + "日（満月：区切りと感謝）"); });
-  return "今月の平均は" + avg + "点　" + tone + "⏎" + trend + "⏎高めの日：" + dl(srt.slice(0, 3)) + "　内側をととのえる日（🌙）：" + dl(srt.slice(-2)) +
-    (sup.length ? "⏎助けが入る日（四柱推命）：" + dl(sup) : "") + (ch.length ? "⏎ご縁がつながる日：" + dl(ch) : "") + (cl.length ? "⏎予定が揺れやすい日：" + dl(cl) : "") + (moons.length ? "⏎" + moons.join("　") : "") + "⏎";
+  return "今月の平均は" + avg + "点⏎" + tone.replace(/　/g, "⏎") + "⏎" + trend.replace(/　/g, "⏎") + "⏎高めの日：" + dl(srt.slice(0, 3)) + "⏎内側をととのえる日（🌙）：" + dl(srt.slice(-2)) +
+    (sup.length ? "⏎助けが入る日（四柱推命）：" + dl(sup) : "") + (ch.length ? "⏎ご縁がつながる日：" + dl(ch) : "") + (cl.length ? "⏎予定が揺れやすい日：" + dl(cl) : "") + (moons.length ? "⏎" + moons.join("⏎") : "") + "⏎";
 }
 function moRender(ov) {
   var a = analyze(ME.A); if (!a) return; var days = new Date(moY, moM + 1, 0).getDate(), arr = [], d, now = new Date(), isNow = now.getFullYear() === moY && now.getMonth() === moM, acts = moActsFor(a, moY, moM);
@@ -4363,8 +4364,17 @@ if (typeof module !== "undefined") { module.exports = { party: party, analyze: a
     if (n.nodeType === 3) {
       var t = n.nodeValue;
       if (t.length < 6 || !JP.test(t)) return;
-      var parts = bun(t); if (parts.length < 2) return;
       var f = document.createDocumentFragment();
+      if (t.indexOf('\u3000') > 0 && !/^\s*\u3000/.test(t)) {
+        t.split('\u3000').forEach(function (c, k) {
+          if (!c) return; if (k) f.appendChild(document.createTextNode(' '));
+          var sp = document.createElement('span'); sp.className = 'cl';
+          bun(c).forEach(function (x, i) { if (i) sp.appendChild(document.createElement('wbr')); sp.appendChild(document.createTextNode(x)); });
+          f.appendChild(sp);
+        });
+        n.parentNode.replaceChild(f, n); return;
+      }
+      var parts = bun(t); if (parts.length < 2) return;
       parts.forEach(function (x, i) { if (i) f.appendChild(document.createElement('wbr')); f.appendChild(document.createTextNode(x)); });
       n.parentNode.replaceChild(f, n); return;
     }
