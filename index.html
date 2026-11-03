@@ -4128,19 +4128,26 @@ document.addEventListener("click", function (e) {
 }, false);
 
 /* --- 毎日のリマインド：カレンダーの繰り返し予定(.ics)として登録 --- */
+function rmFirst(hm) { var t = hm.split(":"), n = new Date(); return n.getHours() * 60 + n.getMinutes() < +t[0] * 60 + +t[1] - 1; }
+function rmGcal(hm) {
+  var t = hm.split(":"), n = new Date(), pad = function (x) { return (x < 10 ? "0" : "") + x; }, st = new Date(n.getFullYear(), n.getMonth(), n.getDate() + (rmFirst(hm) ? 0 : 1), +t[0], +t[1]), en = new Date(st.getTime() + 600000),
+    f = function (d) { return "" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(d.getHours()) + pad(d.getMinutes()) + "00"; }, tz = "Asia/Tokyo"; try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone || tz; } catch (e) {}
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent("🔮 今日のラッキーカラーと開運ポイント（ワタス解体新書）") + "&dates=" + f(st) + "/" + f(en) + "&ctz=" + encodeURIComponent(tz) + "&recur=" + encodeURIComponent("RRULE:FREQ=DAILY") + "&details=" + encodeURIComponent("今日の運勢が届いています✨\nhttps://libertan-33.github.io/shindan/") + "&location=" + encodeURIComponent("https://libertan-33.github.io/shindan/");
+}
 function rmIcs(hm) {
-  var t = hm.split(":"), now = new Date(), pad = function (n) { return (n < 10 ? "0" : "") + n; }, d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1), ds = "" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(+t[0]) + pad(+t[1]) + "00", stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
+  var t = hm.split(":"), now = new Date(), pad = function (n) { return (n < 10 ? "0" : "") + n; }, d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + (rmFirst(hm) ? 0 : 1)), ds = "" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "T" + pad(+t[0]) + pad(+t[1]) + "00", stamp = now.toISOString().replace(/[-:]/g, "").replace(/\.\d+Z$/, "Z");
   return ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//ワタス解体新書//JP", "CALSCALE:GREGORIAN", "BEGIN:VEVENT", "UID:wataso-daily-" + hm.replace(":", "") + "@libertan-33.github.io", "DTSTAMP:" + stamp, "DTSTART:" + ds, "DURATION:PT10M", "RRULE:FREQ=DAILY", "SUMMARY:🔮 今日のラッキーカラーと開運ポイント（ワタス解体新書）", "DESCRIPTION:今日の運勢が届いています✨ ひらくと、今日のラッキーカラー・アイテム・開運ポイントが分かります\\nhttps://libertan-33.github.io/shindan/", "URL:https://libertan-33.github.io/shindan/", "BEGIN:VALARM", "TRIGGER:PT0M", "ACTION:DISPLAY", "DESCRIPTION:🔮 今日の運勢、見にきてね", "END:VALARM", "END:VEVENT", "END:VCALENDAR"].join("\r\n");
 }
 function rmOpen() {
   var old = document.querySelector(".rmov"); if (old) old.remove();
-  var v = ME.rm || "08:00", ov = xEl("div", "rmov", '<div class="rmbox"><h3>🔔 毎日の運勢リマインド</h3><p class="rmlead">毎日見るほど、自分の波に気づけます<br>ラッキーカラーも開運ポイントも<br>毎日ちがう内容でお届けします</p><p>時間を選んで登録すると、スマホのカレンダーに<br>「毎日くり返す予定」が入り、その時間に通知が届きます</p><div class="rmq"><button type="button" data-rmq="07:00">朝 7:00</button><button type="button" data-rmq="08:00">朝 8:00</button><button type="button" data-rmq="12:00">昼 12:00</button><button type="button" data-rmq="21:00">夜 21:00</button></div><input type="time" id="rmt" value="' + v + '"><button type="button" class="btn go" data-rmgo="1">📅 カレンダーに登録する</button><button type="button" class="btn ghost" data-rmx="1" style="margin-top:8px">とじる</button><p class="note">登録は、ダウンロードされたファイルを開くとできます（iPhone・Androidのカレンダーに対応）　通知のオンとオフは、カレンダーの設定で変えられます</p></div>');
+  var v = ME.rm || "08:00", ov = xEl("div", "rmov", '<div class="rmbox"><h3>🔔 毎日の運勢リマインド</h3><p class="rmlead">毎日見るほど、自分の波に気づけます<br>ラッキーカラーも開運ポイントも<br>毎日ちがう内容でお届けします</p><p>時間を選んで登録すると、スマホのカレンダーに<br>「毎日くり返す予定」が入り、その時間に通知が届きます</p><div class="rmq"><button type="button" data-rmq="07:00">朝 7:00</button><button type="button" data-rmq="08:00">朝 8:00</button><button type="button" data-rmq="12:00">昼 12:00</button><button type="button" data-rmq="21:00">夜 21:00</button></div><input type="time" id="rmt" value="' + v + '"><button type="button" class="btn go" data-rmg="1">📅 Googleカレンダーに登録（ワンタップ）</button><button type="button" class="btn ghost" data-rmgo="1" style="margin-top:8px">🍎 iPhoneのカレンダーなど（ファイルで登録）</button><button type="button" class="btn ghost" data-rmx="1" style="margin-top:8px">とじる</button><p class="note">Googleカレンダーは、ボタンを押すと予定の画面が開くので「保存」を押すだけです　Androidはこちらがおすすめです<br>ファイルで登録する場合は、ダウンロードされたファイルを開いてください<br>通知が来ないときは、カレンダーアプリ側の通知設定がオンか確認してください</p></div>');
   document.body.appendChild(ov);
 }
 document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target : null; if (!T) return;
   if (T.closest("[data-rm]")) { rmOpen(); return; }
   var q = T.closest("[data-rmq]"); if (q) { var inp = document.getElementById("rmt"); if (inp) inp.value = q.dataset.rmq; return; }
+  if (T.closest("[data-rmg]")) { var i3 = document.getElementById("rmt"), h3 = i3 && /^\d\d:\d\d$/.test(i3.value) ? i3.value : "08:00"; ME.rm = h3; meSave(); window.open(rmGcal(h3), "_blank", "noopener"); var o3 = document.querySelector(".rmov"); if (o3) o3.remove(); try { hello(); } catch (er) {} return; }
   if (T.closest("[data-rmx]")) { var o = document.querySelector(".rmov"); if (o) o.remove(); return; }
   if (T.closest("[data-rmgo]")) {
     var inp2 = document.getElementById("rmt"), hm = inp2 && /^\d\d:\d\d$/.test(inp2.value) ? inp2.value : "08:00";
