@@ -4446,7 +4446,9 @@ document.addEventListener("click", function (e) {
   if (g && ME.inv) {
     var v = ME.inv, B = S.B; B.sur = ""; B.giv = ""; B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
     try { var b = analyze(B); if (b) { ME.gx = ME.gx || {}; ME.gx[b.seed >>> 0] = v.c; meSave(); collect(analyze(S.A)); collect(b); } } catch (er) {}
-    try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo(); try { $("panel-duo").scrollIntoView(); } catch (er) { window.scrollTo(0, 0); } return;
+    try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo();
+    var goRes = function () { try { var r = $("res-duo"), y = Math.max(0, Math.round(r.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0)) - 64); window.scrollTo({ top: y, behavior: "smooth" }); } catch (er) { window.scrollTo(0, 0); } };
+    goRes(); window.setTimeout(goRes, 350); return;
   }
   var t = e.target && e.target.closest ? e.target.closest("[data-sm]") : null; if (!t) return;
   var a = analyze(S.A); if (!a) return; var k = t.dataset.sm, u = invUrl(a), tx = invText(a), msg = document.querySelector("[data-smmsg]");
