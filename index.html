@@ -4418,13 +4418,13 @@ function invClean(o) {
   if (!(c >= 0 && c < CHR.length)) return null; var pl = parseInt(A.place, 10); if (!(pl >= 0 && pl < 200)) pl = 0;
   return { c: c, n: String(o.n || "").slice(0, 24), A: { sur: "", giv: "", g: A.g === "m" || A.g === "f" ? A.g : "o", date: A.date, time: t, unk: !!A.unk, place: pl, mbti: { EI: m.EI, SN: m.SN, TF: m.TF, JP: m.JP } } };
 }
-function invUrl(a) { var A = S.A; return SHARE_URL + "?d=" + b64e({ c: pickChar(a), n: String(myName(a)).slice(0, 24), A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti } }); }
+function invUrl(a) { var A = S.A; return SHARE_URL + "?d=" + b64e({ c: pickChar(a), n: String(myName(a)).slice(0, 24), A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti } }) + "&openExternalBrowser=1"; }
 function invText(a) { var c = CHR[pickChar(a)]; return "わたしのキャラは「" + c.n + "」（" + RKN[c.r || 0] + "）でした✨\nあなたのキャラも見せてほしい！\nふたりの相性診断をしてみよう💞"; }
 function sendMeHTML(a) {
   var i = pickChar(a), c = CHR[i];
   return '<div class="sendme"><div class="smt">💌 お相手に、あなたのキャラを送ろう</div><div class="smr"><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(i) + '</div><div class="smx"><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b><span>' + esc(myName(a)) + '</span></div></div>' +
     '<p class="smp">リンクを送ると、お相手は自分の診断だけで<br>ふたりの相性まで見られます<br><small>（生年月日はお相手の画面には出ません）</small></p>' +
-    '<div class="sbs"><button type="button" class="sb sline" data-sm="line">LINEで送る</button><button type="button" class="sb sx" data-sm="card">画像カードを作る</button><button type="button" class="sb scp" data-sm="copy">リンクをコピー</button></div><p class="ssm" data-smmsg></p></div>';
+    '<div class="sbs"><button type="button" class="sb sline" data-sm="line">LINEで送る</button><button type="button" class="sb sx" data-sm="card">画像カードを作る</button><button type="button" class="sb scp" data-sm="copy">リンクをコピー</button>' + (navigator.share ? '<button type="button" class="sb sx" data-sm="native">📤 ほかのアプリで送る</button>' : "") + '</div><p class="ssm" data-smmsg></p></div>';
 }
 function invRecvHTML() {
   var v = ME.inv; if (!v) return ""; var c = CHR[v.c];
@@ -4446,6 +4446,7 @@ document.addEventListener("click", function (e) {
   if (k !== "card" && !window.confirm("リンクには、診断のためのデータ（生年月日など）が含まれます\nお相手の画面には表示されませんが、信頼できる相手にだけ送ってください\n\n送りますか？")) return;
   if (k === "line") window.open("https://line.me/R/msg/text/?" + encodeURIComponent(tx + "\n" + u), "_blank", "noopener");
   else if (k === "card") openCard("self");
+  else if (k === "native" && navigator.share) { navigator.share({ title: "ワタス解体新書", text: tx, url: u }).catch(function () {}); }
   else {
     var done = function () { if (msg) msg.textContent = "リンクをコピーしました　お相手に貼りつけてね"; };
     try { navigator.clipboard.writeText(tx + "\n" + u).then(done, function () { if (msg) msg.textContent = u; }); } catch (er) { if (msg) msg.textContent = u; }
