@@ -878,6 +878,18 @@ p, li, dd { text-wrap: pretty; }
 @media (prefers-reduced-motion: reduce) { .rmbtn.rmnew { animation: none; } }
 .rmbox .rmlead { font-size: 15px; font-weight: 800; color: var(--fg); line-height: 1.7; }
 .cl { display: inline-block; max-width: 100%; margin: 0 .12em; }
+
+/* キャラ送信 */
+.sendme, .invc { margin: 0 auto 16px; max-width: 360px; padding: 16px 14px; border-radius: 20px; background: linear-gradient(135deg, #fff7e6, #ffe9f1 55%, #efe6ff); border: 1.5px solid rgba(255,170,120,.55); box-shadow: 0 8px 22px rgba(255,140,120,.2); color: #5a3a2a; text-align: center; }
+.sendme .smt, .invc .invt { font-weight: 900; font-size: 16px; line-height: 1.5; }
+.sendme .smr { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 12px 0 4px; }
+.sm-fr { width: 140px; flex: none; margin: 0 4px; } .sm-fr .mat { padding: 0; } .sm-fr .mat img { width: 100%; height: auto; }
+.sendme .sbs { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; } .sendme .sb { font: inherit; font-weight: 800; font-size: 13.5px; min-height: 44px; padding: 0 14px; border-radius: 999px; border: 0; color: #fff; cursor: pointer; } .sendme .sline { background: #06b94d; } .sendme .sx { background: #7a4ad8; } .sendme .scp { background: #6A56A0; } .sendme .ssm { min-height: 1.4em; margin: 8px 0 0; font-size: 12px; }
+.invc .sm-fr { margin: 12px auto 4px; width: 190px; }
+.sendme .smx { display: flex; flex-direction: column; text-align: left; gap: 2px; min-width: 0; } .sendme .smx span { font-size: 12px; opacity: .8; }
+.sendme .cnm, .invc .cnm { display: block; margin-top: 4px; font-size: 1.3rem; }
+.sendme .smp, .invc .invp { margin: 8px 0 12px; font-size: 13.5px; line-height: 1.8; }
+.invc .invn { display: block; font-size: 13px; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -898,6 +910,7 @@ p, li, dd { text-wrap: pretty; }
     <div class="ttlwrap"><span class="bub">テキトー占い師!?</span><h1 class="pt" aria-label="マダガスカル𖤐りばの　フルコンプ!?　ワタス解体新書"><span class="l1" aria-hidden="true"><span class="pc" data-t="マ" style="animation-delay:0.00s">マ</span><span class="pc" data-t="ダ" style="animation-delay:0.10s">ダ</span><span class="pc" data-t="ガ" style="animation-delay:0.20s">ガ</span><span class="pc" data-t="ス" style="animation-delay:0.30s">ス</span><span class="pc" data-t="カ" style="animation-delay:0.40s">カ</span><span class="pc" data-t="ル" style="animation-delay:0.50s">ル</span><span class="pc" data-t="𖤐" style="animation-delay:0.60s">𖤐</span><span class="pc" data-t="り" style="animation-delay:0.70s">り</span><span class="pc" data-t="ば" style="animation-delay:0.80s">ば</span><span class="pc" data-t="の" style="animation-delay:0.90s">の</span></span><span class="l1b" aria-hidden="true">フルコンプ!?</span><span class="l2" aria-hidden="true"><span class="pc" data-t="ワ" style="animation-delay:0.50s">ワ</span><span class="pc" data-t="タ" style="animation-delay:0.60s">タ</span><span class="pc" data-t="ス" style="animation-delay:0.70s">ス</span><span class="pc" data-t="解" style="animation-delay:0.80s">解</span><span class="pc" data-t="体" style="animation-delay:0.90s">体</span><span class="pc" data-t="新" style="animation-delay:1.00s">新</span><span class="pc" data-t="書" style="animation-delay:1.10s">書</span></span></h1></div>
     <p class="credit">くりえいてぃっど ばぁい りばたん</p>
     <p class="catch"><span class="kw">「なんで私こうなの？」</span>の答えが、<br>全ての診断を通して、<span class="em">自分の輪郭</span>が<br>はっきりしていく</p>
+    <div id="invite"></div>
     <div class="hello" id="hello" hidden></div>
     <div class="enter"><span class="entbtn"><span class="climb" id="climb" aria-hidden="true"></span><button type="button" class="enter-btn" data-stage="intro"><span class="entsm">解体されちゃいたい方はこちら</span><span class="entbig">入口</span></button></span></div>
     <div class="tqs"><button type="button" class="btn ghost" data-stage="list">📖 診断タイプ一覧</button><button type="button" class="btn ghost" data-share="native">👫 友だちに教える</button></div>
@@ -939,6 +952,7 @@ p, li, dd { text-wrap: pretty; }
   </section>
 
   <section id="panel-duo" role="tabpanel" aria-labelledby="tab-duo" hidden>
+    <div id="sendme"></div>
     <p class="recap" id="recap"></p>
     <div style="height:18px"></div>
     <p class="eyebrow" style="margin-bottom:12px">お相手の情報</p>
@@ -4391,6 +4405,39 @@ if (typeof module !== "undefined") { module.exports = { party: party, analyze: a
   });
   function go() { mo.observe(document.body, { childList: true, subtree: true, characterData: true }); try { busy = true; mo.disconnect(); walk(document.body); } catch (e) {} mo.observe(document.body, { childList: true, subtree: true, characterData: true }); busy = false; }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+})();
+
+/* ===== お相手にキャラを送る／届いたキャラを受け取る ===== */
+function invUrl(a) { return SHARE_URL + "?c=" + pickChar(a) + "&n=" + encodeURIComponent(String(myName(a)).slice(0, 24)); }
+function invText(a) { var c = CHR[pickChar(a)]; return "わたしのキャラは「" + c.n + "」（" + RKN[c.r || 0] + "）でした✨\nあなたのキャラも見せてほしい！\nふたりの相性診断をしてみよう💞"; }
+function sendMeHTML(a) {
+  var i = pickChar(a), c = CHR[i];
+  return '<div class="sendme"><div class="smt">💌 お相手に、あなたのキャラを送ろう</div><div class="smr"><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(i) + '</div><div class="smx"><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b><span>' + esc(myName(a)) + '</span></div></div>' +
+    '<p class="smp">先にキャラを見せ合うと、<br>相性診断がぐっと盛り上がります</p>' +
+    '<div class="sbs"><button type="button" class="sb sline" data-sm="line">LINEで送る</button><button type="button" class="sb sx" data-sm="card">画像カードを作る</button><button type="button" class="sb scp" data-sm="copy">リンクをコピー</button></div><p class="ssm" data-smmsg></p></div>';
+}
+function sendMeFill() {
+  var h = document.getElementById("sendme"); if (!h) return; var a = null; try { a = analyze(S.A); } catch (e) {} h.innerHTML = a ? sendMeHTML(a) : "";
+}
+var renderDuo2 = renderDuo; renderDuo = function () { renderDuo2(); try { sendMeFill(); } catch (e) {} };
+document.addEventListener("click", function (e) {
+  var t = e.target && e.target.closest ? e.target.closest("[data-sm]") : null; if (!t) return;
+  var a = analyze(S.A); if (!a) return; var k = t.dataset.sm, u = invUrl(a), tx = invText(a), msg = document.querySelector("[data-smmsg]");
+  if (k === "line") window.open("https://line.me/R/msg/text/?" + encodeURIComponent(tx + "\n" + u), "_blank", "noopener");
+  else if (k === "card") openCard("self");
+  else {
+    var done = function () { if (msg) msg.textContent = "リンクをコピーしました　お相手に貼りつけてね"; };
+    try { navigator.clipboard.writeText(tx + "\n" + u).then(done, function () { if (msg) msg.textContent = u; }); } catch (er) { if (msg) msg.textContent = u; }
+  }
+});
+(function () {
+  try {
+    var q = new URLSearchParams(location.search), ci = parseInt(q.get("c"), 10), nm = (q.get("n") || "").slice(0, 24), h = document.getElementById("invite");
+    if (!h || !(ci >= 0 && ci < CHR.length)) return; var c = CHR[ci];
+    h.innerHTML = '<div class="invc"><div class="invt">💌 お友だちから、キャラが届きました</div><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(ci) + '</div><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b>' +
+      (nm ? '<span class="invn">' + esc(nm) + ' さん</span>' : '') + '<p class="invp">あなたのキャラは、どんな子？<br>診断して、ふたりの相性を見てみよう💞</p></div>';
+    try { history.replaceState(null, "", location.pathname); } catch (e) {}
+  } catch (e) {}
 })();
 </script>
 
