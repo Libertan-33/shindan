@@ -896,6 +896,7 @@ p, li, dd { text-wrap: pretty; }
 .hello .redo { display: block; margin: 6px auto; font-size: 14px; min-height: 44px; }
 .shbox .shp { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 .myres2 { background: linear-gradient(135deg, #6b2bd0, #d05fb0) !important; color: #fff !important; border: 0; font-weight: 900; }
+.hello .mesave { display: block; margin: 6px auto 0; font-size: 13px; min-height: 50px; } .hello .mesave small { display: block; font-size: 10.5px; opacity: .8; font-weight: 600; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -4519,8 +4520,25 @@ function addMyRes() {
     var b2 = xEl("button", "btn ghost redo", "🔄 もう一度、診断する"); b2.type = "button"; b2.dataset.redo = "1";
     var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first);
     var z = host.querySelector(".link[data-zk]"); host.insertBefore(b2, z);
+    var b3 = xEl("button", "btn ghost mesave", "🔗 診断結果を保存するリンクをコピー<small>別のアプリ・別のスマホでも、すぐ結果が開けます</small>"); b3.type = "button"; b3.dataset.mesave = "1"; host.insertBefore(b3, z);
   } catch (e) {}
 }
+function meUrl() { var A = ME.A; return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12) }) + "&openExternalBrowser=1"; }
+document.addEventListener("click", function (e) {
+  var T = e.target && e.target.closest ? e.target.closest("[data-mesave]") : null; if (!T || !ME.A) return;
+  var u = meUrl(), msg = "自分専用リンクです　ブックマークやメモに保存しておくと、どの端末でもすぐ結果が開けます\n（生年月日が含まれるので、他の人には送らないでください）";
+  if (navigator.share) { navigator.share({ title: "ワタス解体新書｜自分の診断結果", text: msg, url: u }).catch(function () {}); return; }
+  try { navigator.clipboard.writeText(u).then(function () { T.innerHTML = "✅ コピーしました<small>メモやブックマークに保存してください</small>"; }); } catch (er) { window.prompt("このリンクを保存してください", u); }
+});
+(function () {
+  try {
+    var q = new URLSearchParams(location.search), t = q.get("me"); if (!t) return; var o = invClean(b64d(t)); if (!o) return;
+    if (ME.A && ME.A.date && ME.A.date !== o.A.date && !window.confirm("このリンクの診断データで、この端末の診断を置きかえますか？")) return;
+    o.A.sur = String(JSON.parse(JSON.stringify(b64d(t))).s || "").slice(0, 12); o.A.giv = String(b64d(t).v || "").slice(0, 12);
+    ME.A = o.A; ME.last = ME.last || Date.now(); meSave(); try { history.replaceState(null, "", location.pathname); } catch (er) {}
+    var hh = $("hello"); if (hh) { try { hello(); } catch (er) {} }
+  } catch (e) {}
+})();
 var hello4 = hello;
 hello = function () { hello4(); addMyRes(); };
 addMyRes();
