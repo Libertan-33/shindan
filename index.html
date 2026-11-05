@@ -877,7 +877,7 @@ p, li, dd { text-wrap: pretty; }
 @keyframes rmPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); box-shadow: 0 0 0 6px rgba(139,92,246,.18); } }
 @media (prefers-reduced-motion: reduce) { .rmbtn.rmnew { animation: none; } }
 .rmbox .rmlead { font-size: 15px; font-weight: 800; color: var(--fg); line-height: 1.7; }
-.cl { display: inline-block; max-width: 100%; margin: 0 .12em; }
+.cl { display: inline-block; max-width: 100%; } .cl + .cl { margin-left: .6em; }
 
 /* キャラ送信 */
 .sendme, .invc { margin: 0 auto 16px; max-width: 360px; padding: 16px 14px; border-radius: 20px; background: linear-gradient(135deg, #fff7e6, #ffe9f1 55%, #efe6ff); border: 1.5px solid rgba(255,170,120,.55); box-shadow: 0 8px 22px rgba(255,140,120,.2); color: #5a3a2a; text-align: center; }
@@ -890,6 +890,11 @@ p, li, dd { text-wrap: pretty; }
 .sendme .cnm, .invc .cnm { display: block; margin-top: 4px; font-size: 1.3rem; }
 .sendme .smp, .invc .invp { margin: 8px 0 12px; font-size: 13.5px; line-height: 1.8; }
 .invc .invn { display: block; font-size: 13px; }
+
+.hello .myres { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; max-width: 340px; margin: 14px auto 6px; min-height: 66px; font-size: 20px; font-weight: 900; background: linear-gradient(135deg, #6b2bd0, #d05fb0) !important; color: #fff !important; border: 0; box-shadow: 0 6px 16px rgba(107,43,208,.35); }
+.hello .myres small { font-size: 11.5px; font-weight: 700; opacity: .9; }
+.hello .redo { display: block; margin: 6px auto; font-size: 14px; min-height: 44px; }
+.shbox .shp { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -4477,6 +4482,46 @@ renderSelf = function () {
   } catch (e) {}
 };
 try { if (ME.inv) renderSelf(); } catch (e) {}
+
+/* ===== 四柱推命ページ（自分の診断に追加） ===== */
+var ST_RD = ["きのえ", "きのと", "ひのえ", "ひのと", "つちのえ", "つちのと", "かのえ", "かのと", "みずのえ", "みずのと"];
+PG_SELF.splice(PG_SELF.map(function (x) { return x[0]; }).indexOf("star") + 1, 0, ["shichu", "四柱推命", "--num"]);
+PG_DESC.shichu = "生まれた日から読む「あなたの型」";
+function shichuPage(a) {
+  var c = shiChart(a);
+  if (!c) return '<div class="block" style="--c:var(--num)"><span class="lab">四柱推命</span><h3>生年月日が必要です</h3><p class="txt">生年月日を入れると、命式が出ます⏎</p></div>';
+  var tp = DM_TXT[c.dm].split("　"), tn = tp[0], rest = tp.slice(1).join("　"), n = new Date(), sd = null; try { sd = shiDay(a, n.getFullYear(), n.getMonth(), n.getDate()); } catch (e) {}
+  var h = '<div class="block" style="--c:var(--num)"><span class="lab">あなたは、これ</span><h3>日主は「' + ST.charAt(c.dm) + '」（' + ST_RD[c.dm] + '）<br>' + esc(tn) + '</h3><p class="txt">' + esc(rest.replace(/　/g, "⏎")) + '⏎</p></div>';
+  h += shiBlock(a);
+  if (sd) h += '<div class="block" style="--c:var(--num)"><span class="lab">今日の四柱推命</span><h3>今日は「' + esc(sd.stem) + '」の日</h3><p class="txt">' + esc(sd.txt.replace(/　/g, "⏎")) + '⏎毎日の流れは、トップの「今月の運勢グラフ」でも見られます⏎</p></div>';
+  if (!(a.p && a.p.time && !a.p.unk)) h += '<p class="mocap">出生時刻がわからないため、「時柱」は出していません　時刻を入れると4本の柱で読めます</p>';
+  return h;
+}
+var selfPage5 = selfPage; selfPage = function (a, key) { return key === "shichu" ? shichuPage(a) : selfPage5(a, key); };
+
+/* ===== 診断ずみの人：すぐ結果へ／もう一度診断 ===== */
+document.addEventListener("click", function (e) {
+  var T = e.target && e.target.closest ? e.target : null; if (!T) return;
+  var my = T.closest("[data-myres]"), rd = T.closest("[data-redo]");
+  if (!my && !rd) return;
+  if (!ME.A || !ME.A.date) return;
+  var A = ME.A; S.A = { sur: A.sur || "", giv: A.giv || "", g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: { EI: A.mbti.EI, SN: A.mbti.SN, TF: A.mbti.TF, JP: A.mbti.JP }, touched: true };
+  try { $("app").dataset.stage = "form"; setTab("self"); } catch (er) {}
+  if (my) { S.page.self = "overview"; try { collect(analyze(S.A)); } catch (er) {} } else { S.page.self = "in"; }
+  try { renderSelf(); } catch (er) {} try { window.scrollTo(0, 0); } catch (er) {}
+});
+var hello4 = hello;
+hello = function () {
+  hello4();
+  try {
+    var host = $("hello"); if (!host || host.hidden || !ME.A || !ME.A.date) return;
+    host.querySelectorAll(".myres, .redo").forEach(function (n) { n.remove(); });
+    var b1 = xEl("button", "btn myres", "📖 自分の診断結果を見る<small>前回の入力で、すぐ結果へ</small>"); b1.type = "button"; b1.dataset.myres = "1";
+    var b2 = xEl("button", "btn ghost redo", "🔄 もう一度、診断する"); b2.type = "button"; b2.dataset.redo = "1";
+    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); 
+    var z = host.querySelector(".link[data-zk]"); host.insertBefore(b2, z);
+  } catch (e) {}
+};
 </script>
 
 
