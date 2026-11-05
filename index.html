@@ -947,6 +947,7 @@ p, li, dd { text-wrap: pretty; }
   </div>
 
   <section id="panel-self" role="tabpanel" aria-labelledby="tab-self">
+    <div id="invform"></div>
     <div id="form-A"></div>
     <div class="res" id="res-self" aria-live="polite"></div>
   </section>
@@ -4438,7 +4439,7 @@ document.addEventListener("click", function (e) {
   if (g && ME.inv) {
     var v = ME.inv, B = S.B; B.sur = ""; B.giv = ""; B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
     try { var b = analyze(B); if (b) { ME.gx = ME.gx || {}; ME.gx[b.seed >>> 0] = v.c; meSave(); collect(analyze(S.A)); collect(b); } } catch (er) {}
-    S.page.duo = "overview"; renderDuo(); try { $("panel-duo").scrollIntoView(); } catch (er) { window.scrollTo(0, 0); } return;
+    try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo(); try { $("panel-duo").scrollIntoView(); } catch (er) { window.scrollTo(0, 0); } return;
   }
   var t = e.target && e.target.closest ? e.target.closest("[data-sm]") : null; if (!t) return;
   var a = analyze(S.A); if (!a) return; var k = t.dataset.sm, u = invUrl(a), tx = invText(a), msg = document.querySelector("[data-smmsg]");
@@ -4459,8 +4460,22 @@ document.addEventListener("click", function (e) {
     h.innerHTML = '<div class="invc"><div class="invt">💌 お友だちから、キャラが届きました</div><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(ci) + '</div><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b>' +
       (nm ? '<span class="invn">' + esc(nm) + ' さん</span>' : '') + '<p class="invp">あなたのキャラは、どんな子？<br>自分の診断をすると、このキャラとの<br>相性がボタンひとつで見られます💞</p></div>';
     try { history.replaceState(null, "", location.pathname); } catch (e) {}
+    try { if (ME.inv) renderSelf(); } catch (e) {}
   } catch (e) {}
 })();
+
+/* 受け取った人：自分の診断の最初の画面から、すぐ相性へ進める */
+var renderSelf3 = renderSelf;
+renderSelf = function () {
+  renderSelf3();
+  try {
+    document.querySelectorAll(".invself").forEach(function (x) { x.remove(); }); var ivf = $("invform"); if (ivf) ivf.innerHTML = ""; if (!ME.inv) return;
+    var res = $("res-self"), inp = ivf, inForm = S.page.self === "in";
+    if (inForm && inp) inp.innerHTML = ('<div class="invself"><div class="sendme invr"><div class="smt">💞 ' + (ME.inv.n ? esc(ME.inv.n) + ' さんから、' : '') + 'キャラが届いています</div><p class="smp">自分の生年月日などを入れて診断すると、<br>そのあと、ふたりの相性がすぐ診られます<br><small>（LINEのアプリ内で開くと、診断データが保存されないことがあります）</small></p></div></div>');
+    else if (!inForm && res && !res.hidden) res.insertAdjacentHTML("afterbegin", '<div class="invself">' + invRecvHTML() + '</div>');
+  } catch (e) {}
+};
+try { if (ME.inv) renderSelf(); } catch (e) {}
 </script>
 
 
