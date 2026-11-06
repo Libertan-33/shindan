@@ -3,14 +3,27 @@
 .az{display:flex;align-items:center;gap:10px;width:min(100%,420px);margin:2px auto;opacity:0;transform:translateX(-26px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.9,.3,1.2)}
 .az.rt{flex-direction:row-reverse;transform:translateX(26px)}
 .az.in{opacity:1;transform:none}
-.az .ai{flex:none;display:flex;flex-direction:column;align-items:center;width:64px;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.az .ai img{width:56px;height:56px;border-radius:50%;object-fit:cover;background:#fff;border:2.5px solid #bbb;box-shadow:0 2px 6px rgba(0,0,0,.15)}
-.az .ai.r3 img{border-color:#e9a82a;box-shadow:0 0 0 2px #fff3c4,0 0 10px #f7c948}
-.az .ai.r4 img{border-color:#ff7ab8;box-shadow:0 0 0 2px #fff,0 0 12px #ffb43b,0 0 18px #7ab8ff}
-.az .ai i{font:700 9px/1 sans-serif;font-style:normal;color:#fff;border-radius:6px;padding:2px 5px;margin-top:-7px;position:relative;background:#e08a1e}
+.az .ai{flex:none;position:relative;display:flex;flex-direction:column;align-items:center;width:84px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.az .ai img{width:80px;height:auto;max-height:96px;object-fit:contain;transform-origin:50% 100%;filter:drop-shadow(0 3px 3px rgba(0,0,0,.22))}
+.az .ai.r3 img{filter:drop-shadow(0 0 5px #f7c948) drop-shadow(0 3px 3px rgba(0,0,0,.22))}
+.az .ai.r4 img{filter:drop-shadow(0 0 5px #ff7ab8) drop-shadow(0 0 8px #7ab8ff) drop-shadow(0 3px 3px rgba(0,0,0,.22))}
+.az .ai i{font:700 9px/1 sans-serif;font-style:normal;color:#fff;border-radius:6px;padding:2px 5px;margin-top:-6px;position:relative;background:#e08a1e}
 .az .ai.r4 i{background:linear-gradient(120deg,#ff5fa2,#ffb43b,#5be0c0,#6a7cff)}
-.az .ai small,.az .ai small *{white-space:nowrap!important;display:inline!important}.az .ai small{display:block!important;height:12px;line-height:12px;text-align:center;font-size:9px;color:#8a7f76;max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
-.az .bb{position:relative;background:#fffdf8;border:1.5px solid #e6d9c8;border-radius:16px;padding:8px 13px;font-size:13px;line-height:1.5;color:#4a3b32;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;max-width:calc(100% - 78px)}
+.az .ai .mk{position:absolute;top:-4px;right:-2px;font:700 15px/1 sans-serif;color:#7a5cc0;animation:azm 1.6s ease-in-out infinite;pointer-events:none}
+.az.rt .ai .mk{right:auto;left:-2px}
+.az.in .ai.a-hum img{animation:azhum 3s ease-in-out infinite}
+.az.in .ai.a-nar img{animation:aznar 2.6s ease-in-out infinite}
+.az.in .ai.a-wow img{animation:azwow 1.8s ease-in-out infinite}
+.az.in .ai.a-me img{animation:azme 1.4s ease-in-out infinite}
+.az.in .ai.a-care img{animation:azcare 3.2s ease-in-out infinite}
+@keyframes azhum{0%,100%{transform:rotate(0)}30%{transform:rotate(-7deg) translateY(1px)}65%{transform:rotate(5deg)}}
+@keyframes aznar{0%,60%,100%{transform:none}15%{transform:rotate(5deg) scaleY(.94)}30%{transform:none}45%{transform:rotate(5deg) scaleY(.94)}}
+@keyframes azwow{0%,50%,100%{transform:none}8%{transform:translateY(-14px) scaleY(1.08)}16%{transform:translateY(0) scaleY(.9)}24%{transform:rotate(-4deg)}32%{transform:rotate(4deg)}40%{transform:rotate(-3deg)}}
+@keyframes azme{0%,100%{transform:none}25%{transform:translateY(-6px) rotate(-4deg)}75%{transform:translateY(-6px) rotate(4deg)}}
+@keyframes azcare{0%,100%{transform:scale(1)}40%{transform:scale(.95) rotate(-3deg) translateY(2px)}70%{transform:scale(.97) rotate(2deg)}}
+@keyframes azm{0%,100%{opacity:.5;transform:translateY(0) scale(.9)}50%{opacity:1;transform:translateY(-4px) scale(1.15)}}
+.az .ai small,.az .ai small *{white-space:nowrap!important;display:inline!important}.az .ai small{display:block!important;max-width:84px;height:12px;line-height:12px;text-align:center;font-size:9px;color:#8a7f76;max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+.az .bb{position:relative;background:#fffdf8;border:1.5px solid #e6d9c8;border-radius:16px;padding:8px 13px;font-size:13px;line-height:1.5;color:#4a3b32;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;max-width:calc(100% - 96px)}
 .az .bb:before{content:"";position:absolute;top:50%;left:-7px;width:11px;height:11px;background:#fffdf8;border-left:1.5px solid #e6d9c8;border-bottom:1.5px solid #e6d9c8;transform:translateY(-50%) rotate(45deg)}
 .az.rt .bb:before{left:auto;right:-7px;transform:translateY(-50%) rotate(-135deg)}
 .az .ai.bn img{animation:azb .5s ease}
@@ -4731,11 +4744,12 @@ document.addEventListener("click", function (e) {
 
 /* ---- 相槌キャラ：SSR/URが説明の合間で「ふむふむ…」 ---- */
 var AZ_L = {
-  nod: ["ふむふむ…", "なるほど…", "そうだったのか！", "ほほう…", "たしかに…！", "勉強になる〜"],
-  wow: ["えっ、そうなの！？", "へぇ〜！", "それは知らなかった…", "おどろいた…！", "ほんとに！？"],
-  me: ["わかる〜！", "あるある！", "それ、ほんとそう", "うんうん！", "身に覚えが…"],
-  care: ["気をつけなきゃ…", "ここ大事だね", "メモメモ…", "覚えておこう…"]
+  nod: [["ふむふむ…", "hum"], ["ほほう…", "hum"], ["勉強になる〜", "hum"], ["なるほど…", "nar"], ["たしかに…！", "nar"], ["そうだったのか！", "nar"]],
+  wow: [["えっ、そうなの！？", "wow"], ["へぇ〜！", "wow"], ["それは知らなかった…", "wow"], ["おどろいた…！", "wow"], ["ほんとに！？", "wow"]],
+  me: [["わかる〜！", "me"], ["あるある！", "me"], ["それ、ほんとそう", "me"], ["うんうん！", "me"], ["身に覚えが…", "me"]],
+  care: [["気をつけなきゃ…", "care"], ["ここ大事だね", "care"], ["メモメモ…", "care"], ["覚えておこう…", "care"]]
 };
+var AZ_MK = { hum: "…", nar: "💡", wow: "‼", me: "♪", care: "💦" };
 function azHash(t) { var h = 2166136261, i; t = String(t); for (i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
 function azKind(tx) {
   if (/ただ|気をつけ|注意|苦手|ケンカ|不安|無理|ぶつか/.test(tx)) return "care";
@@ -4753,16 +4767,16 @@ function aizuchi(box, tab, cur, a) {
   var seed = azHash(tab + ":" + cur + ":" + ((a && a.seed) || 0)), used = {}, n = 0, k, side = seed & 1, made = [];
   for (k = 0; k < bl.length - 1 && n < 3; k += 2) {
     var ci, tries = 0; do { ci = pool[(seed + n * 7919 + tries * 104729 + k * 31) % pool.length]; tries++; } while (used[ci] && tries < 20); used[ci] = 1;
-    var kind = azKind(bl[k].textContent), L = AZ_L[kind], line = L[(seed >>> (n * 3 + 1)) % L.length], r = CHR[ci].r || 3;
+    var kind = azKind(bl[k].textContent), L = AZ_L[kind], pr = L[(seed >>> (n * 3 + 1)) % L.length], line = pr[0], r = CHR[ci].r || 3;
     var d = document.createElement("div"); d.className = "az" + (((side + n) & 1) ? " rt" : "");
-    d.innerHTML = '<div class="ai r' + r + '" role="img" aria-label="' + esc(CHR[ci].n) + '"><img src="' + CHR[ci].s + '" alt="" draggable="false" loading="lazy" decoding="async"><i>' + RKN[r] + '</i><small>' + esc(CHR[ci].n) + '</small></div><div class="bb">' + esc(line) + '</div>';
+    d.innerHTML = '<div class="ai a-' + pr[1] + ' r' + r + '" role="img" aria-label="' + esc(CHR[ci].n) + '"><img src="' + CHR[ci].s + '" alt="" draggable="false" loading="lazy" decoding="async"><span class="mk">' + AZ_MK[pr[1]] + '</span><i>' + RKN[r] + '</i><small>' + esc(CHR[ci].n) + '</small></div><div class="bb">' + esc(line) + '</div>';
     bl[k].parentNode.insertBefore(d, bl[k].nextSibling); made.push({ el: d, kind: kind, L: L }); n++;
   }
   var io = null; try { io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }); }, { threshold: 0.6 }); } catch (e) {}
   made.forEach(function (m) {
     if (io) io.observe(m.el); else m.el.classList.add("in");
     var ai = m.el.querySelector(".ai"), bb = m.el.querySelector(".bb");
-    ai.addEventListener("click", function () { bb.textContent = m.L[Math.floor(Math.random() * m.L.length)]; ai.classList.remove("bn"); void ai.offsetWidth; ai.classList.add("bn"); });
+    ai.addEventListener("click", function () { var q = m.L[Math.floor(Math.random() * m.L.length)]; bb.textContent = q[0]; ai.className = ai.className.replace(/a-\w+/, "a-" + q[1]); ai.querySelector(".mk").textContent = AZ_MK[q[1]]; });
   });
 }
 (function () { var _e = enhance; enhance = function (box, tab, cur, a) { var r = _e.apply(this, arguments); try { aizuchi(box, tab, cur, a); } catch (e) {} return r; }; })();
