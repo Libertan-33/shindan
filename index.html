@@ -21,6 +21,16 @@
 @keyframes azwow{0%,50%,100%{transform:none}8%{transform:translateY(-14px) scaleY(1.08)}16%{transform:translateY(0) scaleY(.9)}24%{transform:rotate(-4deg)}32%{transform:rotate(4deg)}40%{transform:rotate(-3deg)}}
 @keyframes azme{0%,100%{transform:none}25%{transform:translateY(-6px) rotate(-4deg)}75%{transform:translateY(-6px) rotate(4deg)}}
 @keyframes azcare{0%,100%{transform:scale(1)}40%{transform:scale(.95) rotate(-3deg) translateY(2px)}70%{transform:scale(.97) rotate(2deg)}}
+.azf{position:fixed;z-index:60;bottom:18%;width:92px;display:flex;flex-direction:column;align-items:center;cursor:pointer;opacity:0;pointer-events:auto;-webkit-tap-highlight-color:transparent;transition:opacity .7s}
+.azf.on{opacity:1}
+.azf img{width:88px;height:auto;max-height:110px;object-fit:contain;filter:drop-shadow(0 0 7px #f7c948) drop-shadow(0 6px 5px rgba(0,0,0,.25));animation:azfb 2.4s ease-in-out infinite}
+.azf.r4 img{filter:drop-shadow(0 0 7px #ff7ab8) drop-shadow(0 0 10px #7ab8ff) drop-shadow(0 6px 5px rgba(0,0,0,.25))}
+.azf .bb{position:absolute;bottom:calc(100% - 4px);left:50%;transform:translateX(-50%);white-space:nowrap;background:#fffdf8;border:1.5px solid #e6d9c8;border-radius:16px;padding:7px 12px;font-size:13px;color:#4a3b32;box-shadow:0 3px 10px rgba(0,0,0,.18)}
+.azf .bb:after{content:"";position:absolute;left:50%;bottom:-6px;width:10px;height:10px;background:#fffdf8;border-right:1.5px solid #e6d9c8;border-bottom:1.5px solid #e6d9c8;transform:translateX(-50%) rotate(45deg)}
+.azf.go{animation:azfl var(--dur,9s) linear forwards}
+@keyframes azfb{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)}}
+@keyframes azfl{from{transform:translateX(var(--x0))}to{transform:translateX(var(--x1))}}
+@media (prefers-reduced-motion:reduce){.azf img{animation:none}}
 @keyframes azm{0%,100%{opacity:.5;transform:translateY(0) scale(.9)}50%{opacity:1;transform:translateY(-4px) scale(1.15)}}
 .az .ai small,.az .ai small *{white-space:nowrap!important;display:inline!important}.az .ai small{display:block!important;max-width:84px;height:12px;line-height:12px;text-align:center;font-size:9px;color:#8a7f76;max-width:84px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
 .az .bb{position:relative;background:#fffdf8;border:1.5px solid #e6d9c8;border-radius:16px;padding:8px 13px;font-size:13px;line-height:1.5;color:#4a3b32;word-break:keep-all;overflow-wrap:anywhere;text-wrap:balance;max-width:calc(100% - 96px)}
@@ -4744,10 +4754,10 @@ document.addEventListener("click", function (e) {
 
 /* ---- 相槌キャラ：SSR/URが説明の合間で「ふむふむ…」 ---- */
 var AZ_L = {
-  nod: [["ふむふむ…", "hum"], ["ほほう…", "hum"], ["勉強になる〜", "hum"], ["なるほど…", "nar"], ["たしかに…！", "nar"], ["そうだったのか！", "nar"]],
-  wow: [["えっ、そうなの！？", "wow"], ["へぇ〜！", "wow"], ["それは知らなかった…", "wow"], ["おどろいた…！", "wow"], ["ほんとに！？", "wow"]],
-  me: [["わかる〜！", "me"], ["あるある！", "me"], ["それ、ほんとそう", "me"], ["うんうん！", "me"], ["身に覚えが…", "me"]],
-  care: [["気をつけなきゃ…", "care"], ["ここ大事だね", "care"], ["メモメモ…", "care"], ["覚えておこう…", "care"]]
+  nod: [["ふむふむ…", "hum"], ["ほほう…", "hum"], ["勉強になる〜", "hum"], ["ふーむ…", "hum"], ["ほうほう…", "hum"], ["なんと…", "hum"], ["ふむ、ふむ…", "hum"], ["ほぉ〜", "hum"], ["ちょっと考えちゃう…", "hum"], ["深いなぁ…", "hum"], ["なるほど…", "nar"], ["たしかに…！", "nar"], ["そうだったのか！", "nar"], ["あぁ、そういうことか！", "nar"], ["腑に落ちた…！", "nar"], ["言われてみれば…", "nar"], ["合点がいった！", "nar"], ["そこにつながるのか…", "nar"], ["目からウロコ…！", "nar"]],
+  wow: [["えっ、そうなの！？", "wow"], ["へぇ〜！", "wow"], ["それは知らなかった…", "wow"], ["おどろいた…！", "wow"], ["ほんとに！？", "wow"], ["うそっ！？", "wow"], ["まさかの展開…！", "wow"], ["ひゃー！", "wow"], ["意外すぎる…！", "wow"], ["ほへぇ〜！", "wow"]],
+  me: [["わかる〜！", "me"], ["あるある！", "me"], ["それ、ほんとそう", "me"], ["うんうん！", "me"], ["身に覚えが…", "me"], ["ぎくっ、当たってる…", "me"], ["それな〜！", "me"], ["ドンピシャ！", "me"], ["ちょっと笑っちゃった", "me"], ["私もそうかも！", "me"]],
+  care: [["気をつけなきゃ…", "care"], ["ここ大事だね", "care"], ["メモメモ…", "care"], ["覚えておこう…", "care"], ["ここ、テストに出るよ", "care"], ["ゆっくりいこうね", "care"], ["無理しないでね", "care"], ["ここだけは押さえて！", "care"], ["ふむ…肝に銘じる…", "care"]]
 };
 var AZ_MK = { hum: "…", nar: "💡", wow: "‼", me: "♪", care: "💦" };
 function azHash(t) { var h = 2166136261, i; t = String(t); for (i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
@@ -4765,7 +4775,7 @@ function aizuchi(box, tab, cur, a) {
   if (bl.length < 2) return;
   var pool = azPool(); if (!pool.length) return;
   var seed = azHash(tab + ":" + cur + ":" + ((a && a.seed) || 0)), used = {}, n = 0, k, side = seed & 1, made = [];
-  for (k = 0; k < bl.length - 1 && n < 3; k += 2) {
+  for (k = 0; k < bl.length - 1 && n < 6; k += 1) {
     var ci, tries = 0; do { ci = pool[(seed + n * 7919 + tries * 104729 + k * 31) % pool.length]; tries++; } while (used[ci] && tries < 20); used[ci] = 1;
     var kind = azKind(bl[k].textContent), L = AZ_L[kind], pr = L[(seed >>> (n * 3 + 1)) % L.length], line = pr[0], r = CHR[ci].r || 3;
     var d = document.createElement("div"); d.className = "az" + (((side + n) & 1) ? " rt" : "");
@@ -4780,6 +4790,29 @@ function aizuchi(box, tab, cur, a) {
   });
 }
 (function () { var _e = enhance; enhance = function (box, tab, cur, a) { var r = _e.apply(this, arguments); try { aizuchi(box, tab, cur, a); } catch (e) {} return r; }; })();
+
+var AZ_FL = ["楽しんでますかぁ〜？", "ちゃんと水分とってる？", "ここまで読んでくれてありがとう！", "いいね、その調子！", "まだまだ続くよ〜！", "あなたのこと、もっと知りたいな", "ひと休みしてもいいんだよ", "私、レアキャラなんだよ？えっへん", "ちょっと伸びでもしよっか〜", "診断、おもしろいでしょ？", "今日もおつかれさま！", "ほら、ここにいるよ〜", "また会えたね！", "あなたの結果、なかなか深いよ", "読んでくれて、うれしい！"];
+function azFloat() {
+  try {
+    if (document.hidden || document.getElementById("app") == null) return;
+    var res = document.getElementById("res-self"), res2 = document.getElementById("res-duo");
+    var show = (res && !res.hidden && res.offsetParent) || (res2 && !res2.hidden && res2.offsetParent); if (!show) return;
+    if (document.querySelector(".azf")) return;
+    var pool = azPool(), ci = pool[Math.floor(Math.random() * pool.length)], r = CHR[ci].r || 3;
+    var W = window.innerWidth, left = Math.random() < .5, el = document.createElement("div");
+    el.className = "azf r" + r; el.setAttribute("aria-hidden", "true");
+    el.innerHTML = '<div class="bb">' + esc(AZ_FL[Math.floor(Math.random() * AZ_FL.length)]) + '</div><img src="' + CHR[ci].s + '" alt="" draggable="false">';
+    el.style.bottom = (14 + Math.random() * 40) + "%"; el.style.left = "0";
+    el.style.setProperty("--x0", (left ? -100 : W + 10) + "px"); el.style.setProperty("--x1", (left ? W + 10 : -100) + "px"); el.style.setProperty("--dur", (9 + Math.random() * 3).toFixed(1) + "s");
+    document.body.appendChild(el);
+    void el.offsetWidth; el.classList.add("go"); el.classList.add("on");
+    var done = function () { el.classList.remove("on"); setTimeout(function () { try { el.remove(); } catch (e) {} }, 800); };
+    el.addEventListener("click", function () { el.querySelector(".bb").textContent = "えへへ、ありがとう！"; setTimeout(done, 900); });
+    el.addEventListener("animationend", function (e) { if (e.animationName === "azfl") done(); });
+  } catch (e) {}
+}
+(function loop() { setTimeout(function () { azFloat(); loop(); }, 22000 + Math.random() * 18000); })();
+setTimeout(azFloat, 9000);
 </script>
 
 
