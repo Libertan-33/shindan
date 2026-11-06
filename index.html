@@ -909,6 +909,14 @@ p, li, dd { text-wrap: pretty; }
 .xbox { text-align: center; } .xbox h3 { margin: 0 0 6px; font-size: 18px; line-height: 1.5; }
 .xrow { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 10px 0; } .xc { width: 42%; max-width: 150px; } .xfr { width: 100%; } .xfr .mat { padding: 0; } .xfr .mat img { width: 100%; height: auto; }
 .xc .cnm { display: block; font-size: 1.05rem; margin-top: 4px; } .xc small { display: block; font-size: 11.5px; opacity: .8; } .xar { font-size: 26px; font-weight: 900; }
+
+.dhist { margin: 0 auto 16px; max-width: 360px; padding: 12px; border-radius: 18px; background: color-mix(in srgb, var(--star, #c9a) 10%, transparent); border: 1.5px solid var(--line); }
+.dhist .ht { display: block; font-size: 15px; margin-bottom: 8px; } .dhist .hn { margin: 8px 0 0; font-size: 12px; opacity: .8; line-height: 1.7; }
+.dhist .hrow { display: flex; gap: 6px; align-items: stretch; margin: 6px 0; }
+.dhist .hbtn { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 14px; border: 1px solid var(--line); background: var(--card, rgba(255,255,255,.08)); color: inherit; font: inherit; text-align: left; cursor: pointer; min-height: 56px; }
+.dhist .hbtn img { width: 42px; height: 42px; object-fit: contain; flex: none; } .dhist .hm { flex: 1; min-width: 0; } .dhist .hm b { display: block; font-size: 14px; } .dhist .hm small { display: block; font-size: 11.5px; opacity: .75; }
+.dhist .hs { font-size: 20px; font-weight: 900; color: var(--star, #c9812b); } .dhist .hs small { font-size: 11px; }
+.dhist .hx { width: 40px; border-radius: 12px; border: 1px solid var(--line); background: transparent; color: inherit; font-size: 18px; cursor: pointer; }
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -1381,7 +1389,7 @@ function analyze(p) {
   var sg = SG[si];
   var sdeg = sl % 30;
   var stl = styleOf(p, type);
-  var R0 = { p: p, nm: (p.giv || p.sur || "").trim(), gl: gLabel(p), style: stl, seed: hashStr(type + si + mr + nak + kab + (lag == null ? "x" : lag) + stl), unk: unk, place: pl[0], type: type, mb: MB[type], tg: tgOf(type),
+  var R0 = { p: p, nm: String(p.nick || "").trim().slice(0, 12), gl: gLabel(p), style: stl, seed: hashStr(type + si + mr + nak + kab + (lag == null ? "x" : lag) + stl), unk: unk, place: pl[0], type: type, mb: MB[type], tg: tgOf(type),
     si: si, sg: sg, sdeg: sdeg, cusp: unk && (sdeg < 1 || sdeg > 29),
     mr: mr, mrs: SG[mr], nak: nak, pada: pada, nk: NK[nak], lord: nak % 9, lag: lag, lags: lag == null ? null : SG[lag],
     digits: digits, chain: chain, lp: lp, lb: lb, num: NU[lp], roma: roma, kchain: kchain, kab: kab, ksrc: ksrc, day: d, se: SE[kab],
@@ -2231,8 +2239,8 @@ var LV = {
   family: ["心の拠りどころになり合えるふたりです⏎", "近いからこその遠慮が出やすい関係です⏎感謝を言葉にしましょう⏎", "近いからこそ衝突しやすいふたりです⏎距離の取り方を話し合うと楽になります⏎"]
 };
 var S = {
-  A: { sur: "", giv: "", g: "f", date: "1995-08-24", time: "09:30", unk: false, place: 0, mbti: { EI: "I", SN: "N", TF: "F", JP: "P" }, touched: false },
-  B: { sur: "", giv: "", g: "o", date: "1993-11-02", time: "09:30", unk: true, place: 6, mbti: { EI: "E", SN: "N", TF: "F", JP: "J" }, touched: false },
+  A: { sur: "", giv: "", nick: "", g: "f", date: "1995-08-24", time: "09:30", unk: false, place: 0, mbti: { EI: "I", SN: "N", TF: "F", JP: "P" }, touched: false },
+  B: { sur: "", giv: "", nick: "", g: "o", date: "1993-11-02", time: "09:30", unk: true, place: 6, mbti: { EI: "E", SN: "N", TF: "F", JP: "J" }, touched: false },
   rel: "love", page: { self: "in", duo: "in" }
 };
 var today = new Date().toISOString().slice(0, 10);
@@ -2253,11 +2261,13 @@ function dateSel(id, ds) {
 function nmPh(p) { return p.g === "f" ? ["ちょうそかべ", "とめこ"] : ["おにがわら", "ごんざぶろうた"]; }
 function phSet(id) { var n = nmPh(S[id]), a = $(id + "-sur"), b = $(id + "-giv"); if (a) a.placeholder = n[0]; if (b) b.placeholder = n[1]; }
 function formHTML(id) {
-  var p = S[id], h = '<div class="pf"><p class="sample" id="sm-' + id + '">お名前は空欄です⏎生年月日などは、例として入れてあります⏎書き換えると、結果がその場で変わります⏎</p>';
-  h += '<div class="step"><div class="sh"><b>STEP 1</b><span>お名前</span></div><div class="row2">' +
-    '<div class="field"><label for="' + id + '-sur">姓</label><input id="' + id + '-sur" type="text" autocomplete="off" placeholder="' + nmPh(p)[0] + '" value="' + esc(p.sur) + '"></div>' +
-    '<div class="field"><label for="' + id + '-giv">名</label><input id="' + id + '-giv" type="text" autocomplete="off" placeholder="' + nmPh(p)[1] + '" value="' + esc(p.giv) + '"></div></div>' +
-    '<small class="hint" id="' + id + '-nh">ひらがな・カタカナ・ローマ字で入力します⏎（漢字は換算できません）⏎カバラ数に使います⏎空欄でも診断できます⏎</small></div>';
+  var p = S[id], h = '<div class="pf"><p class="sample" id="sm-' + id + '">ニックネームは空欄です⏎生年月日などは、例として入れてあります⏎書き換えると、結果がその場で変わります⏎</p>';
+  h += '<div class="step"><div class="sh"><b>STEP 1</b><span>ニックネーム</span></div><div class="field"><label for="' + id + '-nick">ニックネーム（本名はいりません）</label><input id="' + id + '-nick" type="text" maxlength="12" autocomplete="off" placeholder="例：りばたん" value="' + esc(p.nick || "") + '"></div>' +
+    '<small class="hint">結果や相性は、このニックネームで呼びます⏎お相手にも、ニックネームだけが見えます⏎本名は、どこにも出ません⏎空欄でも診断できます⏎</small>' +
+    '<details class="hlp"><summary>🔤 カバラ数も見たい人だけ（任意）</summary><div><div class="row2">' +
+    '<div class="field"><label for="' + id + '-sur">姓（ローマ字・かな）</label><input id="' + id + '-sur" type="text" autocomplete="off" placeholder="' + nmPh(p)[0] + '" value="' + esc(p.sur) + '"></div>' +
+    '<div class="field"><label for="' + id + '-giv">名（ローマ字・かな）</label><input id="' + id + '-giv" type="text" autocomplete="off" placeholder="' + nmPh(p)[1] + '" value="' + esc(p.giv) + '"></div></div>' +
+    '<small class="hint" id="' + id + '-nh">ひらがな・カタカナ・ローマ字で入力します⏎（漢字は換算できません）⏎カバラ数の計算だけに使い、画面には出ません⏎</small></div></details></div>';
   h += '<div class="step"><div class="sh"><b>STEP 2</b><span>性別（任意）</span></div>' +
     '<div class="field"><label>性別</label><div class="opts" role="group" aria-label="性別">' + chipsHTML(id, "g", GENDERS, p.g) + '</div></div>' +
     '<small class="hint">キャラクターの雰囲気は⏎診断結果から自動で決まります⏎選ばなくても診断できます⏎</small></div>';
@@ -2584,7 +2594,7 @@ function chap(no, c, because, lines, aru) {
 }
 
 function overviewPage(a, st) {
-  var T = st.T, who = a.nm ? a.nm + "さん" : "あなた", cn = comboNo(a), cd = curDash(a), h = "";
+  var T = st.T, who = a.nm ? fnm(a.nm) : "あなた", cn = comboNo(a), cd = curDash(a), h = "";
   h += '<div class="hero">' + (REPEAT2 ? charRV(a) : '<div class="mys" aria-hidden="true"><span>？</span></div>') + '<p class="eyebrow">' + esc(who) + (REPEAT2 ? 'の分身キャラ' : 'の分身キャラは、最後のお楽しみ') + '</p>' + (REPEAT2 ? gxHTML(a) : '') + '<h2>' + esc(st.title) + '</h2>' +
     '<p class="lede txt">' + '太陽は「' + esc(a.sg[4]) + '」 × 運命数' + a.lp + '（' + esc(a.num[0]) + '）× 「' + esc(a.nk[1]) + '」の月</p>' + heroChips(a) + hitokoto(a) + '</div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">総じて、こんな人です</span>' +
@@ -2842,7 +2852,7 @@ function aruPage(a, st) {
 function charPage(a, st) {
   var T = st.T, P = T.pct, tg = a.tg, bal = balance(a), dom = bal.dom, lord = PL[a.lord], cd = curDash(a), t1 = st.t1, t2 = st.t2;
   var p7 = SG[(a.mr + 6) % 12], lg7 = a.lag == null ? null : SG[(a.lag + 6) % 12], gold = GOLD[a.type], par = loveParadox(P), h = "";
-  h += '<div class="hero">' + charRV(a, true) + '<p class="eyebrow">' + esc(a.nm ? a.nm + "さん" : "あなた") + 'の分身キャラ</p>' + gxHTML(a) + '<p class="cname" id="cname">「' + esc(myName(a)) + '」</p><div class="namer"><input id="cn-in" type="text" maxlength="10" placeholder="キャラに名前をつける" aria-label="キャラの名前" value="' + esc(ME.cn || "") + '"><button type="button" class="btn ghost" data-cn="1">つける</button></div><p class="fbr" id="cn-r" aria-live="polite">' + (LASTNEW ? "図鑑に、新しい仲間が加わりました" : "") + '</p>' + accInfo() + '<button type="button" class="btn ghost" data-zk="1">キャラ図鑑を見る（' + (ME.col || []).length + ' / ' + CHR.length + '）</button><p class="no" style="margin-top:-4px">' + nameWhy(a) + '⏎</p><h2>' + esc(st.title) + '</h2>' + heroChips(a) + hitokoto(a) + '</div>';
+  h += '<div class="hero">' + charRV(a, true) + '<p class="eyebrow">' + esc(a.nm ? a.nm : "あなた") + 'は…</p>' + gxHTML(a) + '<p class="cname" id="cname">「' + esc(myName(a)) + '」</p><div class="namer"><input id="cn-in" type="text" maxlength="10" placeholder="キャラに名前をつける" aria-label="キャラの名前" value="' + esc(ME.cn || "") + '"><button type="button" class="btn ghost" data-cn="1">つける</button></div><p class="fbr" id="cn-r" aria-live="polite">' + (LASTNEW ? "図鑑に、新しい仲間が加わりました" : "") + '</p>' + accInfo() + '<button type="button" class="btn ghost" data-zk="1">キャラ図鑑を見る（' + (ME.col || []).length + ' / ' + CHR.length + '）</button><p class="no" style="margin-top:-4px">' + nameWhy(a) + '⏎</p><h2>' + esc(st.title) + '</h2>' + heroChips(a) + hitokoto(a) + '</div>';
   h += '<div class="block" style="--c:var(--star)"><span class="lab">キャラ設定</span><div class="kvs">' +
     kv("二つ名", st.title) + kv("属性", dom + "属性（" + ELM[dom] + "）") + kv("グループ", TNAME[tg] + "（" + tg + "）") +
     kv("必殺技", a.mb[2] + "、そして" + a.sg[6]) + kv("弱点", a.mb[3] + "、" + a.sg[7] + "、" + a.num[3]) +
@@ -2976,7 +2986,7 @@ function mcard(tab, key, c, k, v) {
 }
 
 function selfPage(a, key) {
-  var bal = balance(a), cn = comboNo(a), lord = PL[a.lord], tg = a.tg, dom = bal.dom, who = a.nm ? a.nm + "さん" : "あなた", h = "", st = story(a);
+  var bal = balance(a), cn = comboNo(a), lord = PL[a.lord], tg = a.tg, dom = bal.dom, who = a.nm ? fnm(a.nm) : "あなた", h = "", st = story(a);
   if (key === "overview") {
     h += overviewPage(a, st);
   } else if (key === "why") {
@@ -3054,7 +3064,7 @@ function renderSelf() {
   var a = analyze(S.A), form = $("form-A"), box = $("res-self"), cur = S.page.self;
   if (cur === "in" || !a) { S.page.self = "in"; showNB("self"); var wasH = form.hidden; form.hidden = false; box.hidden = true; box.innerHTML = ""; if (wasH) fxIn(form); return; }
   form.hidden = true; box.hidden = false;
-  var who = a.nm ? a.nm + "さん" : "あなた";
+  var who = a.nm ? fnm(a.nm) : "あなた";
   var h = pageNav("self", PG_SELF, cur) + sayw("self", cur) + sum3Self(cur, a, story(a)) + selfPage(a, cur) + (FB_SET[cur] ? fbRow(a) : "") + pageFoot("self", PG_SELF, cur);
   nbBuild("self", PG_SELF, cur); showNB("self");
   box.innerHTML = fin(h); emph(box); budoxify(box); lineReveal(box); try { enhance(box, "self", cur, a); } catch (e) {} navCenter(box); fxIn(box);
@@ -3125,7 +3135,7 @@ function renderDuo() {
   else rc.innerHTML = '<span>先に「自分を診る」でご自身の生年月日を入れてください⏎</span><button type="button" class="link" data-goto="self">入力へ</button>';
   if (cur === "in" || !a || !b) { S.page.duo = "in"; showNB("duo"); var wasH = form.hidden; form.hidden = false; box.hidden = true; box.innerHTML = ""; if (wasH) fxIn(form); return; }
   form.hidden = true; box.hidden = false;
-  var c = compat(a, b), na = a.nm ? a.nm + "さん" : "あなた", nb = b.nm ? b.nm + "さん" : "お相手";
+  var c = compat(a, b), na = a.nm ? fnm(a.nm) : "あなた", nb = b.nm ? fnm(b.nm) : "お相手";
   var rel = S.rel, rl = REL.filter(function (r) { return r[0] === rel; })[0][1], sc = c.cats[rel], ver = verdictOf(sc), h = "";
   if (cur === "overview") {
     h += '<div class="hero"><div class="chars">' + charRV(a) + '<span class="heart">♥</span>' + charRV(b) + '</div>' +
@@ -3711,8 +3721,9 @@ function fillList() {
   });
   h += '</div><div class="lblock" style="--c:var(--num)"><h3>🔢 数秘術　運命数</h3><p class="lsub">生まれた日から出る数と、長所・短所のひとこと</p>';
   [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33].forEach(function (n) { var m = NU[n]; h += '<div class="lrow' + (mine && mine.lp === n ? " me" : "") + '"><i class="tbg">' + (IC_NU[n] || "") + '</i><div class="lt"><b>「' + n + '」は「' + m[0] + '」</b><span>' + m[1].replace(/⏎/g, "") + '　長所は' + m[2] + 'ですが、' + m[3] + 'のが短所です</span></div></div>'; });
-  h += '</div><div class="lblock" style="--c:var(--star)"><h3>🀄 四柱推命　日干（にちかん）10タイプ</h3><p class="lsub">生まれた日の「日柱」の、上の1文字で見ます</p>';
-  SHI_LIST.forEach(function (x) { h += '<div class="lrow"><i class="tbg">' + (IC_SHI[x[0]] || "") + '</i><div class="lt"><b>「' + x[0] + '（' + x[1] + '）」は「' + x[2] + '」</b><span>' + x[3] + '　長所は' + x[4] + 'ですが、' + x[5] + 'のが短所です</span></div></div>'; });
+  h += '</div><div class="lblock" style="--c:var(--star)"><h3>🀄 四柱推命　日干（にちかん）10タイプ</h3><p class="lsub">生まれた日の「日柱」の、上の1文字で見ます　診断ずみの人は、自分のタイプに★がつきます</p>';
+  var myDm = -1; try { if (mine) { var mc = shiChart(mine); if (mc) myDm = mc.dm; } } catch (e) {}
+  SHI_LIST.forEach(function (x, xi) { h += '<div class="lrow' + (xi === myDm ? " me" : "") + '"><i class="tbg">' + (IC_SHI[x[0]] || "") + '</i><div class="lt"><b>「' + x[0] + '（' + x[1] + '）」は「' + x[2] + '」</b><span>' + x[3] + '　長所は' + x[4] + 'ですが、' + x[5] + 'のが短所です</span></div></div>'; });
   host.innerHTML = fin(h) + '<div class="actions" style="margin-top:14px"><button type="button" class="btn" data-stage="title">🏠 トップにもどる</button></div>';
   try { budoxify(host); } catch (e) {}
 }
@@ -3765,7 +3776,7 @@ function init() {
     if (t.dataset.go) {
       var gt = t.dataset.go === "A" ? "self" : "duo", gn = $(t.dataset.go + "-gn");
       if (!analyze(S.A) || (gt === "duo" && !analyze(S.B))) { gn.textContent = "生年月日を入れてください"; return; }
-      gn.textContent = ""; if (t.dataset.go === "A") { ME.A = { sur: S.A.sur, giv: S.A.giv, g: S.A.g, date: S.A.date, time: S.A.time, unk: S.A.unk, place: S.A.place, mbti: S.A.mbti }; ME.last = Date.now(); meSave(); } collect(analyze(S.A)); if (gt === "duo") collect(analyze(S.B)); pageFx("next", t); S.page[gt] = "overview"; render(gt); return;
+      gn.textContent = ""; if (t.dataset.go === "A") { ME.A = { sur: S.A.sur, giv: S.A.giv, nick: S.A.nick || "", g: S.A.g, date: S.A.date, time: S.A.time, unk: S.A.unk, place: S.A.place, mbti: S.A.mbti }; ME.last = Date.now(); meSave(); } collect(analyze(S.A)); if (gt === "duo") collect(analyze(S.B)); pageFx("next", t); S.page[gt] = "overview"; render(gt); return;
     }
     if (t.dataset.goinput) { pageFx("back", t); S.page[t.dataset.goinput] = "in"; render(t.dataset.goinput); return; }
     if (t.classList.contains("opt") && t.dataset.kind) {
@@ -3809,7 +3820,7 @@ function init() {
     }
   });
   function onField(e) {
-    var el = e.target, m = /^([AB])-(sur|giv|dy|dm|dd|time|unk|place)$/.exec(el.id || "");
+    var el = e.target, m = /^([AB])-(sur|giv|nick|dy|dm|dd|time|unk|place)$/.exec(el.id || "");
     if (!m) return;
     var id = m[1], k = m[2];
     if (k === "unk") { S[id].unk = el.checked; $(id + "-time").disabled = el.checked; }
@@ -4440,11 +4451,11 @@ function invClean(o) {
   if (!(c >= 0 && c < CHR.length)) return null; var pl = parseInt(A.place, 10); if (!(pl >= 0 && pl < 200)) pl = 0;
   return { c: c, n: String(o.n || "").slice(0, 24), A: { sur: "", giv: "", g: A.g === "m" || A.g === "f" ? A.g : "o", date: A.date, time: t, unk: !!A.unk, place: pl, mbti: { EI: m.EI, SN: m.SN, TF: m.TF, JP: m.JP } } };
 }
-function invUrl(a) { var A = S.A; return SHARE_URL + "?d=" + b64e({ c: pickChar(a), n: String(myName(a)).slice(0, 24), A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti } }) + "&openExternalBrowser=1"; }
+function invUrl(a) { var A = S.A; return SHARE_URL + "?d=" + b64e({ c: pickChar(a), n: String(a.nm || myName(a)).slice(0, 24), A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti } }) + "&openExternalBrowser=1"; }
 function invText(a) { var c = CHR[pickChar(a)]; return "わたしのキャラは「" + c.n + "」（" + RKN[c.r || 0] + "）でした✨\nあなたのキャラも見せてほしい！\nふたりの相性診断をしてみよう💞"; }
 function sendMeHTML(a) {
   var i = pickChar(a), c = CHR[i];
-  return '<div class="sendme"><div class="smt">💌 お相手に、あなたのキャラを送ろう</div><div class="smr"><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(i) + '</div><div class="smx"><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b><span>' + esc(myName(a)) + '</span></div></div>' +
+  return '<div class="sendme"><div class="smt">💌 お相手に、あなたのキャラを送ろう</div><div class="smr"><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(i) + '</div><div class="smx"><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b><span>' + esc(a.nm ? a.nm : myName(a)) + '</span></div></div>' +
     '<p class="smp">リンクを送ると、お相手は自分の診断だけで<br>ふたりの相性まで見られます<br><small>（生年月日はお相手の画面には出ません）</small></p>' +
     '<div class="sbs"><button type="button" class="sb sline" data-sm="line">LINEで送る</button><button type="button" class="sb sx" data-sm="card">画像カードを作る</button><button type="button" class="sb scp" data-sm="copy">リンクをコピー</button>' + (navigator.share ? '<button type="button" class="sb sx" data-sm="native">📤 ほかのアプリで送る</button>' : "") + '</div><p class="ssm" data-smmsg></p></div>';
 }
@@ -4453,13 +4464,13 @@ function invRecvHTML() {
   return '<div class="sendme invr"><div class="smt">💞 ' + (v.n ? esc(fnm(v.n)) + 'から、' : '') + 'キャラが届いています</div><div class="smr"><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(v.c) + '</div><div class="smx"><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b></div></div><p class="smp">ボタンひとつで、ふたりの相性を診られます</p><div class="actions"><button type="button" class="btn gold" data-invgo="1">💞 ふたりの相性を診る</button><button type="button" class="btn ghost" data-xreq="1" style="margin-top:8px">🔁 このキャラと、キャラを交換したい</button></div></div>';
 }
 function sendMeFill() {
-  var h = document.getElementById("sendme"); if (!h) return; var a = null; try { a = analyze(S.A); } catch (e) {} h.innerHTML = a ? invRecvHTML() + sendMeHTML(a) : "";
+  var h = document.getElementById("sendme"); if (!h) return; var a = null; try { a = analyze(S.A); } catch (e) {} h.innerHTML = a ? invRecvHTML() + sendMeHTML(a) + histHTML() : "";
 }
 var renderDuo2 = renderDuo; renderDuo = function () { renderDuo2(); try { sendMeFill(); } catch (e) {} };
 document.addEventListener("click", function (e) {
   var g = e.target && e.target.closest ? e.target.closest("[data-invgo]") : null;
   if (g && ME.inv) {
-    var v = ME.inv, B = S.B; B.sur = ""; B.giv = ""; B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
+    var v = ME.inv, B = S.B; B.sur = ""; B.giv = ""; B.nick = String(v.n || "").slice(0, 12); B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
     try { var b = analyze(B); if (b) { ME.gx = ME.gx || {}; ME.gx[b.seed >>> 0] = v.c; meSave(); collect(analyze(S.A)); collect(b); } } catch (er) {}
     try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo();
     var goRes = function () { try { var r = $("res-duo"), y = Math.max(0, Math.round(r.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0)) - 64); window.scrollTo({ top: y, behavior: "smooth" }); } catch (er) { window.scrollTo(0, 0); } };
@@ -4524,7 +4535,7 @@ document.addEventListener("click", function (e) {
   var my = T.closest("[data-myres]"), rd = T.closest("[data-redo]");
   if (!my && !rd) return;
   if (!ME.A || !ME.A.date) return;
-  var A = ME.A; S.A = { sur: A.sur || "", giv: A.giv || "", g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: { EI: A.mbti.EI, SN: A.mbti.SN, TF: A.mbti.TF, JP: A.mbti.JP }, touched: true };
+  var A = ME.A; S.A = { sur: A.sur || "", giv: A.giv || "", nick: A.nick || "", g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: { EI: A.mbti.EI, SN: A.mbti.SN, TF: A.mbti.TF, JP: A.mbti.JP }, touched: true };
   try { $("app").dataset.stage = "form"; setTab("self"); } catch (er) {}
   if (my) { S.page.self = "overview"; try { collect(analyze(S.A)); } catch (er) {} } else { S.page.self = "in"; }
   try { renderSelf(); } catch (er) {} try { window.scrollTo(0, 0); } catch (er) {}
@@ -4540,7 +4551,7 @@ function addMyRes() {
     var b3 = xEl("button", "btn ghost mesave", "🔗 診断結果を保存するリンクをコピー<small>別のアプリ・別のスマホでも、すぐ結果が開けます</small>"); b3.type = "button"; b3.dataset.mesave = "1"; host.insertBefore(b3, z);
   } catch (e) {}
 }
-function meUrl() { var A = ME.A; return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12) }) + "&openExternalBrowser=1"; }
+function meUrl() { var A = ME.A; return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12), k: String(A.nick || "").slice(0, 12) }) + "&openExternalBrowser=1"; }
 document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target.closest("[data-mesave]") : null; if (!T || !ME.A) return;
   var u = meUrl(), msg = "自分専用リンクです　ブックマークやメモに保存しておくと、どの端末でもすぐ結果が開けます\n（生年月日が含まれるので、他の人には送らないでください）";
@@ -4551,7 +4562,7 @@ document.addEventListener("click", function (e) {
   try {
     var q = new URLSearchParams(window.QS0 || location.search), t = q.get("me"); if (!t) return; var o = invClean(b64d(t)); if (!o) return;
     if (ME.A && ME.A.date && ME.A.date !== o.A.date && !window.confirm("このリンクの診断データで、この端末の診断を置きかえますか？")) return;
-    o.A.sur = String(JSON.parse(JSON.stringify(b64d(t))).s || "").slice(0, 12); o.A.giv = String(b64d(t).v || "").slice(0, 12);
+    o.A.sur = String(JSON.parse(JSON.stringify(b64d(t))).s || "").slice(0, 12); o.A.giv = String(b64d(t).v || "").slice(0, 12); o.A.nick = String(b64d(t).k || "").slice(0, 12);
     ME.A = o.A; ME.last = ME.last || Date.now(); meSave(); try { history.replaceState(null, "", location.pathname); } catch (er) {}
     var hh = $("hello"); if (hh) { try { hello(); } catch (er) {} }
   } catch (e) {}
@@ -4613,7 +4624,7 @@ document.addEventListener("click", function (e) {
   var rq = T.closest("[data-xreq]");
   if (rq && ME.inv) {
     var a = xMine(); if (!a) return; var mine = pickChar(a), his = ME.inv.c;
-    var u = xLink("req", { a: mine, b: his, n: String(myName(a)).slice(0, 24) });
+    var u = xLink("req", { a: mine, b: his, n: String(a.nm || myName(a)).slice(0, 24) });
     xModal('<h3>🔁 キャラ交換のお願い</h3><p class="gxs">お相手が「交換する」を押すと、成立します</p><div class="xrow">' + xCard(mine, "あなた") + '<span class="xar">⇄</span>' + xCard(his, (ME.inv.n ? esc(fnm(ME.inv.n)) : "お相手")) + '</div>' +
       '<p class="gxs">このリンクを、お相手に送ってください</p>' + xSend(u, "キャラを交換しよう🔁✨\nワタス解体新書") + '<button type="button" class="btn ghost" data-xclose="1" style="margin-top:10px">とじる</button>');
     return;
@@ -4621,7 +4632,7 @@ document.addEventListener("click", function (e) {
   var ok = T.closest("[data-xok]");
   if (ok && ME.xp) {
     var xp = ME.xp, a2 = xMine(); if (!a2) return; var mine2 = pickChar(a2), oldI = xApply(xp.a); if (oldI === false) return; delete ME.xp; meSave();
-    var u2 = xLink("acc", { a: mine2, n: String(myName(a2)).slice(0, 24) });
+    var u2 = xLink("acc", { a: mine2, n: String(a2.nm || myName(a2)).slice(0, 24) });
     xClose(); curtainShow(oldI, xp.a, function () {
       xModal('<h3>🎉 交換が成立しました！</h3><div class="xrow">' + xCard(xp.a, "あたらしいキャラ") + '</div><p class="gxs">最後に、お相手へ承諾リンクを送ってください<br>お相手が開くと、お相手にも「' + esc(CHR[mine2].n) + '」が届きます</p>' + xSend(u2, "交換OKだよ🎉 このリンクを開いてね\nワタス解体新書") + '<button type="button" class="btn ghost" data-xclose="1" style="margin-top:10px">とじる</button>');
     }); return;
@@ -4648,6 +4659,40 @@ document.addEventListener("click", function (e) {
     }, 700);
   } catch (e) {}
 })();
+
+/* ===== 相性診断の履歴 ===== */
+function histKey(b) { return [b.p.date, b.p.time, b.p.g, b.p.mbti.EI + b.p.mbti.SN + b.p.mbti.TF + b.p.mbti.JP].join("|"); }
+function histRec() {
+  try {
+    if (S.page.duo === "in" || !S.B || !S.B.date) return; var a = analyze(S.A), b = analyze(S.B); if (!a || !b) return;
+    var c = compat(a, b), k = histKey(b); ME.hist = ME.hist || []; var cur = null, t = new Date(), ds = t.getFullYear() + "/" + (t.getMonth() + 1) + "/" + t.getDate();
+    ME.hist.forEach(function (x) { if (x.k === k) cur = x; });
+    var sc = Math.round(typeof c.total === "number" ? c.total : (c.cats && c.cats[S.rel]) || 0);
+    var e = { k: k, n: b.nm || "", c: pickChar(b), d: ds, sc: sc, B: { g: S.B.g, date: S.B.date, time: S.B.time, unk: !!S.B.unk, place: S.B.place, mbti: { EI: S.B.mbti.EI, SN: S.B.mbti.SN, TF: S.B.mbti.TF, JP: S.B.mbti.JP } } };
+    if (cur) { if (!e.n) e.n = cur.n; ME.hist.splice(ME.hist.indexOf(cur), 1); }
+    ME.hist.unshift(e); ME.hist = ME.hist.slice(0, 30); meSave();
+  } catch (e) {}
+}
+function histHTML() {
+  var H = ME.hist || []; if (!H.length) return '<div class="dhist"><b class="ht">📒 相性診断の履歴</b><p class="hn">相性を診ると、ここに残ります　あとから、すぐ見返せます</p></div>';
+  return '<div class="dhist"><b class="ht">📒 相性診断の履歴（' + H.length + '人）</b>' + H.map(function (x, i) {
+    var c = CHR[x.c] || CHR[0];
+    return '<div class="hrow"><button type="button" class="hbtn" data-hist="' + i + '"><img src="' + c.s + '" alt="" draggable="false"><span class="hm"><b>' + esc(x.n ? fnm(x.n) : "ニックネームなし") + '</b><small>' + esc(c.n) + '　' + esc(x.d) + '</small></span><span class="hs">' + x.sc + '<small>点</small></span></button><button type="button" class="hx" data-histdel="' + i + '" aria-label="履歴から消す">×</button></div>';
+  }).join("") + '<p class="hn">お相手の情報は、この端末の中だけに保存されます</p></div>';
+}
+var renderDuo3 = renderDuo; renderDuo = function () { renderDuo3(); histRec(); try { var h = document.getElementById("sendme"); if (h && !h.querySelector(".dhist")) sendMeFill(); else if (h) { var hh = h.querySelector(".dhist"); if (hh) hh.outerHTML = histHTML(); } } catch (e) {} };
+document.addEventListener("click", function (e) {
+  var T = e.target && e.target.closest ? e.target : null; if (!T) return;
+  var d = T.closest("[data-histdel]"), o = T.closest("[data-hist]");
+  if (d) { var i = +d.dataset.histdel; if (ME.hist && ME.hist[i] && window.confirm("この履歴を消しますか？")) { ME.hist.splice(i, 1); meSave(); var hh = document.querySelector(".dhist"); if (hh) hh.outerHTML = histHTML(); } return; }
+  if (o && ME.hist) {
+    var x = ME.hist[+o.dataset.hist]; if (!x) return; var B = S.B; B.sur = ""; B.giv = ""; B.nick = x.n || ""; B.g = x.B.g; B.date = x.B.date; B.time = x.B.time; B.unk = x.B.unk; B.place = x.B.place; B.mbti = { EI: x.B.mbti.EI, SN: x.B.mbti.SN, TF: x.B.mbti.TF, JP: x.B.mbti.JP }; B.touched = true;
+    try { var b = analyze(B); if (b) { ME.gx = ME.gx || {}; ME.gx[b.seed >>> 0] = x.c; meSave(); } } catch (er) {}
+    try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo();
+    var goRes = function () { try { var r = $("res-duo"), y = Math.max(0, Math.round(r.getBoundingClientRect().top + (window.pageYOffset || 0)) - 64); window.scrollTo({ top: y, behavior: "smooth" }); } catch (er) {} };
+    goRes(); window.setTimeout(goRes, 350);
+  }
+});
 </script>
 
 
