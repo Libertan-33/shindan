@@ -22,7 +22,7 @@
 @keyframes azme{0%,100%{transform:none}25%{transform:translateY(-6px) rotate(-4deg)}75%{transform:translateY(-6px) rotate(4deg)}}
 @keyframes azcare{0%,100%{transform:scale(1)}40%{transform:scale(.95) rotate(-3deg) translateY(2px)}70%{transform:scale(.97) rotate(2deg)}}
 .azf{position:fixed;z-index:60;top:0;left:0;padding:10px 8px;touch-action:manipulation;will-change:transform;width:92px;display:flex;flex-direction:column;align-items:center;cursor:pointer;opacity:0;pointer-events:auto;-webkit-tap-highlight-color:transparent;transition:opacity .7s}
-.azf.on{opacity:1}
+.azf.on{opacity:1}.azf.caught{opacity:0!important;transition:opacity 1s ease-out!important}.azf.caught img{animation:none;transform:scale(1.25);transition:transform 1s ease-out;filter:drop-shadow(0 0 14px #fff) drop-shadow(0 0 10px #ffd86b)}
 .azf img{pointer-events:none;width:88px;height:auto;max-height:110px;object-fit:contain;filter:drop-shadow(0 0 7px #f7c948) drop-shadow(0 6px 5px rgba(0,0,0,.25));animation:azfb 2.4s ease-in-out infinite}
 .azf.r4 img{filter:drop-shadow(0 0 7px #ff7ab8) drop-shadow(0 0 10px #7ab8ff) drop-shadow(0 6px 5px rgba(0,0,0,.25))}
 .azf .bb{position:absolute;bottom:calc(100% - 4px);left:50%;transform:translateX(-50%);width:max-content;max-width:none;white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;text-wrap:nowrap;background:#fffdf8;border:1.5px solid #e6d9c8;border-radius:16px;padding:7px 12px;font-size:13px;color:#4a3b32;box-shadow:0 3px 10px rgba(0,0,0,.18)}
@@ -4795,7 +4795,7 @@ function aizuchi(box, tab, cur, a) {
 }
 (function () { var _e = enhance; enhance = function (box, tab, cur, a) { var r = _e.apply(this, arguments); try { aizuchi(box, tab, cur, a); } catch (e) {} return r; }; })();
 
-var AZ_FL = ["楽しんでますかぁ〜？", "ちゃんと水分とってる？", "ここまで読んでくれてありがとう！", "いいね、その調子！", "まだまだ続くよ〜！", "あなたのこと、もっと知りたいな", "ひと休みしてもいいんだよ", "私、レアキャラなんだよ？えっへん", "ちょっと伸びでもしよっか〜", "診断、おもしろいでしょ？", "今日もおつかれさま！", "ほら、ここにいるよ〜", "また会えたね！", "あなたの結果、なかなか深いよ", "読んでくれて、うれしい！", "つかまえてみて〜！", "ここまでおいで〜！", "捕まえたらいいことあるかも？", "レアキャラ通過しまーす！", "ひゃっほー！", "ふわふわ〜", "どこ行こっかな〜", "見つかっちゃった！", "えへへ、こんにちは！", "今日の運勢、どうだった？", "肩の力、ぬいてね〜", "おやつ食べた？", "深呼吸、すぅ〜はぁ〜", "あなたの笑顔、みたいな〜", "ここでひと休み〜", "あれっ、迷子になった！", "わたしのこと見えた？", "ちょっとだけお邪魔しまーす", "診断の続き、楽しんでね！", "ねぇねぇ、聞いて〜！", "ひらひら〜", "のんびり行こうね", "わたし、今日もかわいい？", "ポイントあげちゃう！", "追いつけるかな〜？", "ぴょーん！", "ほらほら、こっちこっち！", "にげろ〜！", "ぷかぷか〜", "いい日になりますように", "あなたに会えてよかった！", "その調子で最後まで読んでね！", "空を飛ぶのが日課なの", "すれちがい〜！", "1日1回、ほっとひと息だよ"], AZ_HIT = ["いたっ！", "きゃっ！", "つかまっちゃった〜", "やるね！", "ポイントゲット！", "えへへ、見つかった！", "はやい！", "ナイスタッチ！", "くすぐったい〜", "あたり！", "もう一回できるかな？", "すごい反射神経！", "うわっ、触られた！", "ふふっ、おみごと！", "あと何回つかまえられる？"];
+var AZ_FL = ["ワイをつかまえてみ？", "ワイをつかまえてみ？ほれほれ〜", "つかまえられるかな〜？ワイをつかまえてみ？", "ワイをつかまえてみ？むりむり〜", "楽しんでますかぁ〜？", "ちゃんと水分とってる？", "ここまで読んでくれてありがとう！", "いいね、その調子！", "まだまだ続くよ〜！", "あなたのこと、もっと知りたいな", "ひと休みしてもいいんだよ", "私、レアキャラなんだよ？えっへん", "ちょっと伸びでもしよっか〜", "診断、おもしろいでしょ？", "今日もおつかれさま！", "ほら、ここにいるよ〜", "また会えたね！", "あなたの結果、なかなか深いよ", "読んでくれて、うれしい！", "つかまえてみて〜！", "ここまでおいで〜！", "捕まえたらいいことあるかも？", "レアキャラ通過しまーす！", "ひゃっほー！", "ふわふわ〜", "どこ行こっかな〜", "見つかっちゃった！", "えへへ、こんにちは！", "今日の運勢、どうだった？", "肩の力、ぬいてね〜", "おやつ食べた？", "深呼吸、すぅ〜はぁ〜", "あなたの笑顔、みたいな〜", "ここでひと休み〜", "あれっ、迷子になった！", "わたしのこと見えた？", "ちょっとだけお邪魔しまーす", "診断の続き、楽しんでね！", "ねぇねぇ、聞いて〜！", "ひらひら〜", "のんびり行こうね", "わたし、今日もかわいい？", "ポイントあげちゃう！", "追いつけるかな〜？", "ぴょーん！", "ほらほら、こっちこっち！", "にげろ〜！", "ぷかぷか〜", "いい日になりますように", "あなたに会えてよかった！", "その調子で最後まで読んでね！", "空を飛ぶのが日課なの", "すれちがい〜！", "1日1回、ほっとひと息だよ"], AZ_HIT = ["いたっ！", "きゃっ！", "つかまっちゃった〜", "やるね！", "ポイントゲット！", "えへへ、見つかった！", "はやい！", "ナイスタッチ！", "くすぐったい〜", "あたり！", "もう一回できるかな？", "すごい反射神経！", "うわっ、触られた！", "ふふっ、おみごと！", "あと何回つかまえられる？"];
 function azPts() { return ME.pt || 0; }
 function azChip(txt) {
   var c = document.querySelector(".azpt"); if (!c) { c = document.createElement("div"); c.className = "azpt"; document.body.appendChild(c); }
@@ -4810,6 +4810,12 @@ function azGain(x, y) {
 function azTicket() {
   try { var ov = xEl("div", "gxov tkov", '<div class="gxbox" style="text-align:center"><div style="font-size:54px">🎟</div><h3>ガチャ券をゲット！</h3><p class="gxs">レアキャラをつかまえて、<br>10,000ポイントたまりました！<br>キャラ画面の「キャラ替えガチャ」で、<br>新しいキャラを引けます</p><button type="button" class="btn" data-gxclose="1">やったー！</button></div>'); document.body.appendChild(ov); try { xBurst(window.innerWidth / 2, window.innerHeight / 3, 14); } catch (e) {} } catch (e) {}
 }
+
+function azSnd() {
+  if (!Au.on) return; var cx = laughCtx(); if (!cx) return; if (cx.state !== "running") { try { cx.resume(); } catch (e) {} }
+  var t = cx.currentTime, g = cx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.28, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.34); g.connect(cx.destination);
+  [[988, 0], [1319, 0.09], [1760, 0.18]].forEach(function (n) { var o = cx.createOscillator(); o.type = "triangle"; o.frequency.setValueAtTime(n[0], t + n[1]); o.connect(g); o.start(t + n[1]); o.stop(t + n[1] + 0.16); });
+}
 function azFloat() {
   try {
     if (document.hidden || document.getElementById("app") == null) return;
@@ -4821,7 +4827,7 @@ function azFloat() {
     el.innerHTML = '<div class="bb">' + esc(AZ_FL[Math.floor(R() * AZ_FL.length)]) + '</div><img src="' + CHR[ci].s + '" alt="" draggable="false">';
     var ed = Math.floor(R() * 4), x, y, ang;
     if (ed === 0) { x = -100; y = 130 + R() * (H - 300); ang = (R() - .5) * 1.2; } else if (ed === 1) { x = 10 + R() * (W - 110); y = -130; ang = Math.PI / 2 + (R() - .5) * 1.2; } else if (ed === 2) { x = W + 10; y = 130 + R() * (H - 300); ang = Math.PI + (R() - .5) * 1.2; } else { x = 10 + R() * (W - 110); y = H + 20; ang = -Math.PI / 2 + (R() - .5) * 1.2; }
-    var sp = 90, turn = 0, until = 0, life = 11 + R() * 6, age = 0, last = performance.now(), mode = "drift", leaving = false, entered = false, tapAt = 0, sw = 0, alive = true;
+    var sp = 90, turn = 0, until = 0, life = 11 + R() * 6, age = 0, last = performance.now(), mode = "drift", leaving = false, entered = false, tapAt = 0, sw = 0, alive = true, caught = false;
     document.body.appendChild(el);
     function newMove() {
       var m = R(), t = age;
@@ -4837,11 +4843,11 @@ function azFloat() {
     function tick(now) {
       if (!alive) return; var dt = Math.min(.05, (now - last) / 1000); last = now; age += dt;
       if (document.hidden) { done(); return; }
-      if (!leaving && age > life) { leaving = true; var cx = x + 45, cy = y + 50, dx = cx - W / 2, dy = cy - H / 2; ang = Math.atan2(dy, dx) + (R() - .5) * .8; sp = 260; turn = 0; mode = "leave"; }
-      if (!leaving && age > until) newMove();
+      if (!caught && !leaving && age > life) { leaving = true; var cx = x + 45, cy = y + 50, dx = cx - W / 2, dy = cy - H / 2; ang = Math.atan2(dy, dx) + (R() - .5) * .8; sp = 260; turn = 0; mode = "leave"; }
+      if (!caught && !leaving && age > until) newMove();
       if (mode === "zig" && !leaving) { if (Math.floor((age - el._zt) / .28) % 2) ang += sw * dt * 3.2; else ang -= sw * dt * 3.2; }
       ang += turn * dt;
-      var vx = Math.cos(ang) * sp, vy = Math.sin(ang) * sp; x += vx * dt; y += vy * dt;
+      var vx = Math.cos(ang) * sp, vy = Math.sin(ang) * sp; x += vx * dt; y += vy * dt - (caught ? 14 * dt : 0);
       if (!leaving) {
         var inside = x > -30 && x < W - 60 && y > 100 && y < H - 100; if (inside) entered = true;
         if (entered) { var bx = 0, by = 0; if (x < -10) { x = -10; bx = 1; } if (x > W - 80) { x = W - 80; bx = 1; } if (y < 110) { y = 110; by = 1; } if (y > H - 110) { y = H - 110; by = 1; } if (bx) ang = Math.PI - ang; if (by) ang = -ang; }
@@ -4851,11 +4857,11 @@ function azFloat() {
       requestAnimationFrame(tick);
     }
     function hit(e) {
-      if (leaving && mode === "leave" && age > life + 3) return;
-      var n = performance.now(); if (n - tapAt < 350) return; tapAt = n; e.preventDefault(); e.stopPropagation();
-      azGain(x + 45, y + 10);
+      if (caught) return; caught = true; e.preventDefault(); e.stopPropagation();
+      azGain(x + 45, y + 10); try { azSnd(); } catch (er) {}
       el.querySelector(".bb").textContent = AZ_HIT[Math.floor(R() * AZ_HIT.length)];
-      mode = "dash"; sp = 420; ang = R() * Math.PI * 2; turn = 0; until = age + .45; if (leaving) { leaving = false; life = age + 8 + R() * 4; }
+      sp = 0; turn = 0; mode = "hover"; until = 1e9; el.classList.add("caught");
+      setTimeout(function () { done(); }, 1100);
     }
     el.addEventListener("pointerdown", hit);
     requestAnimationFrame(function (t0) { last = t0; tick(t0); });
