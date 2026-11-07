@@ -22,7 +22,9 @@
 @keyframes azme{0%,100%{transform:none}25%{transform:translateY(-6px) rotate(-4deg)}75%{transform:translateY(-6px) rotate(4deg)}}
 @keyframes azcare{0%,100%{transform:scale(1)}40%{transform:scale(.95) rotate(-3deg) translateY(2px)}70%{transform:scale(.97) rotate(2deg)}}
 .azf{position:fixed;z-index:60;top:0;left:0;padding:10px 8px;touch-action:manipulation;will-change:transform;width:92px;display:flex;flex-direction:column;align-items:center;cursor:pointer;opacity:0;pointer-events:auto;-webkit-tap-highlight-color:transparent;transition:opacity .7s}
-.azf.on{opacity:1}.azf.caught{opacity:0!important;transition:opacity 1s ease-out!important}.azf.caught img{animation:none;transform:scale(1.25);transition:transform 1s ease-out;filter:drop-shadow(0 0 14px #fff) drop-shadow(0 0 10px #ffd86b)}
+.azf.on{opacity:1}.azf.caught{opacity:0!important;transition:opacity .55s ease-in .75s!important}.azf.caught img{animation:azpoyo 1.3s ease-out forwards!important;filter:drop-shadow(0 0 12px #fff) drop-shadow(0 0 10px #ffd86b)}.azf.caught:after{content:"💗";position:absolute;top:-6px;right:2px;font-size:20px;animation:azheart 1.2s ease-out forwards;pointer-events:none}.azf.caught:before{content:"✨";position:absolute;top:10px;left:-2px;font-size:18px;animation:azheart 1.2s ease-out .15s forwards;pointer-events:none}
+@keyframes azpoyo{0%{transform:scale(1,1)}10%{transform:scale(1.4,.62)}24%{transform:translateY(-22px) scale(.78,1.32)}38%{transform:translateY(0) scale(1.28,.76)}52%{transform:translateY(-12px) scale(.9,1.14)}66%{transform:translateY(0) scale(1.12,.9)}80%{transform:translateY(-5px) scale(.97,1.04)}100%{transform:translateY(-26px) scale(.55,.55)}}
+@keyframes azheart{0%{opacity:0;transform:translateY(8px) scale(.5)}25%{opacity:1}100%{opacity:0;transform:translateY(-34px) scale(1.2)}}
 .azf img{pointer-events:none;width:88px;height:auto;max-height:110px;object-fit:contain;filter:drop-shadow(0 0 7px #f7c948) drop-shadow(0 6px 5px rgba(0,0,0,.25));animation:azfb 2.4s ease-in-out infinite}
 .azf.r4 img{filter:drop-shadow(0 0 7px #ff7ab8) drop-shadow(0 0 10px #7ab8ff) drop-shadow(0 6px 5px rgba(0,0,0,.25))}
 .azf .bb{position:absolute;bottom:calc(100% - 4px);left:50%;transform:translateX(-50%);width:max-content;max-width:none;white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important;text-wrap:nowrap;background:#fffdf8;border:1.5px solid #e6d9c8;border-radius:16px;padding:7px 12px;font-size:13px;color:#4a3b32;box-shadow:0 3px 10px rgba(0,0,0,.18)}
@@ -4900,7 +4902,7 @@ function azFloat() {
       azGain(x + 45, y + 10); try { azSnd(); } catch (er) {}
       el.querySelector(".bb").textContent = AZ_HIT[Math.floor(R() * AZ_HIT.length)];
       sp = 0; turn = 0; mode = "hover"; until = 1e9; el.classList.add("caught");
-      setTimeout(function () { done(); }, 1100);
+      setTimeout(function () { done(); }, 1350);
     }
     el.addEventListener("pointerdown", hit);
     requestAnimationFrame(function (t0) { last = t0; tick(t0); });
