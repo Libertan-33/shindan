@@ -4889,7 +4889,7 @@ setTimeout(azFloat, 7000);
     var url = "https://api.counterapi.dev/v1/libertan-shindan/visitors/" + (seen ? "" : "up");
     fetch(url, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       var n = j && (j.count != null ? j.count : j.value); if (n == null || isNaN(+n)) return;
-      el.textContent = "👣 訪問者 " + Number(n).toLocaleString() + " 人"; el.hidden = false;
+      el.textContent = Number(n).toLocaleString(); el.hidden = false;
       if (!seen) { try { localStorage.setItem(K, "1"); } catch (e) {} }
     }).catch(function () {});
   } catch (e) {}
