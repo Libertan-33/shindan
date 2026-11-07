@@ -4520,8 +4520,9 @@ function sendMeHTML(a) {
     '<p class="smp">リンクを送ると、お相手は自分の診断だけで<br>ふたりの相性まで見られます<br><small>（生年月日はお相手の画面には出ません）</small></p>' +
     '<div class="sbs"><button type="button" class="sb sline" data-sm="line">LINEで送る</button><button type="button" class="sb sx" data-sm="card">画像カードを作る</button><button type="button" class="sb scp" data-sm="copy">リンクをコピー</button>' + (navigator.share ? '<button type="button" class="sb sx" data-sm="native">📤 ほかのアプリで送る</button>' : "") + '</div><p class="ssm" data-smmsg></p></div>';
 }
+function invKey(v) { return v ? (v.c + "|" + (v.n || "") + "|" + ((v.A && v.A.date) || "")) : ""; }
 function invRecvHTML() {
-  var v = ME.inv; if (!v) return ""; var c = CHR[v.c];
+  var v = ME.inv; if (!v || ME.invgo === invKey(v)) return ""; var c = CHR[v.c];
   return '<div class="sendme invr"><div class="smt">💞 ' + (v.n ? esc(fnm(v.n)) + 'から、' : '') + 'キャラが届いています</div><div class="smr"><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(v.c) + '</div><div class="smx"><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b></div></div><p class="smp">ボタンひとつで、ふたりの相性を診られます</p><div class="actions"><button type="button" class="btn gold" data-invgo="1">💞 ふたりの相性を診る</button><button type="button" class="btn ghost" data-xreq="1" style="margin-top:8px">🔁 このキャラと、キャラを交換したい</button></div></div>';
 }
 function sendMeFill() {
@@ -4531,9 +4532,9 @@ var renderDuo2 = renderDuo; renderDuo = function () { renderDuo2(); try { sendMe
 document.addEventListener("click", function (e) {
   var g = e.target && e.target.closest ? e.target.closest("[data-invgo]") : null;
   if (g && ME.inv) {
-    var v = ME.inv, B = S.B; B.sur = ""; B.giv = ""; B.nick = String(v.n || "").slice(0, 12); B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
+    var v = ME.inv, B = S.B; ME.invgo = invKey(v); B.sur = ""; B.giv = ""; B.nick = String(v.n || "").slice(0, 12); B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
     try { var b = analyze(B); if (b) { ME.gx = ME.gx || {}; ME.gx[b.seed >>> 0] = v.c; meSave(); collect(analyze(S.A)); collect(b); } } catch (er) {}
-    try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo();
+    try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo(); try { sendMeFill(); document.querySelectorAll(".invself").forEach(function (x) { x.remove(); }); renderSelf(); } catch (er) {}
     var goRes = function () { try { var r = $("res-duo"), y = Math.max(0, Math.round(r.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0)) - 64); window.scrollTo({ top: y, behavior: "smooth" }); } catch (er) { window.scrollTo(0, 0); } };
     goRes(); window.setTimeout(goRes, 350); return;
   }
@@ -4551,7 +4552,7 @@ document.addEventListener("click", function (e) {
 (function () {
   try {
     var q = new URLSearchParams(window.QS0 || location.search), ci = parseInt(q.get("c"), 10), nm = (q.get("n") || "").slice(0, 24), h = document.getElementById("invite");
-    if (q.get("d")) { var iv = null; try { iv = invClean(b64d(q.get("d"))); } catch (e) {} if (iv) { ME.inv = iv; try { meSave(); } catch (e) {} ci = iv.c; nm = iv.n; } }
+    if (q.get("d")) { var iv = null; try { iv = invClean(b64d(q.get("d"))); } catch (e) {} if (iv) { if (invKey(ME.inv) !== invKey(iv)) ME.invgo = ""; ME.inv = iv; try { meSave(); } catch (e) {} ci = iv.c; nm = iv.n; } }
     else if (ME.inv && !(ci >= 0)) { ci = ME.inv.c; nm = ME.inv.n; }
     if (!h || !(ci >= 0 && ci < CHR.length)) return; var c = CHR[ci];
     h.innerHTML = '<div class="invc"><div class="invt">💌 お友だちから、キャラが届きました</div><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(ci) + '</div><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b>' +
@@ -4569,7 +4570,7 @@ renderSelf = function () {
     document.querySelectorAll(".invself").forEach(function (x) { x.remove(); }); var ivf = $("invform"); if (ivf) ivf.innerHTML = ""; if (!ME.inv) return;
     var res = $("res-self"), inp = ivf, inForm = S.page.self === "in";
     if (inForm && inp) inp.innerHTML = ('<div class="invself"><div class="sendme invr"><div class="smt">💞 ' + (ME.inv.n ? esc(fnm(ME.inv.n)) + 'から、' : '') + 'キャラが届いています</div><p class="smp">自分の生年月日などを入れて診断すると、<br>そのあと、ふたりの相性がすぐ診られます<br><small>（LINEのアプリ内で開くと、診断データが保存されないことがあります）</small></p></div></div>');
-    else if (!inForm && res && !res.hidden) res.insertAdjacentHTML("afterbegin", '<div class="invself">' + invRecvHTML() + '</div>');
+    else if (!inForm && res && !res.hidden && S.page.self === PG_SELF[0][0] && ME.inv && ME.invgo !== invKey(ME.inv)) res.insertAdjacentHTML("afterbegin", '<div class="invself">' + invRecvHTML() + '</div>');
   } catch (e) {}
 };
 try { if (ME.inv) renderSelf(); } catch (e) {}
@@ -4741,7 +4742,7 @@ function histHTML() {
     return '<div class="hrow"><button type="button" class="hbtn" data-hist="' + i + '"><img src="' + c.s + '" alt="" draggable="false"><span class="hm"><b>' + esc(x.n ? fnm(x.n) : "ニックネームなし") + '</b><small>' + esc(c.n) + '　' + esc(x.d) + '</small></span><span class="hs">' + x.sc + '<small>点</small></span></button><button type="button" class="hx" data-histdel="' + i + '" aria-label="履歴から消す">×</button></div>';
   }).join("") + '<p class="hn">お相手の情報は、この端末の中だけに保存されます</p></div>';
 }
-var renderDuo3 = renderDuo; renderDuo = function () { renderDuo3(); histRec(); try { var h = document.getElementById("sendme"); if (h && !h.querySelector(".dhist")) sendMeFill(); else if (h) { var hh = h.querySelector(".dhist"); if (hh) hh.outerHTML = histHTML(); } } catch (e) {} };
+var renderDuo3 = renderDuo; renderDuo = function () { renderDuo3(); histRec(); try { var h = document.getElementById("sendme"); if (h && !h.querySelector(".dhist")) sendMeFill(); else if (h) { var hh = h.querySelector(".dhist"); if (hh) hh.outerHTML = histHTML(); } if (h) h.style.display = (S.page.duo === "overview" || S.page.duo === "tips") ? "" : "none"; } catch (e) {} };
 document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target : null; if (!T) return;
   var d = T.closest("[data-histdel]"), o = T.closest("[data-hist]");
