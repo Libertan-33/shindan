@@ -3810,7 +3810,7 @@ function init() {
     var rv = e.target.closest ? e.target.closest(".rv") : null;
     if (rv && !rv.closest(".cview")) { var im = rv.querySelector("img"), an0 = analyze(S.A); laugh(false, rv); openCview(rv.outerHTML, (ME.cn && an0 && S.page.self === "char") ? ME.cn : (im ? im.alt : "")); return; }
     var zc = e.target.closest ? e.target.closest("[data-zc]") : null;
-    if (zc) { var zi = +zc.dataset.zc; if (CHR[zi]) openCview('<div class="rv"><div class="frame"><div class="mat"><img class="char" src="' + CHR[zi].s + '" alt="" draggable="false"></div></div></div>', CHR[zi].n); return; }
+    if (zc) { var zi = +zc.dataset.zc; if (CHR[zi]) var isMain = false; try { var am = analyze(S.A); isMain = !!(am && pickChar(am) === zi); } catch (er) {} openCview('<div class="rv"><div class="frame"><div class="mat"><img class="char" src="' + CHR[zi].s + '" alt="" draggable="false"></div></div></div>' + (isMain ? '<p class="gxs" style="text-align:center">⭐ いま、メインのキャラです</p>' : xMainBtn(zi)), CHR[zi].n); return; }
     var t = e.target.closest ? e.target.closest("button") : null;
     if (!t || t.id === "bgm") return;
     if (t.dataset.fb) {
@@ -4681,9 +4681,10 @@ function xModal(inner) { var o = document.querySelector(".xov"); if (o) o.remove
 function xClose() { var o = document.querySelector(".xov"); if (o) o.remove(); }
 function xSend(u, tx) { return '<div class="sbs" style="justify-content:center"><button type="button" class="btn" data-xline="' + esc(u) + '|' + esc(tx) + '">LINEで送る</button><button type="button" class="btn ghost" data-xcopy="' + esc(u) + '">リンクをコピー</button></div><p class="ssm" data-xmsg></p>'; }
 function xApply(i) {
-  var a = xMine(); if (!a) return false; var old = pickChar(a); ME.gx = ME.gx || {}; ME.gx[a.seed >>> 0] = i; ME.ex = (ME.ex || 0) + 1; meSave(); try { collect(a); } catch (e) {}
+  var a = xMine(); if (!a) return false; var old = pickChar(a); ME.col = ME.col || []; if (ME.col.indexOf(i) < 0) ME.col.push(i); ME.ex = (ME.ex || 0) + 1; meSave();
   try { gxRefresh(); } catch (e) {} return old;
 }
+function xMainBtn(i) { return '<button type="button" class="btn ghost" data-setmain="' + i + '" style="margin-top:8px">⭐ このキャラを、メインにする</button>'; }
 document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target : null; if (!T) return;
   var l = T.closest("[data-xline]"), c = T.closest("[data-xcopy]");
@@ -4702,14 +4703,14 @@ document.addEventListener("click", function (e) {
   if (ok && ME.xp) {
     var xp = ME.xp, a2 = xMine(); if (!a2) return; var mine2 = pickChar(a2), oldI = xApply(xp.a); if (oldI === false) return; delete ME.xp; meSave();
     var u2 = xLink("acc", { a: mine2, n: String(a2.nm || myName(a2)).slice(0, 24) });
-    xClose(); curtainShow(oldI, xp.a, function () {
-      xModal('<h3>🎉 交換が成立しました！</h3><div class="xrow">' + xCard(xp.a, "あたらしいキャラ") + '</div><p class="gxs">最後に、お相手へ承諾リンクを送ってください<br>お相手が開くと、お相手にも「' + esc(CHR[mine2].n) + '」が届きます</p>' + xSend(u2, "交換OKだよ🎉 このリンクを開いてね\nワタス解体新書") + '<button type="button" class="btn ghost" data-xclose="1" style="margin-top:10px">とじる</button>');
+    xClose(); window.setTimeout(function () {
+      xModal('<h3>🎉 交換が成立しました！</h3><div class="xrow">' + xCard(xp.a, "もらったキャラ") + '</div><p class="gxs">図鑑に追加されました<br>あなたのキャラは、手放しません（メインはそのまま）</p>' + xMainBtn(xp.a) + '<p class="gxs" style="margin-top:12px">最後に、お相手へ承諾リンクを送ってください<br>お相手が開くと、お相手にも「' + esc(CHR[mine2].n) + '」が届きます</p>' + xSend(u2, "交換OKだよ🎉 このリンクを開いてね\nワタス解体新書") + '<button type="button" class="btn ghost" data-xclose="1" style="margin-top:10px">とじる</button>');
     }); return;
   }
   var gt = T.closest("[data-xget]");
   if (gt && ME.xp) {
     var xq = ME.xp, a3 = xMine(); if (!a3) return; var old3 = xApply(xq.a); if (old3 === false) return; delete ME.xp; meSave(); xClose();
-    curtainShow(old3, xq.a, function () { xModal('<h3>🎉 交換が成立しました！</h3><div class="xrow">' + xCard(xq.a, "あたらしいキャラ") + '</div><p class="gxs">キャラ画面で、いつでも見られます</p><button type="button" class="btn" data-xclose="1">とじる</button>'); }); return;
+    window.setTimeout(function () { xModal('<h3>🎉 交換が成立しました！</h3><div class="xrow">' + xCard(xq.a, "もらったキャラ") + '</div><p class="gxs">図鑑に追加されました<br>あなたのキャラは、手放しません（メインはそのまま）</p>' + xMainBtn(xq.a) + '<button type="button" class="btn" data-xclose="1" style="margin-top:8px">とじる</button>'); }, 200); return;
   }
   if (T.closest("[data-xno]")) { delete ME.xp; meSave(); xClose(); }
 });
@@ -4723,7 +4724,7 @@ document.addEventListener("click", function (e) {
     ME.xp = { k: k, a: ai, b: bi, n: nm }; meSave();
     var mine = pickChar(a);
     window.setTimeout(function () {
-      if (k === "req") xModal('<h3>🔁 ' + (nm ? esc(fnm(nm)) + 'から、' : '') + 'キャラ交換のお願い</h3><div class="xrow">' + xCard(mine, "あなたのキャラ") + '<span class="xar">⇄</span>' + xCard(ai, (nm ? esc(fnm(nm)) : "お相手")) + '</div><p class="gxs">交換すると、あなたのキャラが入れかわります<br>あとからキャラ替えガチャで変えることもできます</p><div class="actions"><button type="button" class="btn gold" data-xok="1">✅ 交換する</button><button type="button" class="btn ghost" data-xno="1">やめておく</button></div>');
+      if (k === "req") xModal('<h3>🔁 ' + (nm ? esc(fnm(nm)) + 'から、' : '') + 'キャラ交換のお願い</h3><div class="xrow">' + xCard(mine, "あなたのキャラ") + '<span class="xar">⇄</span>' + xCard(ai, (nm ? esc(fnm(nm)) : "お相手")) + '</div><p class="gxs">交換すると、お互いのキャラが図鑑に追加されます<br>あなたのキャラは、手放しません（メインはそのまま）<br>「メインにする」で、いつでも切りかえられます</p><div class="actions"><button type="button" class="btn gold" data-xok="1">✅ 交換する</button><button type="button" class="btn ghost" data-xno="1">やめておく</button></div>');
       else if (k === "acc") xModal('<h3>🎉 ' + (nm ? esc(fnm(nm)) + 'が、' : '') + '交換を承諾しました</h3><div class="xrow">' + xCard(mine, "いまのキャラ") + '<span class="xar">⇄</span>' + xCard(ai, "届くキャラ") + '</div><div class="actions"><button type="button" class="btn gold" data-xget="1">🎁 受け取る</button><button type="button" class="btn ghost" data-xno="1">あとにする</button></div>');
     }, 700);
   } catch (e) {}
@@ -4902,6 +4903,13 @@ setTimeout(azFloat, 7000);
     }).catch(function () {});
   } catch (e) {}
 })();
+
+document.addEventListener("click", function (e) {
+  var b = e.target && e.target.closest ? e.target.closest("[data-setmain]") : null; if (!b) return;
+  var i = +b.dataset.setmain, a = null; try { a = analyze(S.A); } catch (er) {} if (!a || !a.p || !CHR[i]) return;
+  ME.gx = ME.gx || {}; ME.gx[a.seed >>> 0] = i; ME.col = ME.col || []; if (ME.col.indexOf(i) < 0) ME.col.push(i); meSave();
+  try { gxRefresh(); } catch (er) {} b.outerHTML = '<p class="gxs" style="text-align:center">⭐ メインのキャラにしました</p>';
+}, true);
 </script>
 
 
