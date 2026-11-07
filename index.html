@@ -4606,6 +4606,12 @@ document.addEventListener("click", function (e) {
   var my = T.closest("[data-myres]"), rd = T.closest("[data-redo]");
   if (!my && !rd) return;
   if (!ME.A || !ME.A.date) return;
+  if (rd && (!ME.bk || Date.now() - ME.bk > 7 * 864e5)) {
+    if (window.confirm("診断の入力を変えると、キャラが変わることがあります\n\n先に「キャラを保存するリンク」をコピーしておきますか？\n（OK＝コピーして続ける　キャンセル＝そのまま続ける）")) {
+      ME.bk = Date.now(); try { meSave(); } catch (er) {}
+      try { navigator.clipboard.writeText(meUrl()).then(function () { window.alert("コピーしました\nメモやブックマークに貼って保存してください"); }, function () { window.prompt("このリンクを保存してください", meUrl()); }); } catch (er) { window.prompt("このリンクを保存してください", meUrl()); }
+    }
+  }
   var A = ME.A; S.A = { sur: A.sur || "", giv: A.giv || "", nick: A.nick || "", g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: { EI: A.mbti.EI, SN: A.mbti.SN, TF: A.mbti.TF, JP: A.mbti.JP }, touched: true };
   try { $("app").dataset.stage = "form"; setTab("self"); } catch (er) {}
   if (my) { S.page.self = "overview"; try { collect(analyze(S.A)); } catch (er) {} } else { S.page.self = "in"; }
@@ -4624,7 +4630,7 @@ function addMyRes() {
 }
 function meUrl() {
   var A = ME.A, m = null; try { var an = analyze(A); if (an && an.p) m = pickChar(an); } catch (e) {}
-  return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12), k: String(A.nick || "").slice(0, 12), m: m, cl: (ME.col || []).slice(0, 400), pt: ME.pt || 0, tu: ME.tu || 0 }) + "&openExternalBrowser=1";
+  return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12), k: String(A.nick || "").slice(0, 12), m: m, cl: (ME.col || []).slice(0, 400), pt: ME.pt || 0, tu: ME.tu || 0, dy: (ME.days || []).slice(-120), tn: ME.tn || 0 }) + "&openExternalBrowser=1";
 }
 document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target.closest("[data-mesave]") : null; if (!T || !ME.A) return;
@@ -4643,7 +4649,8 @@ document.addEventListener("click", function (e) {
       var rw = b64d(t) || {}, an = analyze(ME.A); ME.bc = ME.bc || {}; ME.gx = ME.gx || {};
       if (an && an.p && rw.m != null && CHR[+rw.m]) { ME.bc[an.seed >>> 0] = +rw.m; ME.gx[an.seed >>> 0] = +rw.m; }
       ME.col = ME.col || []; (rw.cl || []).concat(rw.m != null ? [rw.m] : []).forEach(function (k) { k = +k; if (CHR[k] && ME.col.indexOf(k) < 0) ME.col.push(k); });
-      ME.pt = Math.max(ME.pt || 0, +rw.pt || 0); ME.tu = Math.max(ME.tu || 0, +rw.tu || 0);
+      ME.pt = Math.max(ME.pt || 0, +rw.pt || 0); ME.tu = Math.max(ME.tu || 0, +rw.tu || 0); ME.tn = Math.max(ME.tn || 0, +rw.tn || 0);
+      ME.days = ME.days || []; (rw.dy || []).forEach(function (d) { d = String(d).slice(0, 12); if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(d) && ME.days.indexOf(d) < 0) ME.days.push(d); }); ME.days.sort();
     } catch (er) {}
     meSave(); try { history.replaceState(null, "", location.pathname); } catch (er) {}
     var hh = $("hello"); if (hh) { try { hello(); } catch (er) {} }
@@ -4934,9 +4941,10 @@ try { if (navigator.storage && navigator.storage.persist) navigator.storage.pers
       var h = "";
       if (inLine) h = '<b>⚠ LINEの中で開いています</b><span>この画面だと、キャラや診断結果が消えやすいです<br>下のボタンから、ふだんのブラウザで開いてください</span><a class="btn gold" href="' + SHARE_URL + '?openExternalBrowser=1">ブラウザで開く</a>';
       else if (ME && ME.A && ME.A.date && (!ME.bk || Date.now() - ME.bk > 14 * 864e5) && (ME.days || []).length >= 2) h = '<b>💾 キャラのバックアップをしておこう</b><span>スマホの設定や機種変更で、キャラが消えることがあります<br>「保存するリンク」をコピーしておくと、いつでも復元できます</span><button type="button" class="btn gold" data-mesave="1">🔗 保存リンクをコピー</button>';
+      if (!h && /iPhone|iPad|iPod/.test(ua) && !navigator.standalone && ME && ME.A && ME.A.date && (ME.days || []).length >= 3 && !ME.a2) h = '<b>📲 ホーム画面に追加すると、消えにくくなります</b><span>Safariの下の「共有」ボタン → 「ホーム画面に追加」<br>アプリのように、すぐ開けるようになります</span><button type="button" class="btn gold" data-a2="1">わかった</button>';
       bar.innerHTML = h ? h + '<button type="button" class="sbx" aria-label="とじる" style="position:absolute;top:4px;right:8px;border:0;background:none;font-size:20px;color:#5c4510">×</button>' : ""; bar.hidden = !h || bar._x;
     }
-    upd(); bar.addEventListener("click", function (e) { if (e.target.closest && e.target.closest(".sbx")) { bar._x = true; bar.hidden = true; } });
+    upd(); bar.addEventListener("click", function (e) { if (e.target.closest && e.target.closest("[data-a2]")) { ME.a2 = 1; try { meSave(); } catch (er) {} bar.hidden = true; return; } if (e.target.closest && e.target.closest(".sbx")) { bar._x = true; bar.hidden = true; } });
     document.addEventListener("click", function (e) { if (e.target && e.target.closest && e.target.closest("[data-mesave]")) setTimeout(upd, 400); }, true);
   } catch (e) {}
 })();
