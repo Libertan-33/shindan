@@ -4926,17 +4926,17 @@ setTimeout(azFloat, 7000);
     var el = document.getElementById("vcnt"); if (!el) return;
     var K = "wts_visited", seen = false;
     try { seen = !!localStorage.getItem(K); } catch (e) {}
-    var C = "https://api.counterapi.dev/v1/libertan-shindan/visitors/", A = "https://abacus.jasoncameron.dev/";
+    var A = "https://abacus.jasoncameron.dev/", NS = "libertan-shindan";
     function val(j) { var n = j && (j.count != null ? j.count : j.value); return (n == null || isNaN(+n)) ? null : +n; }
     function get(u) { return fetch(u, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) { var n = val(j); return n == null ? Promise.reject() : n; }); }
     function show(n) { el.textContent = Number(n).toLocaleString(); el.hidden = false; if (!seen) { try { localStorage.setItem(K, "1"); } catch (e) {} } }
-    var p = seen ? get(C).catch(function () { return get(C + "up"); }) : get(C + "up");
-    p.catch(function () { return get(A + (seen ? "get" : "hit") + "/libertan-shindan/visitors").catch(function () { return get(A + "hit/libertan-shindan/visitors"); }); }).then(show).catch(function (er) { if (/[?&]vc=1/.test(window.QS0 || "")) { el.textContent = "カウンター接続エラー"; el.hidden = false; el.style.color = "#c00"; } });
+    var p = seen ? get(A + "get/" + NS + "/visitors").catch(function () { return get(A + "hit/" + NS + "/visitors"); }) : get(A + "hit/" + NS + "/visitors");
+    p.then(show).catch(function (er) { if (/[?&]vc=1/.test(window.QS0 || "")) { el.textContent = "カウンター接続エラー"; el.hidden = false; el.style.color = "#c00"; } });
   } catch (e) {}
 })();
 
 /* ===== 友だち紹介：1人ごとにガチャ券1枚 ===== */
-var REF_NS = "https://api.counterapi.dev/v1/libertan-shindan/", REF_CAP = 30;
+var REF_NS = "https://abacus.jasoncameron.dev/", REF_CAP = 30;
 function refId() { if (!ME.ri) { var s = "", c = "abcdefghjkmnpqrstuvwxyz23456789", i; for (i = 0; i < 10; i++) s += c.charAt(Math.floor(Math.random() * c.length)); ME.ri = s; meSave(); } return ME.ri; }
 tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 3000) + Math.min(REF_CAP, ME.rn || 0) + (ME.rg ? 1 : 0); return Math.max(0, e - (ME.tu || 0)); };
 (function () { var f = invUrl; invUrl = function (a) { return f(a).replace("?d=", "?r=" + refId() + "&d="); }; })();
@@ -4949,7 +4949,7 @@ tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.
 function refPing() {
   try {
     if (!ME.rb || ME.rd || !(ME.A && ME.A.date)) return; var an = analyze(ME.A); if (!an || !an.p) return;
-    fetch(REF_NS + "r_" + ME.rb + "/up", { cache: "no-store" }).then(function (r) { if (r.ok) { ME.rd = 1; ME.rg = 1; meSave(); try { refGift(); } catch (e) {} } }).catch(function () {});
+    fetch(REF_NS + "hit/libertan-shindan/r_" + ME.rb, { cache: "no-store" }).then(function (r) { if (r.ok) { ME.rd = 1; ME.rg = 1; meSave(); try { refGift(); } catch (e) {} } }).catch(function () {});
   } catch (e) {}
 }
 function refGift() {
@@ -4959,7 +4959,7 @@ function refGift() {
 function refSync() {
   try {
     if (!ME.ri) return;
-    fetch(REF_NS + "r_" + ME.ri, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
+    fetch(REF_NS + "get/libertan-shindan/r_" + ME.ri, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) {
       var n = j && (j.count != null ? j.count : j.value); n = Math.min(REF_CAP, Math.max(0, parseInt(n, 10) || 0)); if (!n || n <= (ME.rn || 0)) return;
       var add = n - (ME.rn || 0); ME.rn = n; meSave();
       if (n > (ME.rs || 0)) {
