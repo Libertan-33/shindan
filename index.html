@@ -4547,7 +4547,7 @@ var renderDuo2 = renderDuo; renderDuo = function () { renderDuo2(); try { sendMe
 document.addEventListener("click", function (e) {
   var g = e.target && e.target.closest ? e.target.closest("[data-invgo]") : null;
   if (g && ME.inv) {
-    var v = ME.inv, B = S.B; ME.invgo = invKey(v); B.sur = ""; B.giv = ""; B.nick = String(v.n || "").slice(0, 12); B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
+    var v = ME.inv, B = S.B; ME.invgo = invKey(v); try { var ih = document.getElementById("invite"); if (ih) ih.innerHTML = ""; } catch (er) {} B.sur = ""; B.giv = ""; B.nick = String(v.n || "").slice(0, 12); B.g = v.A.g; B.date = v.A.date; B.time = v.A.time; B.unk = v.A.unk; B.place = v.A.place; B.mbti = { EI: v.A.mbti.EI, SN: v.A.mbti.SN, TF: v.A.mbti.TF, JP: v.A.mbti.JP }; B.touched = true;
     try { var b = analyze(B); if (b) { ME.gx = ME.gx || {}; ME.gx[b.seed >>> 0] = v.c; meSave(); collect(analyze(S.A)); collect(b); } } catch (er) {}
     try { setTab("duo"); } catch (er) {} S.page.duo = "overview"; renderDuo(); try { sendMeFill(); document.querySelectorAll(".invself").forEach(function (x) { x.remove(); }); renderSelf(); } catch (er) {}
     var goRes = function () { try { var r = $("res-duo"), y = Math.max(0, Math.round(r.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop || 0)) - 64); window.scrollTo({ top: y, behavior: "smooth" }); } catch (er) { window.scrollTo(0, 0); } };
@@ -4568,7 +4568,7 @@ document.addEventListener("click", function (e) {
   try {
     var q = new URLSearchParams(window.QS0 || location.search), ci = parseInt(q.get("c"), 10), nm = (q.get("n") || "").slice(0, 24), h = document.getElementById("invite");
     if (q.get("d")) { var iv = null; try { iv = invClean(b64d(q.get("d"))); } catch (e) {} if (iv) { if (invKey(ME.inv) !== invKey(iv)) ME.invgo = ""; ME.inv = iv; try { meSave(); } catch (e) {} ci = iv.c; nm = iv.n; } }
-    else if (ME.inv && !(ci >= 0)) { ci = ME.inv.c; nm = ME.inv.n; }
+    else if (ME.inv && !(ci >= 0)) { if (ME.invgo === invKey(ME.inv)) return; ci = ME.inv.c; nm = ME.inv.n; }
     if (!h || !(ci >= 0 && ci < CHR.length)) return; var c = CHR[ci];
     h.innerHTML = '<div class="invc"><div class="invt">💌 お友だちから、キャラが届きました</div><div class="frame fr' + (c.r || 0) + ' sm-fr"><div class="mat"><img class="char" src="' + c.s + '" alt="" draggable="false"></div>' + rkBadge(ci) + '</div><b class="cnm cn' + (c.r || 0) + '">' + esc(c.n) + '</b>' +
       (nm ? '<span class="invn">' + esc(fnm(nm)) + '</span>' : '') + '<p class="invp">あなたのキャラは、どんな子？<br>自分の診断をすると、このキャラとの<br>相性がボタンひとつで見られます💞</p></div>';
