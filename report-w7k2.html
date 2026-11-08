@@ -1,0 +1,15 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>週間レポート</title>
+<link rel="manifest" href="report-w7k2.webmanifest"><meta name="theme-color" content="#7c3be2"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="週間レポート"><link rel="apple-touch-icon" href="top.webp">
+<style>body{margin:0;background:#fbf6ee;color:#3b2f2a;font-family:sans-serif;padding:18px 16px;max-width:480px;margin:0 auto;line-height:1.6}h2{text-align:center;margin:0 0 4px}.sub{text-align:center;font-size:12px;color:#8a7c70;margin:0 0 14px}.card{background:#fff;border-radius:14px;padding:14px;margin-bottom:12px}.row{display:grid;grid-template-columns:5.4em 1fr 2.6em;gap:8px;align-items:center;margin:6px 0;font-size:13px}.bar{height:10px;border-radius:5px;background:#eee;overflow:hidden}.bar i{display:block;height:100%;background:#f59e0b}button{padding:10px 22px;border:0;border-radius:99px;background:#7c3be2;color:#fff;font-weight:700;font-size:14px}</style></head><body>
+<h2>📊 週間レポート</h2><p class="sub">1日1端末ごとに1回数えた訪問数です</p><div id="o"><p style="text-align:center">集計中…</p></div>
+<p style="text-align:center;margin-top:18px"><button type="button" onclick="location.reload()">更新する</button></p>
+<script>
+var A="https://abacus.jasoncameron.dev/get/libertan-shindan/",W=["日","月","火","水","木","金","土"],days=[],i;
+for(i=0;i<14;i++){var d=new Date(Date.now()-i*864e5);days.push({k:"d"+d.getFullYear()+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2),l:(d.getMonth()+1)+"/"+d.getDate()+"（"+W[d.getDay()]+"）",n:0})}
+function g(u){return fetch(u,{cache:"no-store"}).then(function(r){return r.ok?r.json():{value:0}}).then(function(j){return +j.value||0}).catch(function(){return 0})}
+var tot=0;Promise.all(days.map(function(x){return g(A+x.k).then(function(n){x.n=n})}).concat([g(A+"visitors").then(function(n){tot=n})])).then(function(){
+var w1=0,w0=0,mx=1;days.forEach(function(x,j){if(j<7)w1+=x.n;else w0+=x.n;if(x.n>mx)mx=x.n});var df=w1-w0;
+var h='<div class="card" style="text-align:center"><div style="font-size:13px">直近7日の合計</div><div style="font-size:40px;font-weight:900;color:#c2410c">'+w1+'</div><div style="font-size:13px">前の週 '+w0+'　'+(df>=0?"＋":"−")+Math.abs(df)+'</div></div><div class="card">';
+days.slice(0,7).forEach(function(x){h+='<div class="row"><span>'+x.l+'</span><span class="bar"><i style="width:'+Math.round(x.n/mx*100)+'%"></i></span><b style="text-align:right">'+x.n+'</b></div>'});
+h+='</div><p style="text-align:center;font-size:13px">これまでの累計　<b>'+tot+'</b></p>';document.getElementById("o").innerHTML=h});
+</script></body></html>
