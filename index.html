@@ -1070,7 +1070,6 @@ p, li, dd { text-wrap: pretty; }
       <a class="al l3" href="https://lin.ee/RFYuSxv" target="_blank" rel="noopener noreferrer">💬 公式LINEで友だち追加</a>
       <a class="al l4" href="https://note.com/rental_libertan/membership" target="_blank" rel="noopener noreferrer">🌙 noteメンバーシップ「変会」</a>
       <a class="al l5" href="https://libertan.official.ec/" target="_blank" rel="noopener noreferrer">🛍 ECサイト レンタルりばたんOfficial</a>
-      <a class="al l6" href="https://libertan-33.github.io/shindan/" target="_blank" rel="noopener noreferrer">🔮 自分診断「ワタス解体新書」</a>
     </div>
   </aside>
 
@@ -4636,7 +4635,7 @@ function addMyRes() {
 }
 function meUrl() {
   var A = ME.A, m = null; try { var an = analyze(A); if (an && an.p) m = pickChar(an); } catch (e) {}
-  return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12), k: String(A.nick || "").slice(0, 12), m: m, cl: (ME.col || []).slice(0, 400), pt: ME.pt || 0, tu: ME.tu || 0, dy: (ME.days || []).slice(-120), tn: ME.tn || 0, ri: ME.ri || "", rn: ME.rn || 0, rs: ME.rs || 0, rb: ME.rb || "", rd: ME.rd || 0 }) + "&openExternalBrowser=1";
+  return SHARE_URL + "?me=" + b64e({ c: 0, A: { g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: A.mbti }, s: String(A.sur || "").slice(0, 12), v: String(A.giv || "").slice(0, 12), k: String(A.nick || "").slice(0, 12), m: m, cl: (ME.col || []).slice(0, 400), pt: ME.pt || 0, tu: ME.tu || 0, dy: (ME.days || []).slice(-120), tn: ME.tn || 0, ri: ME.ri || "", rn: ME.rn || 0, rs: ME.rs || 0, rb: ME.rb || "", rd: ME.rd || 0, rg: ME.rg || 0 }) + "&openExternalBrowser=1";
 }
 document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target.closest("[data-mesave]") : null; if (!T || !ME.A) return;
@@ -4655,7 +4654,7 @@ document.addEventListener("click", function (e) {
       var rw = b64d(t) || {}, an = analyze(ME.A); ME.bc = ME.bc || {}; ME.gx = ME.gx || {};
       if (an && an.p && rw.m != null && CHR[+rw.m]) { ME.bc[an.seed >>> 0] = +rw.m; ME.gx[an.seed >>> 0] = +rw.m; }
       ME.col = ME.col || []; (rw.cl || []).concat(rw.m != null ? [rw.m] : []).forEach(function (k) { k = +k; if (CHR[k] && ME.col.indexOf(k) < 0) ME.col.push(k); });
-      ME.pt = Math.max(ME.pt || 0, +rw.pt || 0); ME.tu = Math.max(ME.tu || 0, +rw.tu || 0); ME.tn = Math.max(ME.tn || 0, +rw.tn || 0); if (!ME.ri && /^[a-z0-9]{6,12}$/.test(String(rw.ri || ""))) ME.ri = rw.ri; ME.rn = Math.max(ME.rn || 0, +rw.rn || 0); ME.rs = Math.max(ME.rs || 0, +rw.rs || 0); if (!ME.rb && /^[a-z0-9]{6,12}$/.test(String(rw.rb || ""))) ME.rb = rw.rb; ME.rd = Math.max(ME.rd || 0, +rw.rd || 0);
+      ME.pt = Math.max(ME.pt || 0, +rw.pt || 0); ME.tu = Math.max(ME.tu || 0, +rw.tu || 0); ME.tn = Math.max(ME.tn || 0, +rw.tn || 0); if (!ME.ri && /^[a-z0-9]{6,12}$/.test(String(rw.ri || ""))) ME.ri = rw.ri; ME.rn = Math.max(ME.rn || 0, +rw.rn || 0); ME.rs = Math.max(ME.rs || 0, +rw.rs || 0); if (!ME.rb && /^[a-z0-9]{6,12}$/.test(String(rw.rb || ""))) ME.rb = rw.rb; ME.rd = Math.max(ME.rd || 0, +rw.rd || 0); ME.rg = Math.max(ME.rg || 0, +rw.rg || 0);
       ME.days = ME.days || []; (rw.dy || []).forEach(function (d) { d = String(d).slice(0, 12); if (/^\d{4}-\d{1,2}-\d{1,2}$/.test(d) && ME.days.indexOf(d) < 0) ME.days.push(d); }); ME.days.sort();
     } catch (er) {}
     meSave(); try { history.replaceState(null, "", location.pathname); } catch (er) {}
@@ -4933,7 +4932,7 @@ setTimeout(azFloat, 7000);
 /* ===== 友だち紹介：1人ごとにガチャ券1枚 ===== */
 var REF_NS = "https://api.counterapi.dev/v1/libertan-shindan/", REF_CAP = 30;
 function refId() { if (!ME.ri) { var s = "", c = "abcdefghjkmnpqrstuvwxyz23456789", i; for (i = 0; i < 10; i++) s += c.charAt(Math.floor(Math.random() * c.length)); ME.ri = s; meSave(); } return ME.ri; }
-tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 5000) + Math.min(REF_CAP, ME.rn || 0); return Math.max(0, e - (ME.tu || 0)); };
+tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 5000) + Math.min(REF_CAP, ME.rn || 0) + (ME.rg ? 1 : 0); return Math.max(0, e - (ME.tu || 0)); };
 (function () { var f = invUrl; invUrl = function (a) { return f(a).replace("?d=", "?r=" + refId() + "&d="); }; })();
 (function () {
   try {
@@ -4944,8 +4943,12 @@ tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.
 function refPing() {
   try {
     if (!ME.rb || ME.rd || !(ME.A && ME.A.date)) return; var an = analyze(ME.A); if (!an || !an.p) return;
-    fetch(REF_NS + "r_" + ME.rb + "/up", { cache: "no-store" }).then(function (r) { if (r.ok) { ME.rd = 1; meSave(); } }).catch(function () {});
+    fetch(REF_NS + "r_" + ME.rb + "/up", { cache: "no-store" }).then(function (r) { if (r.ok) { ME.rd = 1; ME.rg = 1; meSave(); try { refGift(); } catch (e) {} } }).catch(function () {});
   } catch (e) {}
+}
+function refGift() {
+  var ov = xEl("div", "gxov tkov", '<div class="gxbox" style="text-align:center"><div style="font-size:54px">🎟</div><h3>ご招待ボーナス！</h3><p class="gxs">お友だちのリンクから診断してくれたお礼に、<br>ガチャ券を 1 枚プレゼント！<br>お友だちにも、ガチャ券が1枚届きます</p><button type="button" class="btn" data-gxclose="1">やったー！</button></div>');
+  document.body.appendChild(ov); try { xBurst(window.innerWidth / 2, window.innerHeight / 3, 12); } catch (e) {}
 }
 function refSync() {
   try {
@@ -4964,7 +4967,7 @@ function refSync() {
 window.setTimeout(function () { refPing(); refSync(); }, 3500);
 function refBoxHTML() {
   var n = ME.rn || 0;
-  return '<div class="refbox"><b>👫 友だちと、相性を診てみよう</b><small>リンクを送ると、お友だちは自分の診断だけで<br>ふたりの相性まで見られます<br>🎟 ひとり診断してくれるごとに、ガチャ券が1枚！' + (n ? '<br>（これまでの紹介 ' + n + ' 人）' : '') + '</small><div class="rbs"><button type="button" class="rb1" data-sm="line">LINEで送る</button><button type="button" class="rb2" data-sm="' + (navigator.share ? 'native' : 'copy') + '">' + (navigator.share ? '📤 ほかのアプリで送る' : 'リンクをコピー') + '</button></div><p class="rmsg" data-smmsg></p></div>';
+  return '<div class="refbox"><b>👫 友だちと、相性を診てみよう</b><small>リンクを送ると、お友だちは自分の診断だけで<br>ふたりの相性まで見られます<br>🎟 初めての友だちが診断してくれると<br>ふたりともガチャ券が <span class="nw">1枚</span>もらえます！' + (n ? '<br>（これまでの紹介 ' + n + ' 人）' : '') + '</small><div class="rbs"><button type="button" class="rb1" data-sm="line">LINEで送る</button><button type="button" class="rb2" data-sm="' + (navigator.share ? 'native' : 'copy') + '">' + (navigator.share ? '📤 ほかのアプリで送る' : 'リンクをコピー') + '</button></div><p class="rmsg" data-smmsg></p></div>';
 }
 (function () {
   var f = renderSelf; renderSelf = function () {
