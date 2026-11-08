@@ -4925,7 +4925,7 @@ setTimeout(azFloat, 7000);
   try {
     var el = document.getElementById("vcnt"); if (!el) return;
     try { if (/[?&]owner=ribatan-w7k2(&|$)/.test(window.QS0 || "")) localStorage.setItem("wts_owner", "1"); } catch (e) {}
-    try { if (localStorage.getItem("wts_owner") === "1") return; } catch (e) {}
+    try { if (localStorage.getItem("wts_owner") === "1") { fetch("https://abacus.jasoncameron.dev/get/libertan-shindan/visitors", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (j) { if (j && j.value != null) { el.textContent = Number(j.value).toLocaleString(); el.hidden = false; } }).catch(function () {}); return; } } catch (e) {}
     var K = "wts_visited", seen = false;
     try { seen = !!localStorage.getItem(K); } catch (e) {}
     var A = "https://abacus.jasoncameron.dev/", NS = "libertan-shindan";
