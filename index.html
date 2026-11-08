@@ -3980,7 +3980,7 @@ zukan = function () {
 
 /* --- ルーレットとキャラ替えガチャ：引き直し3回まで、候補から選べる --- */
 var GX_CUR = null;
-function tkAvail() { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 5000); return Math.max(0, e - (ME.tu || 0)); }
+function tkAvail() { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 3000); return Math.max(0, e - (ME.tu || 0)); }
 function gxCap(a) { ME.gb = ME.gb || {}; return 3 + (ME.gb[a.seed >>> 0] || 0); }
 function gxPulls(a) { ME.gp = ME.gp || {}; var k = a.seed >>> 0; if (!ME.gp[k]) ME.gp[k] = []; return ME.gp[k]; }
 function gxHTML(a) {
@@ -4688,7 +4688,7 @@ function tkCard() {
   for (i = 0; i < 7; i++) pips += '<i class="' + (i < r || (r === 0 && n > 0 && tk > 0 && i < 7) ? "on" : "") + '"></i>';
   var main = tk > 0 ? "🎟 ガチャ券が " + tk + " 枚あります！" : "🎟 7日あそぶと、キャラガチャ券をプレゼント";
   var sub = tk > 0 ? "キャラ画面の「キャラ替えガチャ」でつかえます" : "毎日じゃなくてもOK　合計7日、あそびに来るだけ<br>いまは " + r + " / 7 日　あと " + (7 - r) + " 日で1枚";
-  return '<div class="tkcard' + (tk > 0 ? " has" : "") + '"><div class="lbhead">🎁 ログインボーナス</div><b>' + main + '</b><div class="tkp">' + pips + '</div><small>' + sub + '</small><div class="tkpt"><i style="width:' + (((ME.pt || 0) % 5000) / 50) + '%"></i></div><small>✨ 画面を横切るレアキャラをタップで100ポイント　' + ((ME.pt || 0) % 5000) + ' / 5,000</small></div>';
+  return '<div class="tkcard' + (tk > 0 ? " has" : "") + '"><div class="lbhead">🎁 ログインボーナス</div><b>' + main + '</b><div class="tkp">' + pips + '</div><small>' + sub + '</small><div class="tkpt"><i style="width:' + (((ME.pt || 0) % 3000) / 30) + '%"></i></div><small>✨ 画面を横切るレアキャラをタップで100ポイント　' + ((ME.pt || 0) % 3000) + ' / 3,000</small></div>';
 }
 function tkCelebrate() {
   try {
@@ -4835,18 +4835,18 @@ var AZ_FL = ["ワイをつかまえてみ？", "ワイをつかまえてみ？�
 function azPts() { return ME.pt || 0; }
 function azChip(txt) {
   var c = document.querySelector(".azpt"); if (!c) { c = document.createElement("div"); c.className = "azpt"; document.body.appendChild(c); }
-  var pt = ME.pt || 0, m = pt % 5000, left = Math.ceil((5000 - m) / 100), tk = Math.floor(pt / 5000);
-  c.innerHTML = '<div class="azn">✨ ' + m.toLocaleString() + '<small> / 5,000 pt</small></div><div class="azb"><i style="width:' + (m / 50) + '%"></i></div><div class="azl">' + (m === 0 && tk > 0 ? "🎟 ガチャ券ゲット！" : "あと " + left + " 回つかまえると、ガチャ券 1 枚！") + '</div>';
+  var pt = ME.pt || 0, m = pt % 3000, left = Math.ceil((3000 - m) / 100), tk = Math.floor(pt / 3000);
+  c.innerHTML = '<div class="azn">✨ ' + m.toLocaleString() + '<small> / 3,000 pt</small></div><div class="azb"><i style="width:' + (m / 30) + '%"></i></div><div class="azl">' + (m === 0 && tk > 0 ? "🎟 ガチャ券ゲット！" : "あと " + left + " 回つかまえると、ガチャ券 1 枚！") + '</div>';
   c.classList.remove("bump"); void c.offsetWidth; c.classList.add("on", "bump"); clearTimeout(c._t); c._t = setTimeout(function () { c.classList.remove("on"); }, 3200);
 }
 function azGain(x, y) {
-  ME.pt = azPts() + 100; var earn = Math.floor(ME.pt / 5000); meSave();
+  ME.pt = azPts() + 100; var earn = Math.floor(ME.pt / 3000); meSave();
   var f = document.createElement("div"); f.className = "azplus"; f.textContent = "+100"; f.style.left = x + "px"; f.style.top = y + "px"; document.body.appendChild(f); setTimeout(function () { try { f.remove(); } catch (e) {} }, 1100);
-  azChip("✨ " + (ME.pt % 5000) + " / 5,000 ポイント");
+  azChip("✨ " + (ME.pt % 3000) + " / 3,000 ポイント");
   if (earn > (ME.pn || 0)) { ME.pn = earn; meSave(); azTicket(); }
 }
 function azTicket() {
-  try { var ov = xEl("div", "gxov tkov", '<div class="gxbox" style="text-align:center"><div style="font-size:54px">🎟</div><h3>ガチャ券をゲット！</h3><p class="gxs">レアキャラをつかまえて、<br>5,000ポイントたまりました！<br>キャラ画面の「キャラ替えガチャ」で、<br>新しいキャラを引けます</p><button type="button" class="btn" data-gxclose="1">やったー！</button></div>'); document.body.appendChild(ov); try { xBurst(window.innerWidth / 2, window.innerHeight / 3, 14); } catch (e) {} } catch (e) {}
+  try { var ov = xEl("div", "gxov tkov", '<div class="gxbox" style="text-align:center"><div style="font-size:54px">🎟</div><h3>ガチャ券をゲット！</h3><p class="gxs">レアキャラをつかまえて、<br>3,000ポイントたまりました！<br>キャラ画面の「キャラ替えガチャ」で、<br>新しいキャラを引けます</p><button type="button" class="btn" data-gxclose="1">やったー！</button></div>'); document.body.appendChild(ov); try { xBurst(window.innerWidth / 2, window.innerHeight / 3, 14); } catch (e) {} } catch (e) {}
 }
 
 function azSnd() {
@@ -4932,7 +4932,7 @@ setTimeout(azFloat, 7000);
 /* ===== 友だち紹介：1人ごとにガチャ券1枚 ===== */
 var REF_NS = "https://api.counterapi.dev/v1/libertan-shindan/", REF_CAP = 30;
 function refId() { if (!ME.ri) { var s = "", c = "abcdefghjkmnpqrstuvwxyz23456789", i; for (i = 0; i < 10; i++) s += c.charAt(Math.floor(Math.random() * c.length)); ME.ri = s; meSave(); } return ME.ri; }
-tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 5000) + Math.min(REF_CAP, ME.rn || 0) + (ME.rg ? 1 : 0); return Math.max(0, e - (ME.tu || 0)); };
+tkAvail = function () { var e = Math.floor(((ME.days || []).length) / 7) + Math.floor((ME.pt || 0) / 3000) + Math.min(REF_CAP, ME.rn || 0) + (ME.rg ? 1 : 0); return Math.max(0, e - (ME.tu || 0)); };
 (function () { var f = invUrl; invUrl = function (a) { return f(a).replace("?d=", "?r=" + refId() + "&d="); }; })();
 (function () {
   try {
