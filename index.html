@@ -4931,7 +4931,32 @@ setTimeout(azFloat, 7000);
     function get(u) { return fetch(u, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) { var n = val(j); return n == null ? Promise.reject() : n; }); }
     function show(n) { el.textContent = Number(n).toLocaleString(); el.hidden = false; if (!seen) { try { localStorage.setItem(K, "1"); } catch (e) {} } }
     var p = seen ? get(A + "get/" + NS + "/visitors").catch(function () { return get(A + "hit/" + NS + "/visitors"); }) : get(A + "hit/" + NS + "/visitors");
+    try {
+      var dt = new Date(), dk = "d" + dt.getFullYear() + ("0" + (dt.getMonth() + 1)).slice(-2) + ("0" + dt.getDate()).slice(-2), lastD = "";
+      try { lastD = localStorage.getItem("wts_day") || ""; } catch (e) {}
+      if (lastD !== dk && !/[?&]report=/.test(window.QS0 || "")) fetch(A + "hit/" + NS + "/" + dk, { cache: "no-store" }).then(function (r) { if (r.ok) { try { localStorage.setItem("wts_day", dk); } catch (e) {} } }).catch(function () {});
+    } catch (e) {}
     p.then(show).catch(function (er) { if (/[?&]vc=1/.test(window.QS0 || "")) { el.textContent = "カウンター接続エラー"; el.hidden = false; el.style.color = "#c00"; } });
+  } catch (e) {}
+})();
+
+/* ===== 週間レポート（?report=合言葉）===== */
+(function () {
+  try {
+    var m = /[?&]report=([^&]+)/.exec(window.QS0 || ""); if (!m || decodeURIComponent(m[1]) !== "ribatan-w7k2") return;
+    var A = "https://abacus.jasoncameron.dev/get/libertan-shindan/", days = [], i, W = ["日", "月", "火", "水", "木", "金", "土"];
+    for (i = 0; i < 14; i++) { var d = new Date(Date.now() - i * 864e5); days.push({ k: "d" + d.getFullYear() + ("0" + (d.getMonth() + 1)).slice(-2) + ("0" + d.getDate()).slice(-2), l: (d.getMonth() + 1) + "/" + d.getDate() + "（" + W[d.getDay()] + "）", n: null }); }
+    var ov = document.createElement("div"); ov.style.cssText = "position:fixed;inset:0;z-index:2147483000;background:#fbf6ee;color:#3b2f2a;overflow:auto;padding:18px 16px;font-family:sans-serif"; ov.innerHTML = '<p style="text-align:center">集計中…</p>'; document.body.appendChild(ov);
+    function g(u) { return fetch(u, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : { value: 0 }; }).then(function (j) { return +j.value || 0; }).catch(function () { return 0; }); }
+    Promise.all(days.map(function (x) { return g(A + x.k).then(function (n) { x.n = n; }); }).concat([g(A + "visitors").then(function (n) { days.total = n; })])).then(function () {
+      var w1 = 0, w0 = 0, mx = 1; days.forEach(function (x, j) { if (j < 7) w1 += x.n; else w0 += x.n; if (x.n > mx) mx = x.n; });
+      var df = w1 - w0, h = '<h2 style="text-align:center;margin:0 0 4px">📊 週間レポート</h2><p style="text-align:center;font-size:12px;color:#8a7c70;margin:0 0 14px">1日1端末ごとに1回数えた訪問数です</p>' +
+        '<div style="background:#fff;border-radius:14px;padding:14px;text-align:center;margin-bottom:12px"><div style="font-size:13px">直近7日の合計</div><div style="font-size:40px;font-weight:900;color:#c2410c">' + w1 + '</div><div style="font-size:13px">前の週 ' + w0 + '　' + (df >= 0 ? "＋" : "−") + Math.abs(df) + '</div></div>' +
+        '<div style="background:#fff;border-radius:14px;padding:12px">';
+      days.slice(0, 7).forEach(function (x) { h += '<div style="display:grid;grid-template-columns:5.4em 1fr 2.6em;gap:8px;align-items:center;margin:6px 0;font-size:13px"><span>' + x.l + '</span><span style="height:10px;border-radius:5px;background:#eee;overflow:hidden"><i style="display:block;height:100%;width:' + Math.round(x.n / mx * 100) + '%;background:#f59e0b"></i></span><b style="text-align:right">' + x.n + '</b></div>'; });
+      h += '</div><p style="text-align:center;font-size:13px;margin-top:14px">これまでの累計　<b>' + (days.total || 0) + '</b></p><p style="text-align:center;margin-top:18px"><button type="button" onclick="location.href=location.pathname" style="padding:10px 22px;border:0;border-radius:99px;background:#7c3be2;color:#fff;font-weight:700">サイトにもどる</button></p>';
+      ov.innerHTML = h;
+    });
   } catch (e) {}
 })();
 
