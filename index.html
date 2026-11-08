@@ -222,11 +222,11 @@ details.quiz summary { cursor: pointer; font-size: 14px; color: var(--mind); min
 .tl { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; }
 .tl .when { font-size: 12px; color: var(--muted); }
 
-.meter { display: grid; grid-template-columns: 3.4em 1fr 3em; gap: 10px; align-items: center; width: 100%; max-width: 28em; text-align: left; }
+.meter { display: grid; grid-template-columns: 3.4em 1fr 3.6em; gap: 10px; align-items: center; width: 100%; max-width: 28em; text-align: left; }
 .meter span { font-size: 13px; }
 .meter .bar { height: 10px; background: color-mix(in srgb, var(--fg) 9%, transparent); border-radius: 99px; overflow: hidden; }
 .meter .bar i { display: block; height: 100%; border-radius: 99px; background: var(--c); }
-.meter b { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+.meter b { white-space: nowrap; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
 .els { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 .el { font-size: 13px; border: 1px solid var(--line); border-radius: 10px; padding: 4px 12px; background: var(--surface); }
 .el b { font-size: 16px; margin-left: 4px; }
@@ -2659,6 +2659,12 @@ function chap(no, c, because, lines, aru) {
     (aru && aru.length ? '<p class="sec-lab">ここから出てくる、あるある</p>' + aruList(aru, c) : '') + '</div>';
 }
 
+function xtrm(T, k) {
+  var vs = T.rank.map(function (x) { return T.pct[x]; }), mx = Math.max.apply(null, vs), mn = Math.min.apply(null, vs);
+  if (mx === mn) return T.pct[k];
+  var t = (T.pct[k] - mn) / (mx - mn);
+  return Math.round(4 + 96 * Math.pow(t, 1.6));
+}
 function overviewPage(a, st) {
   var T = st.T, who = a.nm ? fnm(a.nm) : "あなた", cn = comboNo(a), cd = curDash(a), h = "";
   h += '<div class="hero">' + (REPEAT2 ? charRV(a) : '<div class="mys" aria-hidden="true"><span>？</span></div>') + '<p class="eyebrow">' + esc(who) + (REPEAT2 ? 'の分身キャラ' : 'の分身キャラは、最後のお楽しみ') + '</p>' + (REPEAT2 ? gxHTML(a) : '') + '<h2>' + esc(st.title) + '</h2>' +
@@ -2669,7 +2675,7 @@ function overviewPage(a, st) {
     '<p class="txt">ひと言でいうと、「' + esc(st.pair) + '」</p>' +
     '<p class="txt">' + esc(st.gap) + '</p></div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">あなたの成分</span><h3>このキャラは、こんな成分でできています</h3>' +
-    T.rank.map(function (k) { return '<div class="mrow">' + meter(AXN[k], T.pct[k], AXC[k], "％") + '<p class="reasons">主な理由：' + esc(reasonsFor(a, T, k)) + '</p></div>'; }).join("") +
+    T.rank.map(function (k) { return '<div class="mrow">' + meter(AXN[k], xtrm(T, k), AXC[k], "％") + '<p class="reasons">主な理由：' + esc(reasonsFor(a, T, k)) + '</p></div>'; }).join("") +
     '<p class="txt">いちばん強いのは「' + AXN[st.t1] + '」、次いで「' + AXN[st.t2] + '」⏎いちばん控えめなのは「' + AXN[st.tl] + '」で、「' + esc(LO[st.tl]) + '」ところがあります⏎</p></div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">つぎは</span><p class="txt">「なぜ、こうなるの？」を、順番に説明します⏎MBTI・数秘術・西洋占星術・インド占星術が、どう重なっているのかを見てみましょう⏎</p>' +
     '<div class="actions"><button type="button" class="btn" data-page="self:why">なぜそうなるのか見る</button></div></div>';
