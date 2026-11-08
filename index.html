@@ -4931,7 +4931,7 @@ setTimeout(azFloat, 7000);
     function get(u) { return fetch(u, { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(function (j) { var n = val(j); return n == null ? Promise.reject() : n; }); }
     function show(n) { el.textContent = Number(n).toLocaleString(); el.hidden = false; if (!seen) { try { localStorage.setItem(K, "1"); } catch (e) {} } }
     var p = seen ? get(C).catch(function () { return get(C + "up"); }) : get(C + "up");
-    p.catch(function () { return get(A + (seen ? "get" : "hit") + "/libertan-shindan/visitors").catch(function () { return get(A + "hit/libertan-shindan/visitors"); }); }).then(show).catch(function () {});
+    p.catch(function () { return get(A + (seen ? "get" : "hit") + "/libertan-shindan/visitors").catch(function () { return get(A + "hit/libertan-shindan/visitors"); }); }).then(show).catch(function (er) { if (/[?&]vc=1/.test(window.QS0 || "")) { el.textContent = "カウンター接続エラー"; el.hidden = false; el.style.color = "#c00"; } });
   } catch (e) {}
 })();
 
