@@ -2663,7 +2663,7 @@ function xtrm(T, k) {
   var vs = T.rank.map(function (x) { return T.pct[x]; }), mx = Math.max.apply(null, vs), mn = Math.min.apply(null, vs);
   if (mx === mn) return T.pct[k];
   var t = (T.pct[k] - mn) / (mx - mn);
-  return Math.round(4 + 96 * Math.pow(t, 1.6));
+  return Math.round(16 + 72 * Math.pow(t, 1.2));
 }
 function overviewPage(a, st) {
   var T = st.T, who = a.nm ? fnm(a.nm) : "あなた", cn = comboNo(a), cd = curDash(a), h = "";
