@@ -3511,7 +3511,7 @@ function collect(a) {
 function zukan() {
   var col = ME.col || [], ov = document.createElement("div"), h = "", i;
   ov.className = "zk"; ov.setAttribute("role", "dialog");
-  col.slice().reverse().forEach(function (k) { h += '<button type="button" class="zc got" data-zc="' + k + '"><img src="' + CHR[k].s + '" alt="" draggable="false" loading="lazy" decoding="async"><span>' + esc(CHR[k].n) + '</span></button>'; });
+  col.map(function (k, q) { return [k, q]; }).sort(function (x, y) { return ((CHR[y[0]].r || 0) - (CHR[x[0]].r || 0)) || (y[1] - x[1]); }).forEach(function (e) { var k = e[0]; h += '<button type="button" class="zc got" data-zc="' + k + '"><img src="' + CHR[k].s + '" alt="" draggable="false" loading="lazy" decoding="async"><span>' + esc(CHR[k].n) + '</span></button>'; });
   for (i = col.length; i < CHR.length; i++) h += '<div class="zc"><b>？</b></div>';
   ov.innerHTML = '<div class="zkh"><b>キャラ図鑑　' + col.length + ' / ' + CHR.length + '</b><button type="button" class="btn ghost" data-zx="1">とじる</button></div><p class="zkn">ちがう生年月日や、大切な人を診ると、新しいキャラに出会えます</p><div class="zg">' + h + '</div>';
   document.body.appendChild(ov);
