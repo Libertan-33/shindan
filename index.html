@@ -5058,16 +5058,16 @@ function fzData() {
   var seedS = a ? a.seed : "guest";
   if (a) {
     mine = true; var f = null; try { f = flowAt(a, Date.now()); } catch (e) {}
-    var v = f ? f.t : 60, base = v >= 80 ? 5 : v >= 66 ? 4 : v >= 55 ? 3 : v >= 45 ? 2 : 1, hv = hashStr(a.seed + "fzs" + key) % 4;
-    stars = Math.max(1, Math.min(5, base + (hv === 0 ? -1 : hv === 3 ? 1 : 0)));
+    var sc = 60; try { sc = moScore(a, d.getFullYear(), d.getMonth(), d.getDate()); } catch (e) {}
+    stars = sc >= 80 ? 5 : sc >= 70 ? 4 : sc >= 60 ? 3 : sc >= 50 ? 2 : 1; var fsc = sc;
   } else { var r = hashStr("fzgs" + key) % 100; stars = r < 6 ? 1 : r < 22 ? 2 : r < 52 ? 3 : r < 82 ? 4 : 5; }
   var pl = FZ_MSG[stars - 1], msg = pl[hashStr(seedS + "fzm" + key) % pl.length][0], one = FZ_ONE[hashStr(seedS + "fzo" + key) % FZ_ONE.length];
   var dd = LK_DAY[d.getDay()], cp = dd[2][hashStr(seedS + "col" + key) % dd[2].length], lvv = a ? (function () { var f2 = null; try { f2 = flowAt(a, Date.now()); } catch (e) {} return f2 ? f2.t : 60; })() : (stars >= 5 ? 85 : stars === 4 ? 65 : stars === 3 ? 50 : 20), lv = LK_ITEM.filter(function (x) { return lvv >= x[0]; })[0], item = lv[2][hashStr(seedS + "lucky" + key) % lv[2].length];
   if (a) { cp = dd[2][hashStr(a.seed + "col" + key) % dd[2].length]; item = lv[2][hashStr(a.seed + "lucky" + key) % lv[2].length]; }
-  return { ci: ci, stars: stars, msg: msg, one: one, cp: cp, item: item, mine: mine, d: d };
+  return { sc: typeof fsc === "number" ? fsc : null, ci: ci, stars: stars, msg: msg, one: one, cp: cp, item: item, mine: mine, d: d };
 }
 function fzPage(D, p) {
-  if (p === 0) { var st = ""; for (var i = 1; i <= 5; i++) st += i <= D.stars ? "★" : "<i>★</i>"; return '<span class="lb">' + (D.mine ? "あなたの" : "みんなの") + "今日の運勢</span>" + '<span class="st">' + st + '</span><span class="tx">' + fzLines(D.msg) + "</span>"; }
+  if (p === 0) { var st = ""; for (var i = 1; i <= 5; i++) st += i <= D.stars ? "★" : "<i>★</i>"; return '<span class="lb">' + (D.mine ? "あなたの" : "みんなの") + "今日の運勢</span>" + '<span class="st">' + st + '</span><span class="tx">' + fzLines(D.msg) + "</span>" + (D.sc != null ? '<span class="tx" style="font-size:11px;color:#7a6650;margin-top:2px"><span>開運スコア ' + D.sc + '点</span></span>' : ""); }
   if (p === 1) return '<span class="lb">🍀 今日のラッキー</span><span class="lk">' + '<span style="display:block;white-space:nowrap;color:' + D.cp[1] + ';-webkit-text-stroke:.8px rgba(60,38,26,.6);paint-order:stroke fill">' + esc(D.cp[0]) + '</span><span style="display:block;font-size:17px"><em>と</em>' + esc(D.item) + '</span></span><span class="tx" style="font-size:12px;color:#7a6650"><span>' + LK_DAY[D.d.getDay()][0] + '曜日は' + LK_DAY[D.d.getDay()][1] + 'の日</span><span>運をひろげる色と物</span></span>';
   return '<span class="lb">💬 今日のひとこと</span><span class="tx">' + fzLines(D.one) + "</span>";
 }
