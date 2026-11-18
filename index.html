@@ -5110,7 +5110,7 @@ function fzData() {
   return { sc: typeof fsc === "number" ? fsc : null, ci: ci, stars: stars, msg: msg, one: one, cp: cp, item: item, mine: mine, d: d };
 }
 function fzPage(D, p) {
-  if (p === 0) { var st = ""; for (var i = 1; i <= 5; i++) st += i <= D.stars ? "★" : "<i>★</i>"; return '<span class="lb">' + (D.mine ? "あなたの" : "みんなの") + "今日の運勢</span>" + '<span class="st">' + st + '</span><span class="tx">' + fzLines(D.msg) + "</span>" + (D.sc != null ? '<span class="tx" style="font-size:11px;color:#7a6650;margin-top:2px"><span>開運スコア ' + D.sc + '点</span></span>' : ""); }
+  if (p === 0) { var st = ""; for (var i = 1; i <= 5; i++) st += i <= D.stars ? "★" : "<i>★</i>"; return '<span class="lb">' + (D.mine ? "あなたの今日の運勢" : "サンプル｜今日の運勢") + "</span>" + '<span class="st">' + st + '</span><span class="tx">' + fzLines(D.msg) + "</span>" + (D.sc != null ? '<span class="tx" style="font-size:11px;color:#7a6650;margin-top:2px"><span>開運スコア ' + D.sc + '点</span></span>' : ""); }
   if (p === 1) return '<span class="lb">🍀 今日のラッキー</span><span class="lk">' + '<span style="display:block;white-space:nowrap;color:' + D.cp[1] + ';-webkit-text-stroke:.8px rgba(60,38,26,.6);paint-order:stroke fill">' + esc(D.cp[0]) + '</span><span style="display:block;font-size:17px"><em>と</em>' + esc(D.item) + '</span></span><span class="tx" style="font-size:12px;color:#7a6650"><span>' + LK_DAY[D.d.getDay()][0] + '曜日は' + LK_DAY[D.d.getDay()][1] + 'の日</span><span>運をひろげる色と物</span></span>';
   return '<span class="lb">💬 今日のひとこと</span><span class="tx">' + fzLines(D.one) + "</span>";
 }
@@ -5118,11 +5118,11 @@ function fzRender() {
   try {
     var host = document.getElementById("fortune"); if (!host) return;
     var D = fzData(), c = CHR[D.ci], W = ["日", "月", "火", "水", "木", "金", "土"], n = (ME.days || []).length, p = FZ_ST % 3;
-    host.innerHTML = '<div class="fz"><div class="fzh"><b>🔮 今日の運勢</b><span>' + (D.d.getMonth() + 1) + "/" + D.d.getDate() + "（" + W[D.d.getDay()] + "）</span></div>" +
+    host.innerHTML = '<div class="fz"><div class="fzh"><b>🔮 今日の運勢' + (D.mine ? '' : ' <em style="font-style:normal;font-size:11px;background:#7c3be2;color:#fff;border-radius:99px;padding:1px 9px;vertical-align:2px">サンプル</em>') + '</b><span>' + (D.d.getMonth() + 1) + "/" + D.d.getDate() + "（" + W[D.d.getDay()] + "）</span></div>" +
       '<div class="fzb"><div class="fzc"><img src="' + c.s + '" alt="" draggable="false"><small><span class="ur">UR</span>' + esc(c.n) + '</small></div>' +
       '<div class="fzm" data-fzn="1" role="button" tabindex="0" aria-label="タップで次の吹き出し"><div class="fzp" id="fzp">' + fzPage(D, p) + '</div><span class="fzn">タップで次 ▶</span></div></div>' +
       '<div class="fzd" id="fzd"><i class="' + (p === 0 ? "on" : "") + '"></i><i class="' + (p === 1 ? "on" : "") + '"></i><i class="' + (p === 2 ? "on" : "") + '"></i></div>' +
-      '<p class="fzf">' + (n > 1 ? "🔥 いま <b>" + n + "日目</b>　" : "") + "<span class=\"nw\">運勢は毎朝かわります</span><br><span class=\"nw\">あしたは、どのURキャラが</span><br><span class=\"nw\">語るのか、おたのしみに</span></p>" +
+      '<p class="fzf">' + (D.mine ? (n > 1 ? "🔥 いま <b>" + n + "日目</b>　" : "") + "<span class=\"nw\">運勢は毎朝かわります</span><br><span class=\"nw\">あしたは、どのURキャラが</span><br><span class=\"nw\">語るのか、おたのしみに</span>" : "<span class=\"nw\">これは見本（サンプル）です</span><br><span class=\"nw\">診断が終わると、次の日からは</span><br><span class=\"nw\">あなた専用の運勢が、ここに</span><br><span class=\"nw\">毎朝URキャラから届きます</span>") + "</p>" +
       (D.mine ? "" : '<button type="button" class="fzbtn" data-stage="intro">✨ あなた専用の運勢を診る（無料）</button>') + "</div>";
     window.FZ_D = D;
   } catch (e) {}
