@@ -4088,7 +4088,7 @@ function gxOpen(a) {
   var base = pickChar0(a), pulls = gxPulls(a), cur = pickChar(a), ov = document.querySelector(".gxov"); if (ov) ov.remove();
   var cands = [base].concat(pulls), left = gxCap(a) - pulls.length, tk = tkAvail();
   var h = '<div class="gxbox"><h3>キャラ替えガチャ</h3><p class="gxs">出たキャラのなかから、好きなものを選べます<br>7日あそびに来るたび、ガチャ券🎟がもらえます</p>' + gxActs(left, tk) + '<div class="gxg">' +
-    cands.map(function (i, k) { var r = CHR[i].r || 0; return '<div class="gxc' + (i === cur ? ' sel' : '') + '"><div class="gxi"><img alt="" src="' + CHR[i].s + '"><span class="rkb r' + r + '">' + RKN[r] + '</span></div><small>' + (k === 0 ? '最初のキャラ' : k + '回目') + '</small><button type="button" class="btn ' + (i === cur ? '' : 'ghost') + '" data-gxpick="' + i + '"' + (i === cur ? ' disabled' : '') + '>' + (i === cur ? 'いまのキャラ' : 'このキャラにする') + '</button></div>'; }).join("") +
+    cands.map(function (i, k) { return [i, k]; }).sort(function (x, y) { return ((CHR[y[0]].r || 0) - (CHR[x[0]].r || 0)) || (x[1] - y[1]); }).map(function (e) { var i = e[0], k = e[1], r = CHR[i].r || 0; return '<div class="gxc' + (i === cur ? ' sel' : '') + '"><div class="gxi"><img alt="" src="' + CHR[i].s + '"><span class="rkb r' + r + '">' + RKN[r] + '</span></div><small>' + (k === 0 ? '最初のキャラ' : k + '回目') + '</small><button type="button" class="btn ' + (i === cur ? '' : 'ghost') + '" data-gxpick="' + i + '"' + (i === cur ? ' disabled' : '') + '>' + (i === cur ? 'いまのキャラ' : 'このキャラにする') + '</button></div>'; }).join("") +
     '</div></div>';
   ov = xEl("div", "gxov", h); document.body.appendChild(ov);
 }
