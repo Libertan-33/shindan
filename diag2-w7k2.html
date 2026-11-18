@@ -8,7 +8,12 @@ var T0=Date.now();setInterval(show,500);
 function t(name,url){N.push(name);var s=Date.now(),done=false;
 setTimeout(function(){if(!done){done=true;R[name]="20秒たっても応答なし（通信がブロックされている可能性）"}},20000);
 fetch(url,{cache:"no-store"}).then(function(r){return r.text().then(function(b){if(!done){done=true;R[name]="HTTP "+r.status+"  "+(Date.now()-s)+"ms  "+b.slice(0,60)}})}).catch(function(e){if(!done){done=true;R[name]="失敗: "+e}})}
-var d=new Date(),k="d"+d.getFullYear()+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2);
-t("① 累計を読む",B+"get/libertan-shindan/visitors");t("② 今日の数を読む",B+"get/libertan-shindan/"+k);t("③ ない名前を読む",B+"get/libertan-shindan/nothing-zz9");t("④ 書き込みテスト",B+"hit/libertan-shindan/diag");
-t("⑤ 比較: GitHub",location.origin+"/shindan/manifest.webmanifest");show();
+t("① abacus 読む","https://abacus.jasoncameron.dev/get/libertan-shindan/visitors");
+t("② abacus 別ドメイン(v2)","https://v2.jasoncameron.dev/abacus");
+t("③ countapi(mileshilliard)","https://countapi.mileshilliard.com/api/v1/hit/libertan-shindan-diag");
+t("④ counterapi.dev v2","https://api.counterapi.dev/v2/libertan-shindan/diag/up");
+t("⑤ counterapi.dev v1","https://api.counterapi.dev/v1/libertan-shindan/diag/up");
+t("⑥ 比較: jsdelivr","https://cdn.jsdelivr.net/npm/counterapi@2.1.2/package.json");
+t("⑦ 比較: このサイト",location.origin+"/shindan/manifest.webmanifest");
+show();
 </script></body></html>
