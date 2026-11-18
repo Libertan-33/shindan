@@ -1,10 +1,14 @@
 <!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>通信テスト</title>
 <style>body{margin:0;background:#fbf6ee;color:#3b2f2a;font-family:sans-serif;padding:18px 16px;max-width:480px;margin:0 auto;line-height:1.6}pre{background:#fff;border-radius:12px;padding:12px;font-size:12px;white-space:pre-wrap;word-break:break-all}button{padding:10px 22px;border:0;border-radius:99px;background:#7c3be2;color:#fff;font-weight:700}</style></head><body>
-<h2>🔧 通信テスト</h2><p style="font-size:13px">結果の画面をそのまま送ってください</p><pre id="o">テスト中…</pre><p style="text-align:center"><button onclick="location.reload()">もう一度</button></p>
+<h2>🔧 通信テスト</h2><p style="font-size:13px">結果の画面をそのまま送ってください</p><pre id="o">テスト中…（最大20秒）</pre><p style="text-align:center"><button onclick="location.reload()">もう一度</button></p>
 <script>
-var B="https://abacus.jasoncameron.dev/",o=document.getElementById("o"),L=[];
-function t(name,url){return new Promise(function(res){var s=Date.now(),done=false,tm=setTimeout(function(){if(!done){done=true;L.push(name+"\n  → 10秒で応答なし");res()}},10000);
-fetch(url,{cache:"no-store"}).then(function(r){return r.text().then(function(b){if(!done){done=true;clearTimeout(tm);L.push(name+"\n  → HTTP "+r.status+"  "+(Date.now()-s)+"ms  "+b.slice(0,60));res()}})}).catch(function(e){if(!done){done=true;clearTimeout(tm);L.push(name+"\n  → 失敗: "+e);res();}})})}
+var B="https://abacus.jasoncameron.dev/",o=document.getElementById("o"),R={},N=[];
+function show(){o.textContent=N.map(function(n){return n+"\n  → "+(R[n]||"待っています… "+Math.round((Date.now()-T0)/1000)+"秒")}).join("\n")+"\n\n"+navigator.userAgent}
+var T0=Date.now();setInterval(show,500);
+function t(name,url){N.push(name);var s=Date.now(),done=false;
+setTimeout(function(){if(!done){done=true;R[name]="20秒たっても応答なし（通信がブロックされている可能性）"}},20000);
+fetch(url,{cache:"no-store"}).then(function(r){return r.text().then(function(b){if(!done){done=true;R[name]="HTTP "+r.status+"  "+(Date.now()-s)+"ms  "+b.slice(0,60)}})}).catch(function(e){if(!done){done=true;R[name]="失敗: "+e}})}
 var d=new Date(),k="d"+d.getFullYear()+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2);
-t("① 累計を読む(visitors)",B+"get/libertan-shindan/visitors").then(function(){return t("② 今日の数を読む("+k+")",B+"get/libertan-shindan/"+k)}).then(function(){return t("③ ない名前を読む",B+"get/libertan-shindan/nothing-zz9")}).then(function(){return t("④ 書き込みテスト(diag)",B+"hit/libertan-shindan/diag")}).then(function(){o.textContent=L.join("\n")+"\n\n"+navigator.userAgent})
+t("① 累計を読む",B+"get/libertan-shindan/visitors");t("② 今日の数を読む",B+"get/libertan-shindan/"+k);t("③ ない名前を読む",B+"get/libertan-shindan/nothing-zz9");t("④ 書き込みテスト",B+"hit/libertan-shindan/diag");
+t("⑤ 比較: GitHub",location.origin+"/shindan/manifest.webmanifest");show();
 </script></body></html>
