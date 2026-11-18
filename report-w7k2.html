@@ -4,7 +4,7 @@
 <h2>📊 週間レポート</h2><p class="sub">1日1端末ごとに1回数えた訪問数です</p><div id="o"><p style="text-align:center">集計中…</p></div>
 <p style="text-align:center;margin-top:18px"><button type="button" onclick="location.reload()">更新する</button></p>
 <script>
-var A="https://abacus.jasoncameron.dev/get/libertan-shindan/",W=["日","月","火","水","木","金","土"],days=[],i;
+var A="https://countapi.mileshilliard.com/api/v1/get/libertan-shindan-",W=["日","月","火","水","木","金","土"],days=[],i;
 for(i=0;i<14;i++){var d=new Date(Date.now()-i*864e5);days.push({k:"d"+d.getFullYear()+("0"+(d.getMonth()+1)).slice(-2)+("0"+d.getDate()).slice(-2),l:(d.getMonth()+1)+"/"+d.getDate()+"（"+W[d.getDay()]+"）",n:0})}
 var fails=0;function g(u){return new Promise(function(res){var done=false,t=setTimeout(function(){if(!done){done=true;fails++;res(0)}},7000);try{fetch(u,{cache:"no-store"}).then(function(r){return r.ok?r.json():{value:0}}).then(function(j){if(!done){done=true;clearTimeout(t);res(+j.value||0)}}).catch(function(){if(!done){done=true;clearTimeout(t);fails++;res(0)}})}catch(e){done=true;clearTimeout(t);fails++;res(0)}})}
 var tot=0;Promise.all(days.map(function(x){return g(A+x.k).then(function(n){x.n=n})}).concat([g(A+"visitors").then(function(n){tot=n})])).then(function(){
