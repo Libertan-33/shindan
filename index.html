@@ -2691,7 +2691,7 @@ function overviewPage(a, st) {
     mcard("self", "mind", "--mind", "思考", a.type + "　" + esc(a.mb[0])) + mcard("self", "number", "--num", "運命の数", "運命数" + a.lp + "　カバラ数" + a.kab) +
     mcard("self", "star", "--star", "太陽星座", esc(a.sg[1])) + mcard("self", "jyotish", "--star", "インドの月", esc(a.mrs[1]) + "・" + esc(a.nk[0])) +
     mcard("self", "flow", "--star", "過去・現在・未来", cd ? "いまは" + PL[cd.k][0] + "期" : "周期をみる") + '</div></div>';
-  h += '<div class="block" style="--c:var(--fg)"><p class="no">キャラは、診断結果と性別から、いちばん近い一人が自動で選ばれます⏎<br>全部で ' + CHR.length + ' 人のキャラがいます⏎</p>' +
+  h += '<div class="block" style="--c:var(--fg)"><p class="no">キャラは、まずレア度が決まり⏎その中から、診断結果と性別に近い一人が選ばれます⏎<br>全部で ' + CHR.length + ' 人のキャラがいます⏎</p>' +
     (a.unk ? '<p class="no">出生時刻が不明のため、ラグナは含めずに計算しています⏎</p>' : '') + '</div>';
   h += '<div class="actions"><button type="button" class="btn" data-copy="self">結果をコピー</button><button type="button" class="btn ghost" data-goto="duo">この結果で相性を診る</button></div><div id="copyarea-self"></div>';
   return h;
