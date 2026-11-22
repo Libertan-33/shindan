@@ -988,7 +988,7 @@ p, li, dd { text-wrap: pretty; }
 <div class="bg" aria-hidden="true"></div>
 <canvas id="orbs" aria-hidden="true"></canvas>
 <div id="party" aria-hidden="true"></div>
-<button type="button" class="bgm" id="bgm" aria-pressed="true" aria-label="BGM（528Hz）のオンオフ" title="BGM 528Hz">
+<button type="button" class="bgm" id="bgm" aria-pressed="true" aria-label="BGMのオンオフ" title="BGM">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <g class="on"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></g>
     <path class="off" d="M3 3l18 18"/>
@@ -3635,15 +3635,31 @@ function arrive() {
   }
   window.setTimeout(function () { box.remove(); }, 1700);
 }
+/* ピアノBGM（bgm.mp3 をループ再生。ガチャ中は音量をさげる）*/
+var PN_VOL = 0.5;
+function pnBuild() {
+  if (Au.pn) return true; if (!Au.ctx) return false;
+  try {
+    var a = new Audio("bgm.mp3"); a.loop = true; a.preload = "auto"; a.crossOrigin = "anonymous";
+    var src = Au.ctx.createMediaElementSource(a), g = Au.ctx.createGain(); g.gain.value = 0; src.connect(g); g.connect(Au.ctx.destination);
+    Au.pn = a; Au.pg = g; return true;
+  } catch (e) { return false; }
+}
+function bgmDuck(ms) {
+  try { if (!Au.pg || !Au.on) return; var c = Au.ctx, t = c.currentTime; Au.pg.gain.cancelScheduledValues(t); Au.pg.gain.setTargetAtTime(0.06, t, 0.25); window.clearTimeout(Au.dk); Au.dk = window.setTimeout(function () { try { if (Au.on) Au.pg.gain.setTargetAtTime(PN_VOL, c.currentTime, 1.2); } catch (e) {} }, ms); } catch (e) {}
+}
 function bgmSet(on) {
   Au.on = on; bgmSave(on);
   var b = $("bgm"); b.setAttribute("aria-pressed", String(on));
   if (!bgmBuild()) return;
   var ctx = Au.ctx, t = ctx.currentTime;
-  Au.master.gain.cancelScheduledValues(t); Au.master.gain.setTargetAtTime(on ? 0.9 : 0, t, on ? 1.2 : 0.4);
+  Au.master.gain.cancelScheduledValues(t); Au.master.gain.value = 0;
   if (on && ctx.state !== "running") { try { ctx.resume(); } catch (e) {} }
   window.clearInterval(Au.timer);
-  if (on) { Au.fresh = true; Au.timer = window.setInterval(bell, 640); }
+  if (!pnBuild()) return;
+  window.clearTimeout(Au.dk); Au.pg.gain.cancelScheduledValues(t);
+  if (on) { Au.pg.gain.setTargetAtTime(PN_VOL, t, 1.5); var pr = Au.pn.play(); if (pr && pr.catch) pr.catch(function () {}); }
+  else { Au.pg.gain.setTargetAtTime(0, t, 0.3); window.setTimeout(function () { if (!Au.on) { try { Au.pn.pause(); } catch (e) {} } }, 1200); }
 }
 function bgmInit() {
   var btn = $("bgm"); Au.on = bgmPref(); btn.setAttribute("aria-pressed", String(Au.on));
@@ -3661,7 +3677,7 @@ function bgmInit() {
   btn.addEventListener("click", function (e) { e.stopPropagation(); bgmSet(!Au.on); if (Au.on) { evs.forEach(function (ev) { document.addEventListener(ev, arm, true); }); } });
   document.addEventListener("visibilitychange", function () {
     if (!Au.ctx) return;
-    if (document.hidden) { try { Au.ctx.suspend(); } catch (e) {} } else if (Au.on) { try { Au.ctx.resume(); } catch (e) {} }
+    if (document.hidden) { try { Au.ctx.suspend(); if (Au.pn) Au.pn.pause(); } catch (e) {} } else if (Au.on) { try { Au.ctx.resume(); if (Au.pn) { var pr = Au.pn.play(); if (pr && pr.catch) pr.catch(function () {}); } } catch (e) {} }
   });
 }
 
@@ -4105,7 +4121,7 @@ function gxMPrep() { try { if (GXMB) return; var c = laughCtx(); if (c) decB64(c
 function gxMusic(T) {
   try {
     if (!Au.on || !GXMB) return null; var c = laughCtx(); if (!c) return null; if (c.state !== "running") { try { c.resume(); } catch (e) {} }
-    var off = Math.max(0, GXM_CLIMAX - T / 1000), t = c.currentTime + 0.04, s = c.createBufferSource(), g = c.createGain();
+    bgmDuck(T + 3500); var off = Math.max(0, GXM_CLIMAX - T / 1000), t = c.currentTime + 0.04, s = c.createBufferSource(), g = c.createGain();
     s.buffer = GXMB; g.gain.setValueAtTime(off > 0 ? 0.0001 : 0.9, t); if (off > 0) g.gain.linearRampToValueAtTime(0.9, t + 0.25);
     s.connect(g); g.connect(c.destination); s.start(t, off);
     var lat = 0; try { lat = (c.outputLatency || c.baseLatency || 0); } catch (e) {}
@@ -4143,7 +4159,8 @@ var GX_NEW = null;
 function gxOpen(a) {
   gxMPrep();
   var base = pickChar0(a), pulls = gxPulls(a), cur = pickChar(a), ov = document.querySelector(".gxov"); if (ov) ov.remove();
-  var cands = [base].concat(pulls), left = gxCap(a) - pulls.length, tk = tkAvail(), NW = GX_NEW || []; GX_NEW = null;
+  var cands = [base].concat(pulls).filter(function (q, x, ar) { return ar.indexOf(q) === x; }), left = gxCap(a) - pulls.length, tk = tkAvail(), NW = GX_NEW || []; GX_NEW = null;
+  try { var rmv = pulls.length + 1 - cands.length, sk = a.seed >>> 0; ME.cp = ME.cp || {}; if (rmv > (ME.cp[sk] || 0)) { ME.fz = (ME.fz || 0) + rmv - (ME.cp[sk] || 0); ME.cp[sk] = rmv; meSave(); tk = tkAvail(); } } catch (er) {}
   var h = '<div class="gxbox"><h3>キャラ替えガチャ</h3><p class="gxs">出たキャラのなかから、好きなものを選べます<br>ログインするたび、ガチャ券🎟が1枚<br>ダブりは融合して、券にかわります</p>' + gxActs(left, tk) + '<div class="gxg">' +
     cands.map(function (i, k) { return [i, k]; }).sort(function (x, y) { return ((NW.indexOf(y[0]) >= 0) - (NW.indexOf(x[0]) >= 0)) || ((CHR[y[0]].r || 0) - (CHR[x[0]].r || 0)) || (x[1] - y[1]); }).map(function (e) { var i = e[0], k = e[1], r = CHR[i].r || 0; return '<div class="gxc' + (i === cur ? ' sel' : '') + '"><div class="gxi">' + (NW.indexOf(i) >= 0 ? '<span class="newb">NEW</span>' : '') + '<img alt="" src="' + CHR[i].s + '"><span class="rkb r' + r + '">' + RKN[r] + '</span></div><small>' + (k === 0 ? '最初のキャラ' : k + '回目') + '</small><button type="button" class="btn ' + (i === cur ? '' : 'ghost') + '" data-gxpick="' + i + '"' + (i === cur ? ' disabled' : '') + '>' + (i === cur ? 'いまのキャラ' : 'このキャラにする') + '</button></div>'; }).join("") +
     '</div></div>';
