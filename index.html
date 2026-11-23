@@ -984,6 +984,17 @@ p, li, dd { text-wrap: pretty; }
 .madame img { animation: none !important; transform: none; }
 .madame .mfx { display: none; }
 @media (prefers-reduced-motion: reduce) { .madame .mvid { display: none; } }
+
+.duocard{width:100%;max-width:340px;margin:14px auto 8px;padding:16px 14px 14px;border-radius:24px;background:linear-gradient(135deg,#ff7eb3,#a66bff);color:#fff;box-shadow:0 8px 22px rgba(166,107,255,.35);text-align:center;position:relative;overflow:hidden}
+.duocard .dct{font-size:21px;font-weight:900;line-height:1.5;letter-spacing:.02em;text-shadow:0 2px 6px rgba(80,20,120,.35)}
+.duocard .dcs{font-size:13px;font-weight:700;line-height:1.7;margin:4px 0 10px;opacity:.96}
+.duocard .dcb{display:block;width:100%;min-height:54px;border:0;border-radius:999px;background:#fff;color:#8a2fc7;font-size:18px;font-weight:900;box-shadow:0 4px 0 rgba(90,30,140,.35);cursor:pointer}
+.duocard .dcb small{display:block;font-size:11.5px;font-weight:700;color:#a066c0}
+.duocard .dcn{margin-top:10px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.2);border-radius:14px;padding:7px 10px;line-height:1.6}
+.duocard .dcbest{margin-top:10px;font-size:13px;font-weight:900;background:rgba(255,255,255,.92);color:#7a2fb5;border-radius:14px;padding:8px 10px;line-height:1.6}
+.duocard .nb{white-space:nowrap}
+.mtoast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:99999;background:#3b2a52;color:#fff;font-weight:800;font-size:14px;line-height:1.6;padding:12px 18px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.4);text-align:center;max-width:86vw}
+.superbox{border:2px solid #ffc94d;background:linear-gradient(135deg,#fff6d8,#ffe0f0);color:#7a3b00}
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -3236,6 +3247,7 @@ function renderDuo() {
       '<p class="lede txt">' + esc(na) + 'と' + esc(nb) + 'の、' + rl + 'としての相性です⏎' + esc(c.lv[rel]) + '</p></div>';
     h += ratingBlock(c, sc, rl, a, b);
     h += prevBlock(a, b, c, rel, rl, na, nb);
+    if (sc >= 90) h += '<div class="block superbox"><span class="lab" style="color:#b25a00">🎉 超・好相性！</span><h3>めったに出ない、90点以上です</h3><p class="txt">' + esc(na) + 'と' + esc(nb) + 'は、かなり相性のいいふたりです⏎この結果を、ぜひ本人に見せてあげてください⏎</p></div>';
     h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">関係ごとのスコア</span>' +
       REL.map(function (r) { return meter(r[1], c.cats[r[0]], r[0] === rel ? "--num" : "--star", "点"); }).join("") +
       '<p class="hint">関係の種類は、性別や形にかかわらず自由に選べます⏎上のボタンで切り替えてください⏎</p></div>';
@@ -4781,13 +4793,41 @@ document.addEventListener("click", function (e) {
   if (my) { S.page.self = "overview"; try { collect(analyze(S.A)); } catch (er) {} } else { S.page.self = "in"; }
   try { renderSelf(); } catch (er) {} try { window.scrollTo(0, 0); } catch (er) {}
 });
+function todayKey() { var t = new Date(); return t.getFullYear() + "/" + (t.getMonth() + 1) + "/" + t.getDate(); }
+function mToast(msg) { try { var d = document.createElement("div"); d.className = "mtoast"; d.innerHTML = msg; document.body.appendChild(d); window.setTimeout(function () { try { d.remove(); } catch (e) {} }, 4200); } catch (e) {} }
+/* 今日の相性：診た相手のうち、きょういちばん相性がいい人 */
+function duoBest() {
+  try {
+    var a = analyze(ME.A), best = null, tk = todayKey(); if (!a || !a.p) return null;
+    (ME.hist || []).forEach(function (x) {
+      if (!x.B || !x.B.date) return;
+      var bb = analyze({ sur: "", giv: "", nick: x.n || "", g: x.B.g, date: x.B.date, time: x.B.time, unk: !!x.B.unk, place: x.B.place, mbti: x.B.mbti }); if (!bb || !bb.p) return;
+      var sc = compat(a, bb).cats.love + (hashStr(x.k + "|" + tk) % 9) - 4; sc = Math.max(40, Math.min(99, sc));
+      if (!best || sc > best.sc) best = { n: x.n || "お相手", sc: sc };
+    });
+    return best;
+  } catch (e) { return null; }
+}
+function duoCard() {
+  var H = ME.hist || [], bst = H.length ? duoBest() : null, first = !H.length;
+  var h = '<div class="dct">💞 ふたりの相性を診る</div><div class="dcs">気になる人の<span class="nb">生年月日と</span><span class="nb">MBTIを入れるだけ</span><br><span class="nb">恋愛・仕事・家族の相性が</span><br><span class="nb">ひと目で分かります</span></div>' +
+    '<button type="button" class="dcb" data-goduo="1">💘 相性を診てみる<small>' + (H.length ? '診た相手は ' + H.length + ' 人です　新しい人も診てみよう' : 'いちばん人気の診断です') + '</small></button>';
+  if (bst) h += '<div class="dcbest">📅 きょうの相性No.1<br><span class="nb">' + esc(bst.n) + 'さん　' + bst.sc + '点</span></div>';
+  h += '<div class="dcn">🎟 ' + ((ME.cmpd === todayKey()) ? '今日の「はじめての相手」ボーナスは受け取りずみです' : (first ? 'はじめての相手を診ると、ガチャ券を1枚プレゼント' : '新しい相手を診ると、今日はガチャ券を1枚プレゼント')) + '</div>';
+  return h;
+}
+document.addEventListener("click", function (e) {
+  var T = e.target && e.target.closest ? e.target.closest("[data-goduo]") : null; if (!T || !ME.A) return;
+  var A = ME.A; S.A = { sur: A.sur || "", giv: A.giv || "", nick: A.nick || "", g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: { EI: A.mbti.EI, SN: A.mbti.SN, TF: A.mbti.TF, JP: A.mbti.JP }, touched: true };
+  try { $("app").dataset.stage = "form"; S.page.duo = "in"; setTab("duo"); } catch (er) {} try { window.scrollTo(0, 0); } catch (er) {}
+});
 function addMyRes() {
   try {
     var host = $("hello"); if (!host || host.hidden || !ME.A || !ME.A.date) return;
-    host.querySelectorAll(".myres, .redo, .tkcard").forEach(function (n) { n.remove(); });
+    host.querySelectorAll(".myres, .redo, .tkcard, .duocard").forEach(function (n) { n.remove(); });
     var b1 = xEl("button", "btn myres", "📖 自分の診断結果を見る<small>前回の入力で、すぐ結果へ</small>"); b1.type = "button"; b1.dataset.myres = "1";
     var b2 = xEl("button", "btn ghost redo", "🔄 もう一度、診断する"); b2.type = "button"; b2.dataset.redo = "1";
-    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1);
+    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap"));
     var z = host.querySelector(".link[data-zk]"); host.insertBefore(b2, z);
     var b3 = xEl("button", "btn ghost mesave", "🔗 キャラを保存するリンクをコピー<small>キャラも図鑑も、いっしょに保存されます　別のスマホでも復元できます</small>"); b3.type = "button"; b3.dataset.mesave = "1"; host.insertBefore(b3, z);
   } catch (e) {}
@@ -4924,6 +4964,7 @@ function histRec() {
     var sc = Math.round(typeof c.total === "number" ? c.total : (c.cats && c.cats[S.rel]) || 0);
     var e = { k: k, n: b.nm || "", c: pickChar(b), d: ds, sc: sc, t: a.type, cs: c.cats, pv: (cur ? (cur.t && cur.t !== a.type ? { t: cur.t, cs: cur.cs, d: cur.d } : cur.pv) : null), B: { g: S.B.g, date: S.B.date, time: S.B.time, unk: !!S.B.unk, place: S.B.place, mbti: { EI: S.B.mbti.EI, SN: S.B.mbti.SN, TF: S.B.mbti.TF, JP: S.B.mbti.JP } } };
     if (cur) { if (!e.n) e.n = cur.n; ME.hist.splice(ME.hist.indexOf(cur), 1); }
+    else if (ME.cmpd !== ds) { ME.cmpd = ds; ME.fz = (ME.fz || 0) + 1; window.setTimeout(function () { mToast("🎟 はじめての相手を診たので<br>ガチャ券を1枚プレゼント！"); }, 900); }
     ME.hist.unshift(e); ME.hist = ME.hist.slice(0, 30); meSave();
   } catch (e) {}
 }
