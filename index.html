@@ -2365,7 +2365,7 @@ function formHTML(id) {
       '<div class="q6a"><span class="l">' + q[3] + '</span><span class="r">' + String(q[5]).replace(/(されて(い|る)る?か)$/, '<span class="nw">$1</span>') + '</span></div>' +
       '<div class="q6r" role="radiogroup">' + dots + '</div></div>';
   });
-  h += '<div class="actions" style="margin-top:14px"><button type="button" class="btn ghost" data-apply="' + id + '">この回答で型を決める</button></div><p class="quiz-note" id="' + id + '-qn">出てくるのは目安の「仮の型」です⏎違う気がしたら上のボタンで選び直せます⏎</p></details></div><div class="actions"><button type="button" class="btn" data-go="' + id + '">診断結果を見る</button></div><p class="hint" id="' + id + '-gn"></p></div>';
+  h += '<div class="actions" style="margin-top:14px"><button type="button" class="btn ghost" data-apply="' + id + '">この回答で型を決める</button></div><p class="quiz-note" id="' + id + '-qn">出てくるのは目安の「仮の型」です⏎違う気がしたら上のボタンで選び直せます⏎</p></details></div>' + (id === "A" && ME && ME.A && ME.A.date ? '<p class="hint" style="margin-top:12px">🔁 診断しなおしても、いまのキャラ・図鑑・ガチャ券は⏎そのまま引きつがれます　安心してやり直してください⏎</p>' : '') + '<div class="actions"><button type="button" class="btn" data-go="' + id + '">診断結果を見る</button></div><p class="hint" id="' + id + '-gn"></p></div>';
   return h;
 }
 
