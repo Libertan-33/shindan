@@ -1499,7 +1499,7 @@ var RTX = {
   mid: "数の相性は、良くも悪くもありません⏎関わり方しだいで、どちらにも育ちます⏎",
   tough: "ペースが違うふたりです⏎進むスピードを、ときどき合わせる意識が必要です⏎"
 };
-var W = { love: [0.25, 0.2, 0.2, 0.35], home: [0.3, 0.2, 0.1, 0.4], work: [0.4, 0.3, 0.2, 0.1], friend: [0.3, 0.15, 0.25, 0.3], family: [0.2, 0.2, 0.15, 0.45] };
+var W = { love: [0.4, 0.2, 0.15, 0.25], home: [0.35, 0.2, 0.1, 0.35], work: [0.5, 0.25, 0.15, 0.1], friend: [0.4, 0.15, 0.2, 0.25], family: [0.3, 0.2, 0.15, 0.35] };
 function verdictOf(t) { return t >= 85 ? "惹かれ合うふたり" : t >= 72 ? "補い合うふたり" : t >= 58 ? "刺激し合うふたり" : "育て合うふたり"; }
 function aspOf(i, j) { var diff = (i - j + 12) % 12; return Math.min(diff, 12 - diff); }
 /* 相性の採点の見かた：10段階（点数は約45〜98の範囲に収まるため） */
@@ -1545,7 +1545,8 @@ function compat(a, b) {
   var t1 = a.type, t2 = b.type;
   var same = function (i) { return t1.charAt(i) === t2.charAt(i); };
   var golden = GOLD[t1] === t2;
-  var m = Math.min(98, 40 + (same(1) ? 20 : 0) + (same(0) ? 5 : 8) + (same(2) ? 5 : 7) + (same(3) ? 4 : 8) + (golden ? 20 : 0));
+  var pr = hashStr([t1, t2].sort().join("-")) % 11 - 5;   /* 型の組み合わせごとのちがい（-5〜+5）*/
+  var m = Math.max(30, Math.min(98, 36 + (same(1) ? 20 : 0) + (same(0) ? 6 : 9) + (same(2) ? 4 : 8) + (same(3) ? 3 : 8) + (golden ? 20 : 0) + pr));
   var r1 = rel(a.lb, b.lb), s1 = RSC[r1], r2 = null, n = s1;
   if (a.ksrc === "name" && b.ksrc === "name") { r2 = rel(a.kab, b.kab); n = Math.round(0.7 * s1 + 0.3 * RSC[r2]); }
   var d = aspOf(a.si, b.si), s = ASC[d];
@@ -3208,6 +3209,17 @@ function pairFlow(a, b, na, nb) {
   }
   return svg + '<p class="txt">' + tx + '</p>';
 }
+/* 前回の診断（自分の型が変わる前）との比較 */
+function prevBlock(a, b, c, rel, rl, na, nb) {
+  try {
+    var k = histKey(b), x = null; (ME.hist || []).forEach(function (y) { if (y.k === k) x = y; });
+    if (!x) return ""; var pv = (x.t && x.t !== a.type && x.cs) ? x : (x.pv && x.pv.t !== a.type && x.pv.cs ? x.pv : null);
+    if (!pv || pv.cs[rel] == null) return "";
+    var d = c.cats[rel] - pv.cs[rel], ar = d > 0 ? "▲ +" + d : d < 0 ? "▼ " + d : "→ 変わらず";
+    var why = d > 0 ? "型が変わって、ふたりの歩み寄りやすさが上がりました⏎" : d < 0 ? "型が変わって、ちがいが目立つ部分が増えました⏎そのぶん、話し合いで埋めがいがあります⏎" : "型は変わりましたが、ほかの観点がふたりの空気を支えています⏎";
+    return '<div class="block" style="--c:var(--num)"><span class="lab">🔁 前回との比べ（あなたの型が変わりました）</span><h3><span class="nb">' + pv.t + ' → ' + a.type + '</span> <span class="nb">' + esc(rl) + '　' + pv.cs[rel] + '点 → ' + c.cats[rel] + '点</span> <span class="nb">（' + ar + '）</span></h3><p class="txt">' + esc(why) + '</p></div>';
+  } catch (e) { return ""; }
+}
 function renderDuo() {
   var a = analyze(S.A), b = analyze(S.B), form = $("form-B"), box = $("res-duo"), rc = $("recap"), cur = S.page.duo;
   if (a) rc.innerHTML = '<strong>あなた</strong><span>' + a.type + '</span><span>' + a.sg[1] + '</span><span>月' + a.mrs[1] + '</span><span>運命数' + a.lp + '</span><button type="button" class="link" data-goto="self">編集する</button>';
@@ -3223,6 +3235,7 @@ function renderDuo() {
       '<h2>' + rl + 'の相性　' + sc + '点　' + ver + '</h2>' +
       '<p class="lede txt">' + esc(na) + 'と' + esc(nb) + 'の、' + rl + 'としての相性です⏎' + esc(c.lv[rel]) + '</p></div>';
     h += ratingBlock(c, sc, rl, a, b);
+    h += prevBlock(a, b, c, rel, rl, na, nb);
     h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">関係ごとのスコア</span>' +
       REL.map(function (r) { return meter(r[1], c.cats[r[0]], r[0] === rel ? "--num" : "--star", "点"); }).join("") +
       '<p class="hint">関係の種類は、性別や形にかかわらず自由に選べます⏎上のボタンで切り替えてください⏎</p></div>';
@@ -4909,7 +4922,7 @@ function histRec() {
     var c = compat(a, b), k = histKey(b); ME.hist = ME.hist || []; var cur = null, t = new Date(), ds = t.getFullYear() + "/" + (t.getMonth() + 1) + "/" + t.getDate();
     ME.hist.forEach(function (x) { if (x.k === k) cur = x; });
     var sc = Math.round(typeof c.total === "number" ? c.total : (c.cats && c.cats[S.rel]) || 0);
-    var e = { k: k, n: b.nm || "", c: pickChar(b), d: ds, sc: sc, B: { g: S.B.g, date: S.B.date, time: S.B.time, unk: !!S.B.unk, place: S.B.place, mbti: { EI: S.B.mbti.EI, SN: S.B.mbti.SN, TF: S.B.mbti.TF, JP: S.B.mbti.JP } } };
+    var e = { k: k, n: b.nm || "", c: pickChar(b), d: ds, sc: sc, t: a.type, cs: c.cats, pv: (cur ? (cur.t && cur.t !== a.type ? { t: cur.t, cs: cur.cs, d: cur.d } : cur.pv) : null), B: { g: S.B.g, date: S.B.date, time: S.B.time, unk: !!S.B.unk, place: S.B.place, mbti: { EI: S.B.mbti.EI, SN: S.B.mbti.SN, TF: S.B.mbti.TF, JP: S.B.mbti.JP } } };
     if (cur) { if (!e.n) e.n = cur.n; ME.hist.splice(ME.hist.indexOf(cur), 1); }
     ME.hist.unshift(e); ME.hist = ME.hist.slice(0, 30); meSave();
   } catch (e) {}
