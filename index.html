@@ -1,4 +1,5 @@
 <!doctype html><html><head>
+<link rel="preload" href="bgm.mp3" as="audio">
 <script>window.QS0 = location.search;</script><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png"><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"><link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png"><link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#4A3B32"><meta property="og:type" content="website"><meta property="og:site_name" content="ワタス解体新書"><meta property="og:title" content="ワタス解体新書｜これらまとめて診られちゃう"><meta property="og:description" content="MBTI×数秘術×西洋占星術×インド占星術×四柱推命×バイオリズム。診断すると、あなただけのキャラが生まれます"><meta property="og:url" content="https://libertan-33.github.io/shindan/"><meta property="og:image" content="https://libertan-33.github.io/shindan/ogp.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://libertan-33.github.io/shindan/ogp.png"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}html,body{overflow-x:clip;max-width:100%}.smk{overflow:clip}[hidden]:not([hidden=until-found i]){display:none!important}
 .az{display:flex;align-items:center;gap:10px;width:min(100%,420px);margin:2px auto;opacity:0;transform:translateX(-26px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.9,.3,1.2)}
 .az.rt{flex-direction:row-reverse;transform:translateX(26px)}
@@ -3685,9 +3686,9 @@ function bgmInit() {
   function disarm() { evs.forEach(function (ev) { document.removeEventListener(ev, arm, true); window.removeEventListener(ev, arm, true); }); }
   function arm() {
     if (!Au.on) return;
-    if (running()) { disarm(); return; }
-    if (Au.ctx) { try { Au.ctx.resume(); } catch (e) {} } else { bgmSet(true); }
-    window.setTimeout(function () { if (running()) disarm(); }, 400);
+    if (running() && Au.pn && !Au.pn.paused) { disarm(); return; }
+    if (Au.ctx) { try { Au.ctx.resume(); } catch (e) {} if (Au.pn && Au.pn.paused) { try { Au.pg.gain.setTargetAtTime(PN_VOL, Au.ctx.currentTime, 1.0); var pr0 = Au.pn.play(); if (pr0 && pr0.catch) pr0.catch(function () {}); } catch (e) {} } else if (!Au.pn) { bgmSet(true); } } else { bgmSet(true); }
+    window.setTimeout(function () { if (running() && Au.pn && !Au.pn.paused) disarm(); }, 500);
   }
   evs.forEach(function (ev) { document.addEventListener(ev, arm, true); window.addEventListener(ev, arm, true); });
   if (Au.on) { try { bgmSet(true); } catch (e) {} }
@@ -4031,7 +4032,7 @@ function gxCap(a) { ME.gb = ME.gb || {}; return 3 + (ME.gb[a.seed >>> 0] || 0); 
 function gxPulls(a) { ME.gp = ME.gp || {}; var k = a.seed >>> 0; if (!ME.gp[k]) ME.gp[k] = []; return ME.gp[k]; }
 function gxHTML(a) {
   try { if (!a || !a.p) return ""; GX_CUR = a; var left = gxCap(a) - gxPulls(a).length, tk = tkAvail();
-    return '<button class="gxbtn" data-gx="1">🎰 キャラ替えガチャ<br><span class="nw">（' + (left > 0 ? (left === 3 ? '3回まで引き直して、選べます' : 'あと' + left + '回') : tk > 0 ? '🎟 ガチャ券で、もう1回' : '候補から選びなおす') + '）</span></button>' + (tk > 0 ? '<p class="tkn">🎟 ガチャ券が ' + tk + ' 枚あります</p>' : ''); } catch (e) { return ""; }
+    return '<button class="gxbtn" data-gx="1">🎰 キャラ替えガチャ<br><span class="nw">（' + (left > 0 ? (left === 3 ? '3回まで引き直して、選べます' : 'あと' + left + '回') : tk > 0 ? '🎟 券を1枚つかって、まわす' : '候補から選びなおす') + '）</span></button>' + (tk > 0 ? '<p class="tkn">🎟 ガチャ券が ' + tk + ' 枚あります</p>' : ''); } catch (e) { return ""; }
 }
 function gxDraw(a, ex, force, sg) {
   var g = a.p ? a.p.g : "", x = Math.random() * 100, rk = rkTier(x), pool, i;
