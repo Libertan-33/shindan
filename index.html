@@ -2908,7 +2908,7 @@ function comboPage(a) {
   var tg = tgOf(a.type), h = "", t1 = COMBO_MS[tg][a.si], t2 = COMBO_EL[a.sEl + a.moEl];
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">掛け合わせ</span><h3>組み合わせだから、見えること</h3>' +
     '<p class="txt">それぞれを単独で見るのではなく、掛け合わせて読みました⏎同じ星座でも、思考のクセが違えば、出方が変わります⏎</p></div>';
-  h += '<div class="block" style="--c:var(--mind)"><span class="lab">01　思考 × 太陽星座</span><h3>' + a.type + '（' + esc(TNAME[tg]) + '）× ' + esc(a.sg[1]) + '</h3><p class="txt">' + esc(t1) + '</p></div>';
+  h += '<div class="block" style="--c:var(--mind)"><span class="lab">01　思考 × 太陽星座</span><h3>' + a.type + '（' + esc(a.mb[0]) + '）× ' + esc(a.sg[1]) + '</h3><p class="txt">' + esc(t1) + '</p></div>';
   h += '<div class="block" style="--c:var(--star)"><span class="lab">02　まわりに見せる自分 × 心の中の自分</span><h3>太陽の「' + a.sEl + '」× 月の「' + a.moEl + '」</h3><p class="txt">' + esc(t2) + '</p>' +
     '<p class="txt">「まわりに見せる自分」は太陽星座、「心の中の自分」はインドの月が表します⏎</p></div>';
   return h;
@@ -3509,6 +3509,14 @@ function laughBind() {
     }
   }, true);
 }
+/* 再診断：以前の診断があるときは、キャラ・ガチャ回数・演出済みの記録を新しい診断に引きつぐ（初回扱いにしない） */
+function reKeep(oldA, newA) {
+  if (!oldA || !oldA.date) return; var ao = analyze(oldA), an = analyze(newA); if (!ao || !an || !ao.p || !an.p) return;
+  var ko = ao.seed >>> 0, kn = an.seed >>> 0; if (ko === kn) return;
+  ["bc", "gx", "gp", "gb", "rl", "cp", "gu"].forEach(function (f) { ME[f] = ME[f] || {}; if (ME[f][ko] != null) ME[f][kn] = ME[f][ko]; });
+  var ch = ME.gx[ko] != null ? ME.gx[ko] : ME.bc[ko]; if (ch != null && CHR[ch]) { ME.col = ME.col || []; if (ME.col.indexOf(ch) < 0) ME.col.push(ch); }
+  ME.rl[kn] = 1; meSave();
+}
 var LASTNEW = false;
 function collect(a) {
   if (!a) return; var i = pickChar(a); ME.col = ME.col || []; LASTNEW = ME.col.indexOf(i) < 0;
@@ -3876,7 +3884,7 @@ function init() {
         if (!sn || !gv) bad = "お名前（姓と名）を、ひらがなで入れてください"; else if (/[一-龯]/.test(sn + gv)) bad = "漢字は使えません　ひらがなで入れてください";
         if (bad) { gn.textContent = bad; try { var fe = $("A-" + (!sn || /[一-龯]/.test(sn) ? "sur" : "giv")); fe.scrollIntoView({ block: "center", behavior: "smooth" }); fe.focus({ preventScroll: true }); } catch (er) {} return; }
       }
-      gn.textContent = ""; if (t.dataset.go === "A") { ME.A = { sur: S.A.sur, giv: S.A.giv, nick: S.A.nick || "", g: S.A.g, date: S.A.date, time: S.A.time, unk: S.A.unk, place: S.A.place, mbti: S.A.mbti }; ME.last = Date.now(); meSave(); } collect(analyze(S.A)); if (gt === "duo") collect(analyze(S.B)); pageFx("next", t); S.page[gt] = "overview"; render(gt); return;
+      gn.textContent = ""; if (t.dataset.go === "A") { try { reKeep(ME.A, S.A); } catch (er) {} ME.A = { sur: S.A.sur, giv: S.A.giv, nick: S.A.nick || "", g: S.A.g, date: S.A.date, time: S.A.time, unk: S.A.unk, place: S.A.place, mbti: S.A.mbti }; ME.last = Date.now(); meSave(); } collect(analyze(S.A)); if (gt === "duo") collect(analyze(S.B)); pageFx("next", t); S.page[gt] = "overview"; render(gt); return;
     }
     if (t.dataset.goinput) { pageFx("back", t); S.page[t.dataset.goinput] = "in"; render(t.dataset.goinput); return; }
     if (t.classList.contains("opt") && t.dataset.kind) {
