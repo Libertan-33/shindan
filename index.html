@@ -1023,6 +1023,16 @@ p, li, dd { text-wrap: pretty; }
 .zkcard .zr span{background:rgba(255,255,255,.75);border-radius:99px;padding:2px 9px;font-size:12px;font-weight:900;white-space:nowrap}
 .zkcard .zg{display:block;font-size:13px;font-weight:800;line-height:1.6}
 .link[data-zk]{display:none!important}
+
+.invcard{width:100%;max-width:340px;margin:10px auto;padding:14px;border-radius:24px;background:linear-gradient(135deg,#43c6ac,#2a8cff);color:#fff;text-align:center;box-shadow:0 8px 20px rgba(42,140,255,.3)}
+.invcard .it{font-size:20px;font-weight:900;line-height:1.5;text-shadow:0 2px 5px rgba(0,40,90,.3)}
+.invcard .is{font-size:13px;font-weight:700;line-height:1.7;margin:2px 0 10px}
+.invcard .is em{font-style:normal;background:#fff;color:#1b6fd6;border-radius:99px;padding:1px 9px;font-weight:900;white-space:nowrap}
+.invcard .ib{display:flex;gap:8px}
+.invcard .ib button{flex:1;min-height:50px;border:0;border-radius:999px;background:#fff;color:#1b6fd6;font-size:15px;font-weight:900;box-shadow:0 4px 0 rgba(0,50,110,.3)}
+.invcard .ib .l{background:#06c755;color:#fff}
+.invcard .in{margin-top:10px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.22);border-radius:14px;padding:6px 8px;line-height:1.6}
+.invcard .nb{white-space:nowrap}
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -4866,6 +4876,13 @@ function zkCardHTML() {
   for (var r = 4; r >= 2; r--) chips += '<span>' + RKN[r] + ' ' + c[r] + '/' + tt[r] + '</span>';
     return '<span class="zt">📖 キャラ図鑑</span><span class="zn">' + col.length + ' <small>/ ' + tot + ' 人</small></span><span class="zb"><i style="width:' + Math.max(2, pc) + '%"></i></span><span class="zr">' + chips + '</span><span class="zg">' + (col.length >= tot ? '🎉 コンプリート！' : 'あと ' + (tot - col.length) + ' 人！　ガチャで集めよう') + '</span>';
 }
+function invCardHTML() {
+  var n = ME.rn || 0;
+  return '<div class="it">👫 友だちを招待しよう</div><div class="is">友だちが<span class="nb">はじめて診断すると</span><br><span class="nb">ふたりとも</span><em>🎟 ガチャ券 1枚</em></div>' +
+    '<div class="ib"><button type="button" class="l" data-sm="line">LINEで送る</button><button type="button" data-sm="' + (navigator.share ? 'native' : 'copy') + '">' + (navigator.share ? '📤 ほかで送る' : '🔗 リンクをコピー') + '</button></div>' +
+    '<p class="in" data-smmsg>' + (n ? '🎉 これまでに <span class="nb">' + n + ' 人</span>が診断してくれました' : '友だちの診断も、ふたりの相性まで見られます') + '</p>';
+}
+document.addEventListener("click", function (e) { try { if (e.target.closest && e.target.closest(".invcard") && ME.A) { var A = ME.A; S.A = { sur: A.sur || "", giv: A.giv || "", nick: A.nick || "", g: A.g, date: A.date, time: A.time, unk: !!A.unk, place: A.place, mbti: { EI: A.mbti.EI, SN: A.mbti.SN, TF: A.mbti.TF, JP: A.mbti.JP }, touched: true }; } } catch (er) {} }, true);
 function todayKey() { var t = new Date(); return t.getFullYear() + "/" + (t.getMonth() + 1) + "/" + t.getDate(); }
 function mToast(msg) { try { var d = document.createElement("div"); d.className = "mtoast"; d.innerHTML = msg; document.body.appendChild(d); window.setTimeout(function () { try { d.remove(); } catch (e) {} }, 4200); } catch (e) {} }
 /* 今日の相性：診た相手のうち、きょういちばん相性がいい人 */
@@ -4900,7 +4917,7 @@ function addMyRes() {
     host.querySelectorAll(".myres, .redo, .tkcard, .duocard").forEach(function (n) { n.remove(); });
     var b1 = xEl("button", "btn myres", "📖 自分の診断結果を見る<small>前回の入力で、すぐ結果へ</small>"); b1.type = "button"; b1.dataset.myres = "1";
     var b2 = xEl("button", "btn ghost redo", "🔄 もう一度、診断する"); b2.type = "button"; b2.dataset.redo = "1";
-    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap")); try { host.querySelectorAll(".zkcard").forEach(function (x) { x.remove(); }); var zb = xEl("button", "zkcard", zkCardHTML()); zb.type = "button"; zb.setAttribute("data-zk", "1"); host.insertBefore(zb, host.querySelector(".tkwrap")); } catch (er) {} try { host.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); if (ibOn()) { var zl = host.querySelector(".link[data-zk]"); host.insertBefore(xEl("div", "ibcard", ibCard()), zl ? zl.nextSibling : null); } } catch (er) {}
+    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap")); try { host.querySelectorAll(".zkcard").forEach(function (x) { x.remove(); }); var zb = xEl("button", "zkcard", zkCardHTML()); zb.type = "button"; zb.setAttribute("data-zk", "1"); host.insertBefore(zb, host.querySelector(".tkwrap")); } catch (er) {} try { host.querySelectorAll(".invcard").forEach(function (x) { x.remove(); }); host.insertBefore(xEl("div", "invcard", invCardHTML()), host.querySelector(".tkwrap")); } catch (er) {} try { host.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); if (ibOn()) { var zl = host.querySelector(".link[data-zk]"); host.insertBefore(xEl("div", "ibcard", ibCard()), zl ? zl.nextSibling : null); } } catch (er) {}
     var z = host.querySelector(".link[data-zk]"); host.insertBefore(b2, z);
     var b3 = xEl("button", "btn ghost mesave", "🔗 キャラを保存するリンクをコピー<small>キャラも図鑑も、いっしょに保存されます　別のスマホでも復元できます</small>"); b3.type = "button"; b3.dataset.mesave = "1"; host.insertBefore(b3, z);
   } catch (e) {}
