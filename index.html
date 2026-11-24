@@ -4882,7 +4882,7 @@ function addMyRes() {
     host.querySelectorAll(".myres, .redo, .tkcard, .duocard").forEach(function (n) { n.remove(); });
     var b1 = xEl("button", "btn myres", "📖 自分の診断結果を見る<small>前回の入力で、すぐ結果へ</small>"); b1.type = "button"; b1.dataset.myres = "1";
     var b2 = xEl("button", "btn ghost redo", "🔄 もう一度、診断する"); b2.type = "button"; b2.dataset.redo = "1";
-    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap"));
+    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap")); try { host.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); if (ibOn()) { var zl = host.querySelector(".link[data-zk]"); host.insertBefore(xEl("div", "ibcard", ibCard()), zl ? zl.nextSibling : null); } } catch (er) {}
     var z = host.querySelector(".link[data-zk]"); host.insertBefore(b2, z);
     var b3 = xEl("button", "btn ghost mesave", "🔗 キャラを保存するリンクをコピー<small>キャラも図鑑も、いっしょに保存されます　別のスマホでも復元できます</small>"); b3.type = "button"; b3.dataset.mesave = "1"; host.insertBefore(b3, z);
   } catch (e) {}
@@ -4916,7 +4916,7 @@ document.addEventListener("click", function (e) {
   } catch (e) {}
 })();
 var hello4 = hello;
-hello = function () { hello4(); addMyRes(); try { var hh = $("hello"); if (hh && !hh.hidden && ibOn()) { hh.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); var z = hh.querySelector(".link[data-zk]"); hh.insertBefore(xEl("div", "ibcard", ibCard()), z ? z.nextSibling : null); } } catch (er) {} };
+hello = function () { hello4(); addMyRes(); try { var hh = $("hello"); if (false) { hh.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); var z = hh.querySelector(".link[data-zk]"); hh.insertBefore(xEl("div", "ibcard", ibCard()), z ? z.nextSibling : null); } } catch (er) {} };
 addMyRes(); window.setTimeout(tkCelebrate, 1200);
 /* 入力画面にも「前回の結果をすぐ見る」を出す */
 var renderSelf6 = renderSelf;
