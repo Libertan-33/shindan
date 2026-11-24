@@ -1012,6 +1012,17 @@ p, li, dd { text-wrap: pretty; }
 .ibcard{width:100%;max-width:340px;margin:10px auto;padding:12px;border-radius:20px;background:#fff;border:2px dashed #b88be0;text-align:center}
 .ibcard b{display:block;font-size:16px;color:#6b2bd0}.ibcard small{display:block;font-size:12px;color:#7a6a90;line-height:1.6;margin:2px 0 8px}
 .ibcard button{min-height:46px;padding:0 22px;border-radius:999px;border:0;background:#8a2fc7;color:#fff;font-weight:900;font-size:15px}
+
+.zkcard{display:block;width:100%;max-width:340px;margin:10px auto;padding:14px 14px 12px;border-radius:24px;border:0;background:linear-gradient(135deg,#ffd45a,#ff9f45);color:#4a2a00;box-shadow:0 6px 0 #c9791f,0 12px 22px rgba(255,160,60,.35);text-align:center;cursor:pointer;font-family:inherit}
+.zkcard:active{transform:translateY(3px);box-shadow:0 3px 0 #c9791f}
+.zkcard .zt{display:block;font-size:20px;font-weight:900;line-height:1.5}
+.zkcard .zn{display:block;font-size:30px;font-weight:900;line-height:1.3}.zkcard .zn small{font-size:15px;font-weight:800}
+.zkcard .zb{display:block;height:12px;border-radius:99px;background:rgba(255,255,255,.55);overflow:hidden;margin:4px 6px 8px}
+.zkcard .zb i{display:block;height:100%;background:linear-gradient(90deg,#8a2fc7,#ff6fa5);border-radius:99px}
+.zkcard .zr{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin-bottom:6px}
+.zkcard .zr span{background:rgba(255,255,255,.75);border-radius:99px;padding:2px 9px;font-size:12px;font-weight:900;white-space:nowrap}
+.zkcard .zg{display:block;font-size:13px;font-weight:800;line-height:1.6}
+.link[data-zk]{display:none!important}
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -4848,6 +4859,13 @@ document.addEventListener("click", function (e) {
   var T = e.target && e.target.closest ? e.target.closest("[data-ib],[data-ibchar]") : null; if (!T) return;
   if (T.dataset.ibchar != null) { ibOpen(2, +T.dataset.ibchar); } else ibOpen(0);
 });
+function zkCardHTML() {
+  var col = ME.col || [], tot = CHR.length, c = [0, 0, 0, 0, 0], tt = [0, 0, 0, 0, 0];
+  CHR.forEach(function (q) { tt[q.r || 0]++; }); col.forEach(function (i) { if (CHR[i]) c[CHR[i].r || 0]++; });
+  var pc = Math.round(col.length / tot * 100), chips = "";
+  for (var r = 4; r >= 2; r--) chips += '<span>' + RKN[r] + ' ' + c[r] + '/' + tt[r] + '</span>';
+    return '<span class="zt">📖 キャラ図鑑</span><span class="zn">' + col.length + ' <small>/ ' + tot + ' 人</small></span><span class="zb"><i style="width:' + Math.max(2, pc) + '%"></i></span><span class="zr">' + chips + '</span><span class="zg">' + (col.length >= tot ? '🎉 コンプリート！' : 'あと ' + (tot - col.length) + ' 人！　ガチャで集めよう') + '</span>';
+}
 function todayKey() { var t = new Date(); return t.getFullYear() + "/" + (t.getMonth() + 1) + "/" + t.getDate(); }
 function mToast(msg) { try { var d = document.createElement("div"); d.className = "mtoast"; d.innerHTML = msg; document.body.appendChild(d); window.setTimeout(function () { try { d.remove(); } catch (e) {} }, 4200); } catch (e) {} }
 /* 今日の相性：診た相手のうち、きょういちばん相性がいい人 */
@@ -4882,7 +4900,7 @@ function addMyRes() {
     host.querySelectorAll(".myres, .redo, .tkcard, .duocard").forEach(function (n) { n.remove(); });
     var b1 = xEl("button", "btn myres", "📖 自分の診断結果を見る<small>前回の入力で、すぐ結果へ</small>"); b1.type = "button"; b1.dataset.myres = "1";
     var b2 = xEl("button", "btn ghost redo", "🔄 もう一度、診断する"); b2.type = "button"; b2.dataset.redo = "1";
-    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap")); try { host.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); if (ibOn()) { var zl = host.querySelector(".link[data-zk]"); host.insertBefore(xEl("div", "ibcard", ibCard()), zl ? zl.nextSibling : null); } } catch (er) {}
+    var first = host.querySelector(".todayact") || host.querySelector("em"); host.insertBefore(b1, host.querySelector(".molink") || first); host.insertBefore(xEl("div", "tkwrap", tkCard()), b1); host.insertBefore(xEl("div", "duocard", duoCard()), host.querySelector(".tkwrap")); try { host.querySelectorAll(".zkcard").forEach(function (x) { x.remove(); }); var zb = xEl("button", "zkcard", zkCardHTML()); zb.type = "button"; zb.setAttribute("data-zk", "1"); host.insertBefore(zb, host.querySelector(".tkwrap")); } catch (er) {} try { host.querySelectorAll(".ibcard").forEach(function (x) { x.remove(); }); if (ibOn()) { var zl = host.querySelector(".link[data-zk]"); host.insertBefore(xEl("div", "ibcard", ibCard()), zl ? zl.nextSibling : null); } } catch (er) {}
     var z = host.querySelector(".link[data-zk]"); host.insertBefore(b2, z);
     var b3 = xEl("button", "btn ghost mesave", "🔗 キャラを保存するリンクをコピー<small>キャラも図鑑も、いっしょに保存されます　別のスマホでも復元できます</small>"); b3.type = "button"; b3.dataset.mesave = "1"; host.insertBefore(b3, z);
   } catch (e) {}
