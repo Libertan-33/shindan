@@ -3018,13 +3018,16 @@ function charPage(a, st) {
 var PG_SELF = [["overview", "総合", "--fg"], ["why", "なぜ？", "--fg"], ["aruaru", "あるある", "--num"], ["combo", "掛け合わせ", "--mind"], ["mind", "思考", "--mind"], ["number", "数", "--num"], ["nmap", "数秘マップ", "--num"], ["star", "太陽星座", "--star"], ["jyotish", "月", "--star"], ["flow", "流れ", "--star"], ["char", "キャラ", "--star"]];
 var PG_DUO = [["overview", "総合", "--fg"], ["mn", "思考と数", "--mind"], ["sm", "星と月", "--star"], ["scene", "場面別", "--mind"], ["now", "いまの二人", "--star"], ["tips", "コツ", "--num"]];
 var EM_POS = "強み|才能|魅力|得意|長所|武器|持ち味|追い風|伸びしろ|ごほうび";
-var EM_NEG = "苦手|弱点|疲れをため|疲れやすい|疲れがち|抱え込み|抱え込む|気をつけ|注意|無理(?!なく|せず)|ストレス";
-var EM_KEY = "\\b[IE][NS][FT][JP]\\b|大切|大事|ポイント|コツコツ|コツ|いちばん|一番|本音|本質|使命|課題|実は|本当は|テーマ|おすすめ";
+var EM_NEG = "苦手|弱点|疲れをため|疲れやすい|疲れがち|抱え込み|抱え込む|無理(?!なく|せず)|ストレス";
+var EM_KEY = "\\b[IE][NS][FT][JP]\\b|大切|大事|ポイント|本音|本質|使命|課題|テーマ";
 var EMP_RE = new RegExp("(「[^「」]{1,20}」)|(" + EM_POS + ")|(" + EM_NEG + ")|(" + EM_KEY + ")", "g");
 function empText(t) {
-  if (t.length < 6) return t.replace(/「([^「」]{1,20})」/g, '<span class="kw">「$1」</span>');
+  if (t.length < 22) return t.replace(/「([^「」]{1,20})」/g, '<span class="kw">「$1」</span>');   /* 短い一文・箇条書きには、キーワードの色づけをしない */
+  var used = 0;   /* 一文（改行まで）につき、キーワードの色づけは1か所まで */
   return t.replace(EMP_RE, function (x, q, p, n, k) {
-    return q ? '<span class="kw">' + q + '</span>' : p ? '<span class="pos">' + p + '</span>' : n ? '<span class="neg">' + n + '</span>' : '<span class="em">' + k + '</span>';
+    if (q) return '<span class="kw">' + q + '</span>';
+    if (used >= 1) return x; used++;
+    return p ? '<span class="pos">' + p + '</span>' : n ? '<span class="neg">' + n + '</span>' : '<span class="em">' + k + '</span>';
   });
 }
 function fin(h) { return h.replace(/⏎+(?=\s*(<\/|$))/g, "").replace(/⏎+(?=<br>)/g, "").replace(/⏎+/g, "<br>").replace(/(^|>)([^<]+)/g, function (m, g, t) { return g + empText(t); }); }
