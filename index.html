@@ -1033,6 +1033,17 @@ p, li, dd { text-wrap: pretty; }
 .invcard .ib .l{background:#06c755;color:#fff}
 .invcard .in{margin-top:10px;font-size:12.5px;font-weight:800;background:rgba(255,255,255,.22);border-radius:14px;padding:6px 8px;line-height:1.6}
 .invcard .nb{white-space:nowrap}
+
+.gxdet{position:fixed;inset:0;z-index:2147483000;background:rgba(10,6,20,.82);display:flex;align-items:center;justify-content:center;padding:16px}
+.gxdb{width:100%;max-width:340px;background:#26201c;border:2px solid #7a5ac0;border-radius:26px;padding:18px 16px 16px;text-align:center;color:#fff}
+.gxdi{position:relative;width:78%;aspect-ratio:1/1;margin:0 auto 6px;display:flex;align-items:center;justify-content:center}
+.gxdi img{max-width:100%;max-height:100%;object-fit:contain;filter:drop-shadow(0 6px 10px rgba(0,0,0,.5))}
+.gxdi .rkb{position:absolute;left:-4px;top:-4px}
+.gxdn{font-size:22px;font-weight:900;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gxds{font-size:14px;font-weight:700;color:#d9c9ee;margin:2px 0 12px;line-height:1.6}
+.gxdb .btn.ghost{color:#fff;border:2px solid #8a7aa0;background:transparent}
+.gxdb .btn{display:block;width:100%;min-height:52px;margin-top:8px;font-size:17px}
+.gxc .gxi{cursor:pointer}
 </style>
 
 <div class="bg" aria-hidden="true"></div>
@@ -4245,7 +4256,7 @@ function gxOpen(a) {
   var base = pickChar0(a), pulls = gxPulls(a), cur = pickChar(a), ov = document.querySelector(".gxov"); if (ov) ov.remove();
   var cands = [base].concat(pulls).filter(function (q, x, ar) { return ar.indexOf(q) === x; }), left = gxCap(a) - pulls.length, tk = tkAvail(), NW = GX_NEW || []; GX_NEW = null;
   try { var rmv = pulls.length + 1 - cands.length, sk = a.seed >>> 0; ME.cp = ME.cp || {}; if (rmv > (ME.cp[sk] || 0)) { ME.fz = (ME.fz || 0) + rmv - (ME.cp[sk] || 0); ME.cp[sk] = rmv; meSave(); tk = tkAvail(); } } catch (er) {}
-  var h = '<div class="gxbox"><h3>キャラ替えガチャ</h3><p class="gxs">出たキャラのなかから、好きなものを選べます<br>ログインするたび、ガチャ券🎟が1枚<br>ダブりは融合して、券にかわります</p>' + gxActs(left, tk) + '<div class="gxg">' +
+  var h = '<div class="gxbox"><h3>キャラ替えガチャ</h3><p class="gxs">出たキャラをタップすると、くわしく見られます<br>ログインするたび、ガチャ券🎟が1枚<br>ダブりは融合して、券にかわります</p>' + gxActs(left, tk) + '<div class="gxg">' +
     cands.map(function (i, k) { return [i, k]; }).sort(function (x, y) { return ((NW.indexOf(y[0]) >= 0) - (NW.indexOf(x[0]) >= 0)) || ((CHR[y[0]].r || 0) - (CHR[x[0]].r || 0)) || (x[1] - y[1]); }).map(function (e) { var i = e[0], k = e[1], r = CHR[i].r || 0; return '<div class="gxc' + (i === cur ? ' sel' : '') + '"><div class="gxi">' + (NW.indexOf(i) >= 0 ? '<span class="newb">NEW</span>' : '') + '<img alt="" src="' + CHR[i].s + '"><span class="rkb r' + r + '">' + RKN[r] + '</span></div><small>' + (k === 0 ? '最初のキャラ' : k + '回目') + '</small><button type="button" class="btn ' + (i === cur ? '' : 'ghost') + '" data-gxpick="' + i + '"' + (i === cur ? ' disabled' : '') + '>' + (i === cur ? 'いまのキャラ' : 'このキャラにする') + '</button></div>'; }).join("") +
     '</div></div>';
   ov = xEl("div", "gxov", h); document.body.appendChild(ov);
@@ -4256,7 +4267,18 @@ document.addEventListener("click", function (e) {
   if (!a && T.closest("[data-gx]")) { try { a = GX_CUR = analyze(ME.A); } catch (er) {} }
   if (T.closest("[data-gx]")) { if (a) { try { document.querySelectorAll(".tkov").forEach(function (q) { q.remove(); }); } catch (er) {} gxOpen(a); } return; }
   if (T.closest("[data-gxclose]")) { var o = document.querySelector(".gxov"); if (o) o.remove(); return; }
-  var pk = T.closest("[data-gxpick]"); if (pk && a) { ME.gx = ME.gx || {}; ME.gx[a.seed >>> 0] = +pk.dataset.gxpick; meSave(); var o2 = document.querySelector(".gxov"); if (o2) o2.remove(); try { collect(a); } catch (er) {} gxRefresh(); return; }
+  if (T.closest("[data-gxdetx]")) { var dd = document.querySelector(".gxdet"); if (dd) dd.remove(); return; }
+  var gcd = T.closest(".gxc");
+  if (gcd && !T.closest("button") && a) {
+    var pb = gcd.querySelector("[data-gxpick]"), di = pb ? +pb.dataset.gxpick : -1, ci = CHR[di];
+    if (ci) {
+      var dr = ci.r || 0, dcur = (di === pickChar(a)), dov = document.createElement("div"); dov.className = "gxdet"; dov.setAttribute("role", "dialog");
+      dov.innerHTML = '<div class="gxdb"><div class="gxdi"><img alt="" src="' + ci.s + '"><span class="rkb r' + dr + '">' + RKN[dr] + '</span></div><div class="gxdn">' + esc(ci.n) + '</div><div class="gxds">' + (dcur ? '⭐ いま、メインのキャラです' : 'このキャラに、かえますか？') + '</div>' +
+        (dcur ? '' : '<button type="button" class="btn" data-gxpick="' + di + '">✅ このキャラにする</button>') + '<button type="button" class="btn ghost" data-gxdetx="1">もどる</button></div>';
+      document.body.appendChild(dov); return;
+    }
+  }
+  var pk = T.closest("[data-gxpick]"); if (pk && a) { try { var dd2 = document.querySelector(".gxdet"); if (dd2) dd2.remove(); } catch (er) {} ME.gx = ME.gx || {}; ME.gx[a.seed >>> 0] = +pk.dataset.gxpick; meSave(); var o2 = document.querySelector(".gxov"); if (o2) o2.remove(); try { collect(a); } catch (er) {} gxRefresh(); return; }
   var spb = T.closest("[data-gxspin]");
   if (spb && a) {
     var sgm = spb.dataset.gxspin === "sg", pulls = gxPulls(a);
