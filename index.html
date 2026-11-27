@@ -1045,6 +1045,24 @@ p, li, dd { text-wrap: pretty; }
 .gxdb .btn{display:block;width:100%;min-height:52px;margin-top:8px;font-size:17px}
 .gxc .gxi{cursor:pointer}
 </style>
+<style id="patch-20261127-brk">
+/* ===== 改行を整える（2026-11-27）=====
+   ・文章はぜんぶ「文節のまとまり」で行を分け、行の長さをそろえる（1文字だけ残らない）
+   ・「かぎかっこ」の強調語は、途中で折れず、色づけも行をまたがない
+   ・まわりからは／心の中では の文は、強調語を大きく1行で見せる */
+.txt, .txt .ln, .block p, .chap p, .hero p, .card p, .aru li, .lmh dd, .kv span, .lrow .lt > span, .hello p, .sample, .hint, .annot, .reasons, .mcard .mv, li, dd { text-wrap: balance; }
+.kw, .em, .pos, .neg { -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.kw.kn { white-space: nowrap; }
+/* 1行は、全角で19文字ほどまで。読みやすい長さで、文節ごとにそろえて折り返す */
+.block > p.txt, .chap > p.txt { max-width: min(21em, 100%); }
+.gk { display: block; margin: 6px auto; max-width: 100%; font-size: 1.38em; font-weight: 900; line-height: 1.5; text-align: center; color: var(--c, var(--fg)); text-wrap: balance; -webkit-text-stroke: 0.45px currentColor; }
+.gk .kw { font-size: 1em; padding: 0 0.2em; }
+.pg { display: block; height: 14px; }
+.sumline .sumbig { display: inline; padding: 0 0.1em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.opts .opt { white-space: nowrap; }
+.meter { grid-template-columns: 5.4em 1fr 3.6em; }
+.meter span { white-space: nowrap; }
+</style>
 
 <div class="bg" aria-hidden="true"></div>
 <canvas id="orbs" aria-hidden="true"></canvas>
@@ -2198,24 +2216,7 @@ function protect(el) {
   });
 }
 var WB_RE = /([ぁ-んー、。！？」』）])(?=[一-龥々ァ-ヶ「『（A-Za-z0-9])|([、。！？])(?=[ぁ-ん])/g;
-function budoxify(root) {
-  var list = (root || document).querySelectorAll(".txt, .lead, h2, li, .lmh dd, .card p, .card h4, .hero h2, .block h3, .catch, .no, .hint, .annot, .notice p, .lede, .tips li, .sample, .intro, .quiz-note, .because, .sumline, .aru li, .kv span, .reasons, .block p, .chap p, .hero p, .mast p, .mv, .lmh dt, .legend span"), i;
-  for (i = 0; i < list.length; i++) {
-    var el = list[i];
-    if (el.dataset.bx) continue; el.dataset.bx = "1";
-    protect(el);
-    var w = document.createTreeWalker(el, 4, null), nodes = [], n;
-    while ((n = w.nextNode())) nodes.push(n);
-    nodes.forEach(function (t) {
-      if (window.Intl && Intl.Segmenter) return; /* 後段の文節処理にまかせる（複合語を途中で切らない） */
-      var txt = t.nodeValue; if (!txt || !WB_RE.test(txt)) { WB_RE.lastIndex = 0; return; } WB_RE.lastIndex = 0;
-      var parts = txt.replace(WB_RE, "$1$2\u0001").split("\u0001"), f = document.createDocumentFragment(), k;
-      for (k = 0; k < parts.length; k++) { if (k) f.appendChild(document.createElement("wbr")); if (parts[k]) f.appendChild(document.createTextNode(parts[k])); }
-      t.parentNode.replaceChild(f, t);
-    });
-    el.classList.add("wb");
-  }
-}
+function budoxify(root) { try { if (window.brkRun) window.brkRun(root || document.body); } catch (e) {} }
 
 /* ---------- view helpers ---------- */
 function $(id) { return document.getElementById(id); }
@@ -2700,8 +2701,8 @@ function hito3(a, T) {
 function story(a) {
   var T = traits(a), r = T.rank, t1 = r[0], t2 = r[1], tl = r[5];
   var gh = hashStr(a.seed + "gap") >>> 0, gap = T.outer === T.inner ?
-    "人前でも、ひとりのときでも、「" + AXW[T.outer] + "」のままの人です⏎" + ["見たままの人、と思われやすく、ぶれにくいのが強みです⏎", "まわりから分かってもらいやすく、安心感のある人です⏎", "気持ちと見た目が近いので、一緒にいる人が楽でいられます⏎"][gh % 3] :
-    "まわりからは「" + AXW[T.outer] + "」に見えます⏎でも心の中では、「" + AXI[T.inner] + "」が動いています⏎" + ["だから、「本当はそうじゃないのに」と感じる日が、ときどきあるかもしれません⏎", "見えている姿と気持ちにズレがあるので、ひとりでほっとする時間が大切です⏎", "気づいてもらえなくても大丈夫です⏎心の中の気持ちを、自分だけは分かってあげてください⏎", "そのズレは、あなたの深みであり、人をひきつける魅力でもあります⏎", "信頼できる人にだけ、心の中の気持ちを少し話してみると、楽になります⏎", "まわりが思うより、あなたはずっと豊かな気持ちを抱えています⏎"][gh % 6];
+    "人前でも、ひとりのときでも、⟦「" + AXW[T.outer] + "」⟧のままの人です⏏" + ["見たままの人、と思われやすく、ぶれにくいのが強みです⏎", "まわりから分かってもらいやすく、安心感のある人です⏎", "気持ちと見た目が近いので、一緒にいる人が楽でいられます⏎"][gh % 3] :
+    "まわりからは⟦「" + AXW[T.outer] + "」⟧に見えます⏏でも心の中では、⟦「" + AXI[T.inner] + "」⟧が動いています⏏" + ["だから、「本当はそうじゃないのに」と感じる日が、ときどきあるかもしれません⏎", "見えている姿と気持ちにズレがあるので、ひとりでほっとする時間が大切です⏎", "気づいてもらえなくても大丈夫です⏎心の中の気持ちを、自分だけは分かってあげてください⏎", "そのズレは、あなたの深みであり、人をひきつける魅力でもあります⏎", "信頼できる人にだけ、心の中の気持ちを少し話してみると、楽になります⏎", "まわりが思うより、あなたはずっと豊かな気持ちを抱えています⏎"][gh % 6];
   return { T: T, t1: t1, t2: t2, tl: tl, title: trioTitle(a, T) + a.mb[0], pair: hito3(a, T), gap: gap };
 }
 function loveParadox(P) {
@@ -2740,8 +2741,8 @@ function overviewPage(a, st) {
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">総じて、こんな人です</span>' +
     '<p class="sumline txt">あなたは総じて<br><b class="sumbig">' + esc(st.title) + '<span style="font-size:1.15rem;font-weight:700">です</span></b></p>' +
     '<p class="txt">' + esc(HI[st.t1]) + '、そして' + esc(HI[st.t2]) + '人です</p>' +
-    '<p class="txt">ひと言でいうと、「' + esc(st.pair) + '」</p>' +
-    '<p class="txt">' + esc(st.gap) + '</p></div>';
+    '<p class="txt gapp">ひと言でいうと⏎「' + esc(st.pair) + '」</p>' +
+    '<p class="txt gapp">' + esc(st.gap) + '</p></div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">あなたの成分</span><h3>このキャラは、こんな成分でできています</h3>' +
     T.rank.map(function (k) { return '<div class="mrow">' + meter(AXN[k], xtrm(T, k), AXC[k], "％") + '<p class="reasons">主な理由：' + esc(reasonsFor(a, T, k)) + '</p></div>'; }).join("") +
     '<p class="txt">いちばん強いのは「' + AXN[st.t1] + '」、次いで「' + AXN[st.t2] + '」⏎いちばん控えめなのは「' + AXN[st.tl] + '」で、「' + esc(LO[st.tl]) + '」ところがあります⏎</p></div>';
@@ -3002,7 +3003,7 @@ function charPage(a, st) {
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">キャラ紹介</span><h3>このキャラは、こんな子です</h3>' +
     '<p class="txt">' + esc(st.pair) + '</p>' +
     '<p class="txt">思考は' + esc(a.mb[0]) + '、生き方の軸は' + esc(a.sg[4]) + '、人生のテーマは' + esc(a.num[0]) + '、心の奥は「' + esc(a.nk[1]) + '」⏎</p>' +
-    '<p class="txt">' + esc(st.gap) + '</p></div>';
+    '<p class="txt gapp">' + esc(st.gap) + '</p></div>';
   h += '<div class="block" style="--c:var(--star)"><span class="lab">恋愛</span><h3>あなたの恋愛</h3>' +
     '<p class="txt">' + esc(LOVE_STYLE[t1]) + '⏎' + esc(LOVE_TIP[t2]) + '⏎</p>' + (par ? '<p class="txt">' + esc(par) + '</p>' : '') +
     '<p class="txt">惹かれやすいのは、「' + esc(p7[4]) + '」を感じさせる相手です（月から数えて7番目の星座・' + p7[1] + '）⏎' +
@@ -3041,9 +3042,9 @@ function empText(t) {
     return p ? '<span class="pos">' + p + '</span>' : n ? '<span class="neg">' + n + '</span>' : '<span class="em">' + k + '</span>';
   });
 }
-function fin(h) { return h.replace(/⏎+(?=\s*(<\/|$))/g, "").replace(/⏎+(?=<br>)/g, "").replace(/⏎+/g, "<br>").replace(/(^|>)([^<]+)/g, function (m, g, t) { return g + empText(t); }); }
+function fin(h) { return h.replace(/⏎*⟦([^⟧]*)⟧⏎*/g, '<b class="gk">$1</b>').replace(/⏎*⏏⏎*/g, '<span class="pg"></span>').replace(/⏎+(?=\s*(<\/|$))/g, "").replace(/⏎+(?=<br>)/g, "").replace(/⏎+/g, "<br>").replace(/(^|>)([^<]+)/g, function (m, g, t) { return g + empText(t); }); }
 function emph(root) {
-  var ps = root.querySelectorAll(".block > p.txt:not(.hito):not(.sumline)");
+  var ps = root.querySelectorAll(".block > p.txt:not(.hito):not(.sumline):not(.gapp)");
   Array.prototype.forEach.call(ps, function (p) {
     var br = null, i;
     for (i = 0; i < p.childNodes.length; i++) if (p.childNodes[i].nodeName === "BR") { br = p.childNodes[i]; break; }
@@ -3053,8 +3054,8 @@ function emph(root) {
     p.insertBefore(sp, br);
   });
 }
-function tx(s) { return s.replace(/⏎+$/, "").replace(/⏎+/g, "　"); }
-function plain(s) { return s.replace(/⏎+/g, "\n"); }
+function tx(s) { return s.replace(/[⟦⟧]/g, "").replace(/⏏/g, "⏎").replace(/⏎+$/, "").replace(/⏎+/g, "　"); }
+function plain(s) { return s.replace(/[⟦⟧]/g, "").replace(/⏏/g, "⏎").replace(/⏎+/g, "\n"); }
 var SEEN = { self: {}, duo: {} };
 var PG_DESC = { overview: "あなたを、ひと言で", why: "どうしてそうなるかの理由", aruaru: "「あるある」な日常の場面", combo: "組み合わせから見える顔", mind: "考え方のクセ", number: "運命数が示す人生のテーマ", nmap: "数の9マスと注目ポイント", star: "太陽星座と注目ポイント", jyotish: "心の奥の月と、これからの周期", flow: "過去・いま・未来のグラフ", char: "あなたの完成キャラ", mn: "考え方と数の相性", sm: "太陽と月の相性", scene: "ふだんの場面別アドバイス", now: "いまの二人の流れ", tips: "うまくいくコツ" };
 function pageNav(tab, pages, cur) {
@@ -3213,7 +3214,7 @@ function renderSelf() {
   box.innerHTML = fin(h); emph(box); budoxify(box); lineReveal(box); try { enhance(box, "self", cur, a); } catch (e) {} navCenter(box); fxIn(box);
   var stx = story(a);
   lastText = plain("【ワタス解体新書】" + who + (a.gl ? "（" + a.gl + "）" : "") + "\n「" + stx.title + "」\n" + a.type + "（" + a.mb[0] + "）× 運命数" + a.lp + "（" + a.num[0] + "）× " + a.sg[1] + " × 月" + a.mrs[1] + "・" + a.nk[0] +
-    "\n" + stx.pair + "\n" + stx.gap + "\nNo." + num(comboNo(a)[0]) + " / " + num(comboNo(a)[1]));
+    "\n" + stx.pair + "\n" + plain(stx.gap) + "\nNo." + num(comboNo(a)[0]) + " / " + num(comboNo(a)[1]));
 }
 
 function sceneBlocks(a, b, na, nb) {
@@ -4697,60 +4698,251 @@ window.setInterval(function () { try { if (LX && LX.state === "running" && Date.
 window.setTimeout(function () { try { if (SMK_BUSY || document.querySelector(".smkov")) return; var w = smkBuild("in"); w.style.opacity = "0.02"; window.setTimeout(function () { w.remove(); }, 600); } catch (e) {} }, 3500);
 if (typeof module !== "undefined") { module.exports = { party: party, analyze: analyze, compat: compat, toRomaji: toRomaji, charSVG: charSVG, comboNo: comboNo, balance: balance, ascendant: ascendant, sunLon: sunLon, moonLon: moonLon, jd: jd, ayanamsa: ayanamsa }; } else { init(); }
 
-/* 文節ごとに <wbr> を差し込み、Safari等でも自然な位置で改行 */
+/* ===== 改行エンジン（2026-11-27）=====
+   ・文章を「文節」「ひと区切り（、。で終わるまとまり）」に分け、1行に収まるまとまりは途中で折らない
+   ・収まらない長いまとまりだけ、文節の切れ目で折る（語の途中・「、」「」」の手前では折らない）
+   ・「かぎかっこ」も同じ。1行に収まるなら丸ごと次の行へ送る
+   ・画面の幅が変わったとき・フォントが読み込まれたときは、自動でやり直す */
 (function () {
-  if (!window.Intl || !Intl.Segmenter) return;
-  var seg = new Intl.Segmenter('ja', { granularity: 'word' });
-  var SKIP = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, CODE: 1, PRE: 1, SVG: 1, TEXT: 1, TSPAN: 1, WBR: 1 };
-  var JP = /[\u3040-\u30ff\u4e00-\u9fff]/, busy = false, timer = 0;
-  function bun(t) { // 助詞・記号の手前では切らず、単語のまとまり単位にする
-    var out = [], cur = '';
-    for (var x of seg.segment(t)) {
-      var w = x.segment;
-      if (cur && x.isWordLike && !/^[ぁ-ん]{1,2}$/.test(w) && !/^[ー、。！？）」』】\u3000]/.test(w)) { out.push(cur); cur = ''; }
-      if (!x.isWordLike && /\p{Extended_Pictographic}/u.test(w) && cur) cur += '\u2060';
-      cur += w;
-    }
-    if (cur) out.push(cur);
-    while (out.length > 1 && out[out.length - 1].replace(/\s/g, '').length < 4 && (out[out.length - 1].length + out[out.length - 2].length) <= 8) { var lst = out.pop(); out[out.length - 1] += lst; }
-    return out;
+  var SKIPT = { SCRIPT: 1, STYLE: 1, TEXTAREA: 1, INPUT: 1, SELECT: 1, CODE: 1, PRE: 1, SVG: 1, CANVAS: 1, NOSCRIPT: 1, TEMPLATE: 1, AUDIO: 1, VIDEO: 1, IMG: 1, WBR: 1, BR: 1 };
+  var JP = /[぀-ヿ㐀-鿿]/;
+  var HIRA = /[ぁ-ゖ]/, KANJI = /[㐀-鿿々〆]/, KATA = /[ァ-ヺ]/, LAT = /[A-Za-z0-9０-９Ａ-Ｚａ-ｚ]/;
+  var OPEN = /[「『（(【〈《〔｛]/, CLOSE = /[」』）)】〉》〕｝]/;
+  var NOSTART = /[、。，．！？!?）)」』】〉》〕｝ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶー・…‥〜～:：;；,.]/;
+  var PUNCT = /[、。，！？!?]/;
+  var EMO = /[\u{1F000}-\u{1FAFF}\u2600-\u27BF\u2B00-\u2BFF\uFE0F\u200D\u2190-\u21FF\u2300-\u23FF]/u;
+  var DEP = /^(?:[はがをにでとものへやかねよてばなだ]|から|まで|より|など|です|ます|でし|まし|ませ|だけ|しか|ばかり|ほど|くらい|ぐらい|こと|もの|ため|ので|のに|ない|たい|れる|られ|せる|させ|ている|ていく|てくる|たり|たら|だら|なら|けど|けれど|ので|って|という|といった|として|について|による|ような|ように|みたい|い(?:る|ま|な|た|て|ら|れ)[ぁ-ん]*|あ(?:る|り|っ)|お(?:り|る)|くれ|くる|みる|みて|もら|ほし|くだ|あげ|やす|にく|すぎ|がち|そう|らし|しま|しい|てい|でい)$/;
+  var VSTEM = /[みきりいちびにえけめれしじ]$/, VTAIL = /^[合上去込切付替出直返続抜回掛過寄添方]/;
+  function noStart(ch) { return NOSTART.test(ch) || EMO.test(ch); }
+  var WJ = '⁠';
+  var ctx = null, wcache = {}, stamps = new WeakMap(), busy = false, atomSeq = 0;
+  try { ctx = document.createElement('canvas').getContext('2d'); } catch (e) {}
+
+  function cwid(ch, key, font, ls) {
+    var k = key + '|' + ch, v = wcache[k];
+    if (v === undefined) { ctx.font = font; v = ctx.measureText(ch).width + ls; wcache[k] = v; }
+    return v;
   }
-  function walk(n) {
-    if (n.nodeType === 3) {
-      var t = n.nodeValue;
-      if (n.previousSibling && n.previousSibling.nodeType === 1 && n.previousSibling.tagName !== 'BR' && n.previousSibling.tagName !== 'WBR' && /^[ぁ-ん]{1,4}(?![ぁ-んァ-ヶ一-龥])/.test(t)) { n.nodeValue = t = '\u2060' + t; } /* 「…です」だけが次の行に残らないように */
-      if (t.length < 6 || !JP.test(t)) return;
-      var f = document.createDocumentFragment();
-      if (t.indexOf('\u3000') > 0 && !/^\s*\u3000/.test(t)) {
-        t.split('\u3000').forEach(function (c, k) {
-          if (!c) return; if (k) f.appendChild(document.createTextNode(' '));
-          var sp = document.createElement('span'); sp.className = 'cl';
-          bun(c).forEach(function (x, i) { if (i) sp.appendChild(document.createElement('wbr')); sp.appendChild(document.createTextNode(x)); });
-          f.appendChild(sp);
-        });
-        n.parentNode.replaceChild(f, n); return;
+  function fontOf(el, cache) {
+    var f = cache.get(el); if (f) return f;
+    var cs = getComputedStyle(el), ls = parseFloat(cs.letterSpacing); if (isNaN(ls)) ls = 0;
+    var font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily;
+    f = { font: font, ls: ls, key: font + '|' + ls, nw: /nowrap|pre/.test(cs.whiteSpace) }; cache.set(el, f); return f;
+  }
+  function availOf(el) {
+    var cs = getComputedStyle(el), w = el.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    return w;
+  }
+
+  /* ひとかたまりの文（<br>で区切られた1行ぶん）を処理する
+     切れ目の候補（文節の切れ目）から、「行の長さがそろい」「かぎかっこや「、」で終わるまとまりを壊さず」「1文字だけ残らない」
+     いちばん読みやすい折り方を選び、その位置だけで折れるようにする */
+  function procRun(items, avail, fc, root) {
+    var U = [], i, k, n;
+    for (k = 0; k < items.length; k++) {
+      var nd = items[k].n, v = nd.nodeValue, f = fontOf(nd.parentElement, fc), st0 = U.length;
+      for (var o = 0; o < v.length; o++) {
+        var ch = v.charAt(o), len = 1, c = v.charCodeAt(o);
+        if (ch === WJ || ch === '​') continue;
+        if (c >= 0xD800 && c <= 0xDBFF && o + 1 < v.length) { ch = v.substr(o, 2); len = 2; o++; }
+        U.push({ ch: ch, node: nd, off: o - len + 1, len: len, at: items[k].at, atEl: items[k].atEl, w: ctx ? cwid(ch, f.key, f.font, f.ls) : 16 });
       }
-      var parts = bun(t); if (parts.length < 2) return;
-      parts.forEach(function (x, i) { if (i) f.appendChild(document.createElement('wbr')); f.appendChild(document.createTextNode(x)); });
-      n.parentNode.replaceChild(f, n); return;
+      if (U.length && items[k].xr) U[U.length - 1].w += items[k].xr;
+      if (items[k].xl && U.length > st0) U[st0].w += items[k].xl;
     }
-    if (n.nodeType !== 1 || SKIP[n.tagName.toUpperCase()] || n.isContentEditable) return;
-    Array.prototype.slice.call(n.childNodes).forEach(walk);
+    n = U.length; if (n < 4) return;
+    var pw = [0]; for (i = 0; i < n; i++) pw.push(pw[i] + U[i].w);
+    function wsum(s, e) { return pw[e] - pw[s]; }
+    var lim = avail - 3 - avail * 0.01;
+    /* 切れ目の候補 */
+    var cand = [], last = 0, segB = null, spos = [], sstr = '';
+    try {
+      if (window.Intl && Intl.Segmenter) {
+        for (i = 0; i < n; i++) { spos.push(sstr.length); sstr += U[i].ch; }
+        segB = {}; var sgi = new Intl.Segmenter('ja', { granularity: 'word' }).segment(sstr)[Symbol.iterator](), sgr;
+        while (!(sgr = sgi.next()).done) segB[sgr.value.index] = sgr.value.segment;
+      }
+    } catch (e) { segB = null; }
+    var cand, qpen, keep;
+    /* loose=true は、ふつうの切れ目では1行に収まらないときの最終手段（語の途中以外で、できるだけ自然な所を探す） */
+    function solve(loose) {
+      var i, last = 0, jj;
+      cand = [];
+      for (i = 1; i < n; i++) {
+        var a = U[i - 1].ch, b = U[i].ch;
+        if (U[i].at && U[i].at === U[i - 1].at) continue;
+        if (/\s/.test(a) || /\s/.test(b)) continue;
+        if (noStart(b) || OPEN.test(a) || EMO.test(a)) continue;
+        /* 複合語（組み合わせ・置き去り・ひと言 など）は、途中で切らない */
+        if (VSTEM.test(a) && VTAIL.test(b) && HIRA.test(a)) continue;
+        if (i >= 2 && U[i - 2].ch === 'ひ' && a === 'と' && KANJI.test(b)) continue;
+        var clause = PUNCT.test(a) || b === '「' || b === '『' || b === '（';
+        var chunk = (HIRA.test(a) || CLOSE.test(a)) && (KANJI.test(b) || KATA.test(b) || LAT.test(b) || OPEN.test(b));
+        var dep = segB && segB[spos[i]] !== undefined && DEP.test(segB[spos[i]]);
+        if (!clause && !chunk && /[」』]/.test(a) && JP.test(b) && !dep && (segB || !/^[はがをにでとものへやかねよ]/.test(b))) chunk = true;
+        if (!clause && !chunk && segB && /^[をにへとがはもでのて]$/.test(a) && segB[spos[i - 1]] === a && segB[spos[i]] !== undefined && !dep && JP.test(b)) chunk = true;
+        var soft = false;
+        if (!clause && !chunk && a === '・') chunk = true;
+        if (!clause && !chunk && loose && (JP.test(a) || JP.test(b)) && !(LAT.test(a) && LAT.test(b)) && !dep && (!segB || segB[spos[i]] !== undefined)) { chunk = true; soft = true; }
+        if (!clause && !chunk) continue;
+        if (i - last < 2 || n - i < 2) continue;
+        cand.push({ i: i, c: clause, s: soft }); last = i;
+      }
+      /* 1行に収まる「かぎかっこ」は、中で折らない（折るとき大きな罰点） */
+      qpen = {};
+      for (i = 0; i < n; i++) {
+        if (U[i].ch !== '「' && U[i].ch !== '『') continue;
+        var dp = 0, q1 = -1;
+        for (jj = i; jj < n; jj++) { if (/[「『]/.test(U[jj].ch)) dp++; else if (/[」』]/.test(U[jj].ch)) { dp--; if (dp === 0) { q1 = jj; break; } } }
+        if (q1 < 0) continue;
+        if (wsum(i, q1 + 1) <= lim) for (jj = 0; jj < cand.length; jj++) if (cand[jj].i > i && cand[jj].i <= q1) qpen[cand[jj].i] = 500;
+        i = q1;
+      }
+      var kp = {};
+      if (wsum(0, n) <= lim) return { keep: kp, cost: 0 };
+      var P = [0].concat(cand.map(function (x) { return x.i; }), [n]), m = P.length, isC = {}, isS = {};
+      cand.forEach(function (x) { isC[x.i] = x.c; isS[x.i] = x.s; });
+      var best = [0], prev = [-1], INF = 1e12, ck, cj, cnt = [0], total = wsum(0, n);
+      for (ck = 1; ck < m; ck++) { /* まず、最も少ない行数を求める */
+        cnt[ck] = INF;
+        for (cj = ck - 1; cj >= 0; cj--) { var w0 = wsum(P[cj], P[ck]); if (w0 > lim && cj < ck - 1) continue; if (cnt[cj] + 1 + (w0 > lim ? 100 : 0) < cnt[ck]) cnt[ck] = cnt[cj] + 1 + (w0 > lim ? 100 : 0); }
+      }
+      var T = total / Math.max(1, cnt[m - 1] % 100); /* 理想の1行の長さ（行数が同じなら、できるだけそろえる） */
+      for (ck = 1; ck < m; ck++) {
+        best[ck] = INF; prev[ck] = -1;
+        for (cj = ck - 1; cj >= 0; cj--) {
+          var w = wsum(P[cj], P[ck]), lastLine = ck === m - 1, cost = best[cj];
+          if (cost >= INF) continue;
+          if (w > lim) { cost += 1000 + (w - lim); if (cj < ck - 1) continue; }
+          else {
+            var dv = (w - T) / lim * 10; cost += 40 + dv * dv * (lastLine && w < T ? 0.5 : 1);
+            if (P[ck] - P[cj] < 4) cost += 40;
+            if (lastLine && w < lim * 0.18) cost += 80;
+          }
+          if (!lastLine) cost += (isC[P[ck]] ? 0 : 14) + (isS[P[ck]] ? 30 : 0) + (qpen[P[ck]] || 0);
+          if (cost < best[ck]) { best[ck] = cost; prev[ck] = cj; }
+        }
+      }
+      for (ck = m - 1; ck > 0 && prev[ck] >= 0; ck = prev[ck]) if (P[prev[ck]] > 0) kp[P[prev[ck]]] = 1;
+      return { keep: kp, cost: best[m - 1] };
+    }
+    var plan = solve(false);
+    if (plan.cost >= 1000) { var plan2 = solve(true); if (plan2.cost < plan.cost) plan = plan2; }
+    keep = plan.keep;
+    /* 実際に差し込む */
+    var ops = [];
+    for (i = 1; i < n; i++) {
+      var a2 = U[i - 1].ch, b2 = U[i].ch;
+      if (keep[i]) { ops.push({ i: i, t: 'b' }); continue; }
+      var edge = (U[i].at || U[i - 1].at) && U[i].at !== U[i - 1].at;
+      if (EMO.test(b2) && !/\s/.test(a2) || (a2 === '・' && !/\s/.test(b2) && !noStart(b2)) || (PUNCT.test(a2) || CLOSE.test(a2) || a2 === '…') && !noStart(b2) && !/\s/.test(b2) || (OPEN.test(b2) && !OPEN.test(a2) && !/\s/.test(a2)) || (edge && !noStart(b2) && !/\s/.test(b2) && !/\s/.test(a2) && !OPEN.test(a2))) ops.push({ i: i, t: 'j' });
+    }
+    for (k = ops.length - 1; k >= 0; k--) {
+      var op = ops[k], B = U[op.i], A = U[op.i - 1];
+      if (op.t === 'b') {
+        var w = document.createElement('wbr'); w.className = 'bw';
+        if (B.at && B.at !== A.at && B.atEl && B.atEl.parentNode) { B.atEl.parentNode.insertBefore(w, B.atEl); continue; }
+        if (B.off === 0) { var rf = B.node; while (rf.parentNode && rf.parentNode !== root && !rf.previousSibling) rf = rf.parentNode; rf.parentNode.insertBefore(w, rf); }
+        else { var nn = B.node.splitText(B.off); nn.parentNode.insertBefore(w, nn); }
+      } else {
+        if (B.at && B.at !== A.at && !A.at) A.node.insertData(A.off + A.len, WJ);
+        else B.node.insertData(B.off, WJ);
+      }
+    }
   }
-  var mo = new MutationObserver(function () {
-    if (busy) return; clearTimeout(timer);
-    timer = setTimeout(function () {
-      busy = true; mo.disconnect();
-      try { walk(document.body); } catch (e) {}
-      mo.observe(document.body, { childList: true, subtree: true, characterData: true }); busy = false;
-    }, 30);
-  });
-  function go() { mo.observe(document.body, { childList: true, subtree: true, characterData: true }); try { busy = true; mo.disconnect(); walk(document.body); } catch (e) {} mo.observe(document.body, { childList: true, subtree: true, characterData: true }); busy = false; }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go();
+
+  function gather(el, fc, fonts) {
+    var cs = getComputedStyle(el); if (cs.display === 'none' || /nowrap|pre/.test(cs.whiteSpace) && !el.querySelector('br')) { if (cs.display === 'none') return; }
+    var runs = [], cur = [], kids = [], sig = '', pendL = 0;
+    function hx(cc, sd) { return (parseFloat(cc['padding' + sd]) || 0) + (parseFloat(cc['margin' + sd]) || 0) + (parseFloat(cc['border' + sd + 'Width']) || 0); }
+    function flush() { if (cur.length) { runs.push(cur); cur = []; } }
+    (function rec(p, at, atEl) {
+      var c = p.firstChild, nx;
+      while (c) {
+        nx = c.nextSibling;
+        if (c.nodeType === 3) { if (c.nodeValue) { cur.push({ n: c, at: at, atEl: atEl, xl: pendL, xr: 0 }); pendL = 0; } }
+        else if (c.nodeType === 1) {
+          var tn = c.tagName.toUpperCase();
+          if (tn === 'BR') flush();
+          else if (SKIPT[tn] || c.isContentEditable || (c.namespaceURI && /svg/i.test(c.namespaceURI))) { /* とばす */ }
+          else {
+            var cc = getComputedStyle(c), d = cc.display;
+            if (d === 'none') { /* とばす */ }
+            else if (d === 'inline' || d === 'contents') {
+              var xl = hx(cc, 'Left'), xr = hx(cc, 'Right'), nb = cur.length; pendL += xl;
+              if (/nowrap/.test(cc.whiteSpace) && !at) { var id = ++atomSeq; rec(c, id, c); } else rec(c, at, atEl);
+              if (xr && cur.length > nb) cur[cur.length - 1].xr += xr; else if (xr && cur.length) cur[cur.length - 1].xr += xr;
+            } else if (/^inline/.test(d) && /nowrap/.test(cc.whiteSpace) && !at) { var id2 = ++atomSeq, xl2 = hx(cc, 'Left'), xr2 = hx(cc, 'Right'); pendL += xl2; rec(c, id2, c); if (xr2 && cur.length) cur[cur.length - 1].xr += xr2; }
+            else { flush(); kids.push(c); }
+          }
+        }
+        c = nx;
+      }
+    })(el, 0, null);
+    flush();
+    var text = runs.map(function (r) { return r.map(function (x) { return x.n.nodeValue; }).join(''); }).join('\n');
+    var avail = availOf(el);
+    if (el.classList && el.classList.contains('gk') && avail > 40 && ctx) { /* 大きく見せる一語は、1行に収まるよう少しだけ小さくする（下限あり） */
+      el.style.fontSize = ''; var gf = fontOf(el, fc), gw = 0; for (var gi = 0; gi < text.length; gi++) { var gc = text.charAt(gi); if (gc !== '\n') gw += cwid(gc, gf.key, gf.font, gf.ls); }
+      if (gw > avail - 2 && (avail - 4) / gw >= 0.8) { var base = parseFloat(getComputedStyle(el).fontSize); el.style.fontSize = (base * (avail - 4) / gw * 0.99).toFixed(2) + 'px'; }
+      fc.delete(el);
+    }
+    if (!(avail > 40)) { kids.forEach(function (k) { gather(k, fc); }); return; }
+    var stamp = Math.round(avail) + '|' + text;
+    if (runs.length && stamps.get(el) !== stamp) {
+      /* 前回の差し込みを外す */
+      var olds = []; (function f(p) { for (var c = p.firstChild; c; c = c.nextSibling) { if (c.nodeType !== 1) continue; if (c.tagName === 'WBR' && c.className === 'bw') olds.push(c); else if (!kids.includes(c)) f(c); } })(el);
+      olds.forEach(function (w) { w.parentNode && w.parentNode.removeChild(w); });
+      if (JP.test(text)) runs.forEach(function (r) { var t = r.map(function (x) { return x.n.nodeValue; }).join(''); if (JP.test(t)) { try { procRun(r, avail, fc, el); } catch (e) {} } });
+      var t2 = ''; /* 差し込み後の文字列（見えない文字を除く）で記録 */
+      stamps.set(el, Math.round(avail) + '|' + runs.map(function (r) { return r.map(function (x) { return x.n.nodeValue; }).join(''); }).join('\n'));
+    }
+    kids.forEach(function (k) { gather(k, fc); });
+  }
+  var FC = null;
+  function closestBlock(el) {
+    while (el && el !== document.body) { var d = getComputedStyle(el).display; if (d !== 'inline' && d !== 'contents') break; el = el.parentElement; }
+    return el || document.body;
+  }
+  function run(root) {
+    if (!ctx || busy) return; busy = true;
+    try { mo && mo.disconnect(); } catch (e) {}
+    try {
+      root = root || document.body; if (root.nodeType === 9) root = document.body; if (root.nodeType === 3) root = root.parentElement; if (!root) { busy = false; return; }
+      var r = closestBlock(root); FC = new Map(); gather(r, FC);
+    } catch (e) { if (window.console) console.error('brk', e && e.stack || e); }
+    busy = false; try { mo && mo.observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (e) {}
+  }
+  function redo() {
+    Array.prototype.forEach.call(document.querySelectorAll('wbr.bw'), function (w) { w.parentNode && w.parentNode.removeChild(w); });
+    stamps = new WeakMap(); wcache = {}; run(document.body);
+  }
+  var pend = [], tmr = 0, mo = null;
+  try {
+    mo = new MutationObserver(function (recs) {
+      recs.forEach(function (m) {
+        if (m.type === 'characterData') pend.push(m.target);
+        else Array.prototype.forEach.call(m.addedNodes, function (x) { if (x.nodeType === 1 || x.nodeType === 3) pend.push(x); });
+      });
+      if (!pend.length) return; clearTimeout(tmr);
+      tmr = setTimeout(function () { var l = pend; pend = []; var seen = []; l.forEach(function (x) { var e = x.nodeType === 3 ? x.parentElement : x; if (e && e.isConnected && seen.indexOf(e) < 0) { seen.push(e); run(e); } }); }, 30);
+    });
+  } catch (e) {}
+  window.brkRun = run; window.brkRedo = redo;
+  /* あとから表示される部分（開閉・タブ切り替え・画面移動）も、表示されたあとにもう一度そろえる */
+  var lt1 = 0, lt2 = 0;
+  function later() { clearTimeout(lt1); clearTimeout(lt2); lt1 = setTimeout(function () { run(document.body); }, 380); lt2 = setTimeout(function () { run(document.body); }, 1100); }
+  document.addEventListener('click', later, true); document.addEventListener('toggle', later, true); document.addEventListener('change', later, true);
+  function start() { try { mo.observe(document.body, { childList: true, subtree: true, characterData: true }); } catch (e) {} run(document.body); }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  var lw = window.innerWidth, rt = 0;
+  window.addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (window.innerWidth !== lw) { lw = window.innerWidth; redo(); } }, 150); });
+  try { if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { redo(); }); } catch (e) {}
+  window.addEventListener('load', function () { setTimeout(redo, 200); });
 })();
 
 /* ===== お相手にキャラを送る／届いたキャラを受け取る ===== */
-function fnm(n) { n = String(n || ''); return /(さん|ちゃん|くん)$/.test(n) ? n : n + ' さん'; }
+function fnm(n) { n = String(n || ''); return /(さん|ちゃん|くん)$/.test(n) ? n : n + '\u00A0さん'; }
 function b64e(o) { return btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, ""); }
 function b64d(t) { t = String(t).replace(/-/g, "+").replace(/_/g, "/"); while (t.length % 4) t += "="; return JSON.parse(decodeURIComponent(escape(atob(t)))); }
 function invClean(o) {
