@@ -1058,6 +1058,7 @@ p, li, dd { text-wrap: pretty; }
 .gk { display: block; margin: 6px auto; max-width: 100%; font-size: 1.38em; font-weight: 900; line-height: 1.5; text-align: center; color: var(--c, var(--fg)); text-wrap: balance; -webkit-text-stroke: 0.45px currentColor; }
 .gk .kw { font-size: 1em; padding: 0 0.2em; }
 .pg { display: block; height: 14px; }
+.sumline .sumbig .tp { display: inline-block; max-width: 100%; }
 .sumline .sumbig { display: inline; padding: 0 0.1em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
 .opts .opt { white-space: nowrap; }
 .meter { grid-template-columns: 5.4em 1fr 3.6em; }
@@ -2668,6 +2669,7 @@ var TRIO = {
 };
 function trioTitle(a, T) {
   var L, h, ks = T.rank.slice(0, 3).sort(function (x, y) { return AXK.indexOf(x) - AXK.indexOf(y); }), L = TRIO[ks.join("+")], h = hashStr(a.seed + "trio") % 4, v = h < 2 ? L[h] : h === 2 ? [L[0][0], L[1][1]] : [L[1][0], L[0][1]];
+  window.__tsp = v[0].length;
   return v[0] + v[1];
 }
 var HITO3 = {
@@ -2703,7 +2705,7 @@ function story(a) {
   var gh = hashStr(a.seed + "gap") >>> 0, gap = T.outer === T.inner ?
     "人前でも、ひとりのときでも、⟦「" + AXW[T.outer] + "」⟧のままの人です⏏" + ["見たままの人、と思われやすく、ぶれにくいのが強みです⏎", "まわりから分かってもらいやすく、安心感のある人です⏎", "気持ちと見た目が近いので、一緒にいる人が楽でいられます⏎"][gh % 3] :
     "まわりからは⟦「" + AXW[T.outer] + "」⟧に見えます⏏でも心の中では、⟦「" + AXI[T.inner] + "」⟧が動いています⏏" + ["だから、「本当はそうじゃないのに」と感じる日が、ときどきあるかもしれません⏎", "見えている姿と気持ちにズレがあるので、ひとりでほっとする時間が大切です⏎", "気づいてもらえなくても大丈夫です⏎心の中の気持ちを、自分だけは分かってあげてください⏎", "そのズレは、あなたの深みであり、人をひきつける魅力でもあります⏎", "信頼できる人にだけ、心の中の気持ちを少し話してみると、楽になります⏎", "まわりが思うより、あなたはずっと豊かな気持ちを抱えています⏎"][gh % 6];
-  return { T: T, t1: t1, t2: t2, tl: tl, title: trioTitle(a, T) + a.mb[0], pair: hito3(a, T), gap: gap };
+  return { T: T, t1: t1, t2: t2, tl: tl, title: trioTitle(a, T) + a.mb[0], tsp: window.__tsp, pair: hito3(a, T), gap: gap };
 }
 function loveParadox(P) {
   if (P.loyal >= 62 && P.free >= 62) return "一途なのに束縛は苦手という、少しむずかしい恋愛傾向です⏎好きだからこそ「自分の時間も大事」と、先に伝えておくとすれ違いません⏎";
@@ -2739,7 +2741,7 @@ function overviewPage(a, st) {
   h += '<div class="hero">' + (REPEAT2 ? charRV(a) : '<div class="mys" aria-hidden="true"><span>？</span></div>') + '<p class="eyebrow">' + esc(who) + (REPEAT2 ? 'の分身キャラ' : 'の分身キャラは、最後のお楽しみ') + '</p>' + (REPEAT2 ? gxHTML(a) : '') + '<h2>' + esc(st.title) + '</h2>' +
     '<p class="lede txt">' + '太陽は「' + esc(a.sg[4]) + '」 × 運命数' + a.lp + '（' + esc(a.num[0]) + '）× 「' + esc(a.nk[1]) + '」の月</p>' + heroChips(a) + hitokoto(a) + '</div>';
   h += '<div class="block" style="--c:var(--fg)"><span class="lab" style="color:var(--muted)">総じて、こんな人です</span>' +
-    '<p class="sumline txt">あなたは総じて<br><b class="sumbig">' + esc(st.title) + '<span style="font-size:1.15rem;font-weight:700">です</span></b></p>' +
+    '<p class="sumline txt">あなたは総じて<br><b class="sumbig"><span class="tp">' + esc(st.title.slice(0, st.tsp)) + '</span><span class="tp">' + esc(st.title.slice(st.tsp)) + '<span style="font-size:1.15rem;font-weight:700">です</span></span></b></p>' +
     '<p class="txt">' + esc(HI[st.t1]) + '、そして' + esc(HI[st.t2]) + '人です</p>' +
     '<p class="txt gapp">ひと言でいうと⏎「' + esc(st.pair) + '」</p>' +
     '<p class="txt gapp">' + esc(st.gap) + '</p></div>';
